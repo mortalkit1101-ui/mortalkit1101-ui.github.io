@@ -1,7 +1,7 @@
 const contributionGrids = document.querySelectorAll(".contribution-grid");
 const activeNavLinks = document.querySelectorAll(".nav-links a");
 const themeToggle = document.querySelector("#themeToggle");
-const githubUser = "mortalkit";
+const githubUser = "mortalkit1101-ui";
 const contributionApi = `https://github-contributions-api.jogruber.de/v4/${githubUser}?y=last`;
 
 function renderContributionGrid(contributions = []) {

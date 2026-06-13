@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>动态 | Motral</title>
+    <meta name="description" content="Motral dynamic notes page." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="glass-nav" aria-label="主导航">
+        <a class="brand" href="./index.html">Motral</a>
+        <nav class="nav-links">
+          <a href="./index.html">首页</a>
+          <a href="./blog.html">博客</a>
+          <a class="active" href="./notes.html">动态</a>
+          <a href="./about.html">关于</a>
+        </nav>
+        <div class="nav-actions" aria-label="快捷操作">
+          <button type="button" aria-label="搜索">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 21-4.3-4.3m1.3-5.2a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+            </svg>
+          </button>
+          <button class="accent" type="button" aria-label="随机浏览">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+            </svg>
+          </button>
+          <button id="themeToggle" type="button" aria-label="切换深色模式">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.8A8.6 8.6 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="notes-page">
+        <section class="content-grid">
+          <div class="main-column">
+            <div class="page-title">
+              <p class="eyebrow">Notes</p>
+              <h1>动态</h1>
+            </div>
+
+            <section class="glass-card section-card">
+              <div class="empty-state">
+                <div class="empty-icon">0</div>
+                <h3>暂无更多动态</h3>
+              </div>
+            </section>
+          </div>
+
+          <aside class="side-column" aria-label="侧边栏">
+            <section class="glass-card sidebar-card">
+              <h2>标签</h2>
+              <div class="tag-cloud">
+                <span>python</span>
+              </div>
+            </section>
+
+            <section class="glass-card sidebar-card">
+              <h2>统计</h2>
+              <div class="stats-list">
+                <p>共 <strong>0</strong> 篇文章</p>
+                <p>共 <strong>0</strong> 条动态</p>
+              </div>
+            </section>
+          </aside>
+        </section>
+      </main>
+
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Motral</title>
+    <meta name="description" content="Motral personal site interface." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="glass-nav" aria-label="主导航">
+        <a class="brand" href="./index.html">Motral</a>
+        <nav class="nav-links">
+          <a class="active" href="./index.html">首页</a>
+          <a href="./blog.html">博客</a>
+          <a href="./notes.html">动态</a>
+          <a href="./about.html">关于</a>
+        </nav>
+        <div class="nav-actions" aria-label="快捷操作">
+          <button type="button" aria-label="搜索">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 21-4.3-4.3m1.3-5.2a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+            </svg>
+          </button>
+          <button class="accent" type="button" aria-label="随机浏览">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+            </svg>
+          </button>
+          <button id="themeToggle" type="button" aria-label="切换深色模式">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.8A8.6 8.6 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="home-stack">
+        <section class="glass-card profile-card home-profile" id="about" aria-labelledby="home-title">
+          <div class="avatar-ring">
+            <img class="avatar" src="./assets/avatar.jpg" alt="Motral 头像" />
+          </div>
+          <h1 id="home-title">Motral</h1>
+          <div class="badge-row" aria-label="个人标签">
+            <span>学生</span>
+          </div>
+        </section>
+
+        <section class="glass-card activity-card home-activity" aria-labelledby="activity-title">
+          <div class="month-row" aria-hidden="true">
+            <span>一月</span><span>二月</span><span>三月</span><span>四月</span>
+            <span>五月</span><span>六月</span><span>七月</span><span>八月</span>
+            <span>九月</span><span>十月</span><span>十一月</span><span>十二月</span>
+          </div>
+          <div class="contribution-grid" aria-label="贡献日历视觉预览"></div>
+          <div class="activity-summary">
+            <p>正在同步 <strong>GitHub</strong> 活跃度...</p>
+            <div class="legend" aria-label="活跃度图例">
+              <span>少</span>
+              <i></i><i></i><i></i><i></i>
+              <span>多</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="chip-row" aria-label="分类">
+          <a href="./blog.html">python</a>
+        </div>
+      </main>
+
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

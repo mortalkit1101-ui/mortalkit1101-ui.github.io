@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于 | Motral</title>
+    <meta name="description" content="About Motral and friend links." />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="glass-nav" aria-label="主导航">
+        <a class="brand" href="./index.html">Motral</a>
+        <nav class="nav-links">
+          <a href="./index.html">首页</a>
+          <a href="./blog.html">博客</a>
+          <a href="./notes.html">动态</a>
+          <a class="active" href="./about.html">关于</a>
+        </nav>
+        <div class="nav-actions" aria-label="快捷操作">
+          <button type="button" aria-label="搜索">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 21-4.3-4.3m1.3-5.2a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+            </svg>
+          </button>
+          <button class="accent" type="button" aria-label="随机浏览">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+            </svg>
+          </button>
+          <button id="themeToggle" type="button" aria-label="切换深色模式">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.8A8.6 8.6 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="about-grid">
+        <section class="glass-card about-card" aria-labelledby="about-title">
+          <div class="about-intro">
+            <div class="avatar-ring">
+              <img class="avatar" src="./assets/avatar.jpg" alt="Motral 头像" />
+            </div>
+            <div>
+              <p class="eyebrow">About</p>
+              <h1 id="about-title">你好呀，我是 Motral</h1>
+            </div>
+          </div>
+
+          <div class="about-copy">
+            <p>
+              欢迎来到我的小小博客空间。这里会慢慢记录 Python 学习、折腾网页的小发现，
+              还有一些日常里亮晶晶的想法。
+            </p>
+            <p>
+              现在站点还在一点点搭建中，像给玻璃罐里收集糖纸一样，把喜欢的颜色、
+              可爱的组件和实用的小功能慢慢放进来。
+            </p>
+            <p>
+              如果你也有自己的博客，欢迎来交换友链。可以通过邮箱告诉我你的站点名称、
+              链接、一句话介绍和头像地址，我看到后会把它放到右侧的友链小框里。
+            </p>
+          </div>
+
+          <a class="github-button" href="https://github.com/mortalkit" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 0 1.6 1.1 1.6 1.1.9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.7-1.3-2.2-.3-4.6-1.1-4.6-5A3.9 3.9 0 0 1 6.8 8c-.1-.3-.5-1.3.1-2.7 0 0 .9-.3 2.8 1a9.6 9.6 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1.1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.8 1 .8 2v3.3c0 .3.2.6.8.5A10 10 0 0 0 12 2Z" />
+            </svg>
+            GitHub
+          </a>
+        </section>
+
+        <aside class="glass-card friends-card" aria-labelledby="friends-title">
+          <p class="eyebrow">Friends</p>
+          <h2 id="friends-title">友链</h2>
+          <div class="friend-empty">
+            <span>等一位朋友</span>
+            <p>名称 / 链接 / 简介 / 头像</p>
+          </div>
+          <a class="side-contact" href="mailto:mortalkit1101@gmail.com">申请友链</a>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

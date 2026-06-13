@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Python 基础 | Motral</title>
+    <meta name="description" content="Python 基础学习笔记，记录字面量、数据类型、类型转换、字符串和数据输入。" />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="glass-nav" aria-label="主导航">
+        <a class="brand" href="../index.html">Motral</a>
+        <nav class="nav-links">
+          <a href="../index.html">首页</a>
+          <a class="active" href="../blog.html">博客</a>
+          <a href="../notes.html">动态</a>
+          <a href="../about.html">关于</a>
+        </nav>
+        <div class="nav-actions" aria-label="快捷操作">
+          <button type="button" aria-label="搜索">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 21-4.3-4.3m1.3-5.2a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+            </svg>
+          </button>
+          <button class="accent" type="button" aria-label="随机浏览">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" />
+            </svg>
+          </button>
+          <button id="themeToggle" type="button" aria-label="切换深色模式">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.8A8.6 8.6 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="article-page">
+        <aside class="glass-card toc-card" aria-labelledby="toc-title">
+          <h2 id="toc-title">目录</h2>
+          <nav class="toc-nav" aria-label="文章目录">
+            <a href="#literal-types">字面量与常见数据类型</a>
+            <a href="#data-types">数据类型</a>
+            <a href="#type-conversion">类型转换</a>
+            <a href="#strings">字符串</a>
+            <a class="toc-sub" href="#string-definition">三种定义方法</a>
+            <a class="toc-sub" href="#string-concat">字符串拼接</a>
+            <a class="toc-sub" href="#string-format">字符串格式化</a>
+            <a class="toc-sub" href="#format-practice">格式化综合小练习</a>
+            <a href="#input">数据输入</a>
+          </nav>
+        </aside>
+
+        <article class="glass-card article-card">
+          <header class="article-hero">
+            <a class="text-link" href="../blog.html">返回博客</a>
+            <p class="eyebrow">Python</p>
+            <h1>Python 基础</h1>
+            <div class="article-meta">
+              <time datetime="2026-06-13">2026-06-13</time>
+              <span>python基础</span>
+            </div>
+          </header>
+
+          <section class="article-content">
+            <h2 id="literal-types">字面量与常见数据类型</h2>
+            <p>字面量就是直接写在代码中的固定值，例如数字、字符串、列表等。</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>类型</th>
+                  <th>示例/关键字</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>数字</td>
+                  <td><code>int</code>、<code>float</code>、<code>complex</code>、<code>bool</code></td>
+                  <td>用来表示整数、浮点数、复数和布尔值</td>
+                </tr>
+                <tr>
+                  <td>字符串</td>
+                  <td><code>str</code></td>
+                  <td>用来描述文本</td>
+                </tr>
+                <tr>
+                  <td>列表</td>
+                  <td><code>list</code></td>
+                  <td>有序、可变的序列</td>
+                </tr>
+                <tr>
+                  <td>元组</td>
+                  <td><code>tuple</code></td>
+                  <td>有序、不可变的序列</td>
+                </tr>
+                <tr>
+                  <td>集合</td>
+                  <td><code>set</code></td>
+                  <td>无序、不重复的元素集合</td>
+                </tr>
+                <tr>
+                  <td>字典</td>
+                  <td><code>dict</code></td>
+                  <td>由 <code>key: value</code> 组成的键值对集合</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <pre><code>"我是字符串"</code></pre>
+
+            <h2 id="data-types">数据类型</h2>
+            <p><code>type()</code> 可以查看数据的类型。</p>
+
+            <pre><code>print(type("马浩博"))
+print(type(666))
+print(type(11.234))</code></pre>
+
+            <figure>
+              <img src="../assets/posts/python-basics/type-output.png" alt="type() 输出示例" />
+              <figcaption>type() 输出示例</figcaption>
+            </figure>
+
+            <p>上面的输出结果分别对应字符串、整数和浮点数：</p>
+
+            <pre><code>&lt;class 'str'&gt;
+&lt;class 'int'&gt;
+&lt;class 'float'&gt;</code></pre>
+
+            <h2 id="type-conversion">类型转换</h2>
+            <p>类型转换可以把一个值转换成另一种数据类型。</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>函数</th>
+                  <th>作用</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>int(x)</code></td>
+                  <td>将 <code>x</code> 转成整数</td>
+                </tr>
+                <tr>
+                  <td><code>float(x)</code></td>
+                  <td>将 <code>x</code> 转成浮点数</td>
+                </tr>
+                <tr>
+                  <td><code>str(x)</code></td>
+                  <td>将 <code>x</code> 转成字符串</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <pre><code>number = str(111)
+print(type(number))</code></pre>
+
+            <h2 id="strings">字符串</h2>
+            <h3 id="string-definition">三种定义方法</h3>
+            <p>字符串可以用单引号、双引号或三引号定义。</p>
+
+            <pre><code>name = '马浩博'
+print(type(name))
+
+name = "马浩博"
+print(type(name))
+
+name = """马
+浩
+博"""
+print(type(name))</code></pre>
+
+            <p>如果字符串里需要出现引号，可以使用反斜杠 <code>\</code> 进行转义。</p>
+
+            <pre><code>message = '他说：\'你好\''
+print(message)</code></pre>
+
+            <h3 id="string-concat">字符串拼接</h3>
+            <p>字符串之间可以使用 <code>+</code> 进行拼接。</p>
+
+            <pre><code>print("马" + "浩博")
+
+me = "浩"
+print("马" + me + "博")</code></pre>
+
+            <p>需要注意：数字不能直接和字符串拼接，必须先转换成字符串，或者使用字符串格式化。</p>
+
+            <pre><code>age = 18
+print("今年" + str(age) + "岁")</code></pre>
+
+            <h3 id="string-format">字符串格式化</h3>
+            <p>字符串格式化是更灵活的拼接方式，可以把数字、变量等内容放进字符串里。</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>占位符</th>
+                  <th>含义</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>%s</code></td>
+                  <td>字符串</td>
+                </tr>
+                <tr>
+                  <td><code>%d</code></td>
+                  <td>整数</td>
+                </tr>
+                <tr>
+                  <td><code>%f</code></td>
+                  <td>浮点数</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <pre><code>number = 1111
+avg = 123
+message = "python 有 %s 个字母和 %s 个单词" % (number, avg)
+print(message)</code></pre>
+
+            <p>更推荐使用 f-string：</p>
+
+            <pre><code>number = "马浩博"
+avg = 123
+message = f"我是{number}，今年{avg}岁了"
+print(message)</code></pre>
+
+            <h3 id="format-practice">格式化综合小练习</h3>
+
+            <figure>
+              <img src="../assets/posts/python-basics/format-practice.png" alt="字符串格式化练习要求" />
+              <figcaption>字符串格式化练习要求</figcaption>
+            </figure>
+
+            <p>练习目标：</p>
+            <ul>
+              <li>使用变量保存公司名、股票代码、当前股价、每日增长系数和增长天数。</li>
+              <li>使用 f-string 输出公司、股票代码和当前股价。</li>
+              <li>使用 <code>%</code> 占位符输出增长系数、增长天数和最终股价。</li>
+              <li>最终股价保留 2 位小数。</li>
+            </ul>
+
+            <pre><code>name = "传智播客"
+stock_price = 19.99
+stock_code = "003032"
+stock_price_daily_growth_factor = 1.2
+growth_days = 7
+
+finally_stock_price = stock_price * stock_price_daily_growth_factor ** growth_days
+
+print(f"公司：{name}，股票代码：{stock_code}，当前股价：{stock_price}")
+print(
+    "每日增长系数是：%.1f，经过%d天的增长后，股价达到了：%.2f"
+    % (stock_price_daily_growth_factor, growth_days, finally_stock_price)
+)</code></pre>
+
+            <h2 id="input">数据输入</h2>
+            <p><code>input()</code> 用来从键盘获取用户输入。需要注意：<code>input()</code> 获取到的内容全部都是字符串类型。</p>
+
+            <pre><code>print("请输入一个数：")
+a = input()
+print(a)
+print(type(a))</code></pre>
+
+            <p>如果需要把输入内容当成数字使用，可以进行类型转换。</p>
+
+            <pre><code>a = int(input("请输入一个整数："))
+print(a + 10)</code></pre>
+          </section>
+        </article>
+      </main>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

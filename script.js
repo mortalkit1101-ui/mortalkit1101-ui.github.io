@@ -3,13 +3,18 @@ const activeNavLinks = document.querySelectorAll(".nav-links a");
 const themeToggle = document.querySelector("#themeToggle");
 const copyEmailButton = document.querySelector("[data-copy-email]");
 const searchButtons = document.querySelectorAll(".nav-actions button:first-child");
+const randomButtons = document.querySelectorAll(".nav-actions button:nth-child(2)");
 const githubUser = "mortalkit1101-ui";
 const contributionApi = `https://github-contributions-api.jogruber.de/v4/${githubUser}?y=last`;
 
 const articles = [
-  // Add future posts here:
-  // { title: "Python 学习笔记", url: "./posts/python-note.html", tags: ["python"] },
+  { title: "Python 基础", url: "posts/python-basics.html", tags: ["python基础"] },
 ];
+
+function resolveArticleUrl(url) {
+  const prefix = window.location.pathname.includes("/posts/") ? "../" : "./";
+  return `${prefix}${url}`;
+}
 
 function renderContributionGrid(contributions = []) {
   contributionGrids.forEach((grid) => {
@@ -126,7 +131,7 @@ function renderSearchResults(keyword) {
   searchResults.innerHTML = matched
     .map(
       (article) => `
-        <a class="search-result-item" href="${article.url}">
+        <a class="search-result-item" href="${resolveArticleUrl(article.url)}">
           <span>${article.title}</span>
           <small>${(article.tags || []).join(" · ")}</small>
         </a>
@@ -148,11 +153,46 @@ function closeSearch() {
   document.body.classList.remove("search-open");
 }
 
+function showToast(message) {
+  const oldToast = document.querySelector(".toast-message");
+  oldToast?.remove();
+
+  const toast = document.createElement("div");
+  toast.className = "glass-card toast-message";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  window.setTimeout(() => {
+    toast.classList.add("is-leaving");
+  }, 1800);
+
+  window.setTimeout(() => {
+    toast.remove();
+  }, 2200);
+}
+
+function openRandomArticle(button) {
+  button?.classList.add("is-spinning");
+  window.setTimeout(() => button?.classList.remove("is-spinning"), 450);
+
+  if (!articles.length) {
+    showToast("文章还在路上，先等等它长出来~");
+    return;
+  }
+
+  const article = articles[Math.floor(Math.random() * articles.length)];
+  window.location.href = resolveArticleUrl(article.url);
+}
+
 loadGitHubContributions();
 setInterval(loadGitHubContributions, 1000 * 60 * 60 * 6);
 
 searchButtons.forEach((button) => {
   button.addEventListener("click", openSearch);
+});
+
+randomButtons.forEach((button) => {
+  button.addEventListener("click", () => openRandomArticle(button));
 });
 
 searchDialog.querySelectorAll("[data-search-close]").forEach((button) => {

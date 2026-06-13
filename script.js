@@ -2,8 +2,14 @@ const contributionGrids = document.querySelectorAll(".contribution-grid");
 const activeNavLinks = document.querySelectorAll(".nav-links a");
 const themeToggle = document.querySelector("#themeToggle");
 const copyEmailButton = document.querySelector("[data-copy-email]");
+const searchButtons = document.querySelectorAll(".nav-actions button:first-child");
 const githubUser = "mortalkit1101-ui";
 const contributionApi = `https://github-contributions-api.jogruber.de/v4/${githubUser}?y=last`;
+
+const articles = [
+  // Add future posts here:
+  // { title: "Python 学习笔记", url: "./posts/python-note.html", tags: ["python"] },
+];
 
 function renderContributionGrid(contributions = []) {
   contributionGrids.forEach((grid) => {
@@ -68,8 +74,103 @@ async function loadGitHubContributions() {
   }
 }
 
+function createSearchDialog() {
+  const dialog = document.createElement("div");
+  dialog.className = "search-dialog";
+  dialog.hidden = true;
+  dialog.innerHTML = `
+    <div class="search-backdrop" data-search-close></div>
+    <section class="glass-card search-panel" role="dialog" aria-modal="true" aria-labelledby="search-title">
+      <div class="search-head">
+        <div>
+          <p class="eyebrow">Search</p>
+          <h2 id="search-title">搜索文章</h2>
+        </div>
+        <button class="search-close" type="button" data-search-close aria-label="关闭搜索">×</button>
+      </div>
+      <label class="search-box">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m21 21-4.3-4.3m1.3-5.2a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0Z" />
+        </svg>
+        <input type="search" placeholder="输入标题关键词..." autocomplete="off" data-search-input />
+      </label>
+      <div class="search-results" data-search-results>
+        <p class="search-empty">输入关键词后，会搜索标题中包含它的文章。</p>
+      </div>
+    </section>
+  `;
+
+  document.body.appendChild(dialog);
+  return dialog;
+}
+
+const searchDialog = createSearchDialog();
+const searchInput = searchDialog.querySelector("[data-search-input]");
+const searchResults = searchDialog.querySelector("[data-search-results]");
+
+function renderSearchResults(keyword) {
+  const query = keyword.trim().toLowerCase();
+
+  if (!query) {
+    searchResults.innerHTML = '<p class="search-empty">输入关键词后，会搜索标题中包含它的文章。</p>';
+    return;
+  }
+
+  const matched = articles.filter((article) => article.title.toLowerCase().includes(query));
+
+  if (!matched.length) {
+    searchResults.innerHTML = `<p class="search-empty">没有找到标题包含「${keyword}」的文章。</p>`;
+    return;
+  }
+
+  searchResults.innerHTML = matched
+    .map(
+      (article) => `
+        <a class="search-result-item" href="${article.url}">
+          <span>${article.title}</span>
+          <small>${(article.tags || []).join(" · ")}</small>
+        </a>
+      `
+    )
+    .join("");
+}
+
+function openSearch() {
+  searchDialog.hidden = false;
+  document.body.classList.add("search-open");
+  searchInput.value = "";
+  renderSearchResults("");
+  window.setTimeout(() => searchInput.focus(), 0);
+}
+
+function closeSearch() {
+  searchDialog.hidden = true;
+  document.body.classList.remove("search-open");
+}
+
 loadGitHubContributions();
 setInterval(loadGitHubContributions, 1000 * 60 * 60 * 6);
+
+searchButtons.forEach((button) => {
+  button.addEventListener("click", openSearch);
+});
+
+searchDialog.querySelectorAll("[data-search-close]").forEach((button) => {
+  button.addEventListener("click", closeSearch);
+});
+
+searchInput.addEventListener("input", (event) => {
+  renderSearchResults(event.target.value);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !searchDialog.hidden) closeSearch();
+
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    openSearch();
+  }
+});
 
 activeNavLinks.forEach((link) => {
   link.addEventListener("click", () => {

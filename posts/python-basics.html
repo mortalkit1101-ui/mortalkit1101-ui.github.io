@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python 基础 | Motral</title>
     <meta name="description" content="Python 基础学习笔记，记录字面量、数据类型、类型转换、字符串和数据输入。" />
-    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="../styles.css?v=20260623" />
   </head>
   <body>
     <div class="page-shell">
@@ -67,7 +67,8 @@
             <h2 id="literal-types">字面量与常见数据类型</h2>
             <p>字面量就是直接写在代码中的固定值，例如数字、字符串、列表等。</p>
 
-            <table>
+            <div class="table-scroll" role="region" aria-label="常见数据类型表格" tabindex="0">
+              <table>
               <thead>
                 <tr>
                   <th>类型</th>
@@ -107,7 +108,8 @@
                   <td>由 <code>key: value</code> 组成的键值对集合</td>
                 </tr>
               </tbody>
-            </table>
+              </table>
+            </div>
 
             <pre><code>"我是字符串"</code></pre>
 
@@ -132,7 +134,8 @@ print(type(11.234))</code></pre>
             <h2 id="type-conversion">类型转换</h2>
             <p>类型转换可以把一个值转换成另一种数据类型。</p>
 
-            <table>
+            <div class="table-scroll" role="region" aria-label="类型转换函数表格" tabindex="0">
+              <table>
               <thead>
                 <tr>
                   <th>函数</th>
@@ -153,7 +156,8 @@ print(type(11.234))</code></pre>
                   <td>将 <code>x</code> 转成字符串</td>
                 </tr>
               </tbody>
-            </table>
+              </table>
+            </div>
 
             <pre><code>number = str(111)
 print(type(number))</code></pre>
@@ -194,7 +198,8 @@ print("今年" + str(age) + "岁")</code></pre>
             <h3 id="string-format">字符串格式化</h3>
             <p>字符串格式化是更灵活的拼接方式，可以把数字、变量等内容放进字符串里。</p>
 
-            <table>
+            <div class="table-scroll" role="region" aria-label="字符串格式化占位符表格" tabindex="0">
+              <table>
               <thead>
                 <tr>
                   <th>占位符</th>
@@ -215,7 +220,8 @@ print("今年" + str(age) + "岁")</code></pre>
                   <td>浮点数</td>
                 </tr>
               </tbody>
-            </table>
+              </table>
+            </div>
 
             <pre><code>number = 1111
 avg = 123

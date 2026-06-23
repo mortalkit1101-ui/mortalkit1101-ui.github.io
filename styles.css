@@ -25,6 +25,8 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 120px;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -749,14 +751,27 @@ button.side-contact {
 }
 
 .article-content table {
-  display: block;
   width: 100%;
-  max-width: 100%;
-  overflow: hidden;
   border-collapse: collapse;
   border: 1px solid rgba(255, 255, 255, 0.68);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.3);
+}
+
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll table {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .article-content th,
@@ -1182,14 +1197,15 @@ body.dark .empty-mini {
     grid-column: 1 / -1;
     order: 3;
     width: 100%;
+    min-width: 0;
     gap: 8px;
-    overflow-x: auto;
     font-size: 15px;
   }
 
   .nav-links a {
-    min-width: 70px;
-    padding: 10px 14px;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 8px;
   }
 
   .hero-grid,
@@ -1208,22 +1224,27 @@ body.dark .empty-mini {
   }
 
   .toc-nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .toc-nav::-webkit-scrollbar {
-    display: none;
   }
 
   .toc-nav a {
-    flex: 0 0 auto;
-    max-width: 220px;
-    white-space: nowrap;
+    display: grid;
+    min-height: 42px;
+    padding: 9px 10px;
+    line-height: 1.35;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.28);
+    place-items: center;
+  }
+
+  .toc-nav a:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .toc-nav .toc-sub {
+    display: none;
   }
 
   .month-row {
@@ -1254,14 +1275,8 @@ body.dark .empty-mini {
     width: 100%;
   }
 
-  .article-content table {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .article-content th,
-  .article-content td {
-    min-width: 96px;
+  .table-scroll table {
+    min-width: 560px;
   }
 }
 
@@ -1331,7 +1346,6 @@ body.dark .empty-mini {
   .article-content th,
   .article-content td {
     padding: 10px 11px;
-    min-width: 86px;
   }
 
   .article-content figure {

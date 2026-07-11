@@ -63,6 +63,9 @@ category_generator:
   per_page: 0
   order_by: title
 
+include:
+  - .nojekyll
+
 theme: butterfly
 
 search:

@@ -1,17 +1,19 @@
 ---
-title: 电源硬件研发与数字电源一年半学习路线
+title: 00 电源硬件与数字电源学习路线
 date: 2026-07-07 14:10:54
 updated: 2026-07-07 14:10:54
-categories:
-  - 研究生课程
-  - 电源硬件与数字电源
 tags:
   - 学习路线
   - 电源硬件
   - 数字电源
 permalink: courses/power-electronics/learning-roadmap/
 description: 面向电源硬件研发与数字电源方向的一年半学习路线。
+categories:
+  - 电源硬件与数字电源
+series: 电源硬件与数字电源
+cover: /img/courses/covers/power-learning-roadmap.svg
 ---
+
 > 主线：电源硬件研发 + 数字控制 + EMI/EMC  
 > 目标岗位：电源硬件工程师 / 数字电源工程师 / 电力电子硬件工程师 / 电源应用工程师  
 > 对标方向：大疆偏消费级高功率密度电源，阳光电源偏新能源逆变器与储能电力电子，TI / 英飞凌偏电源芯片应用。
@@ -607,4 +609,4 @@ MOSFET 不是只知道它能开关，而是要理解：
 
 ---
 
-**课程导航：** [返回电源硬件与数字电源分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/) · [下一篇：01 电力电子绪论](/courses/power-electronics/01-introduction/)
+**课程导航：** [返回电源硬件与数字电源分类](/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/) · [下一篇：01 电力电子绪论](/courses/power-electronics/01-introduction/)

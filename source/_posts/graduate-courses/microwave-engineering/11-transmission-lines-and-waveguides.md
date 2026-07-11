@@ -2,16 +2,18 @@
 title: 11 传输线和波导
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 传输线
 permalink: courses/microwave-engineering/11-transmission-lines-and-waveguides/
 description: 传输线与波导的联系和区别。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/11-transmission-lines-and-waveguides.svg
 ---
+
 > 主线：不同导波结构支持不同模式；TEM、TE、TM 是区分传输线和波导的关键语言。
 
 ## 模式分类
@@ -116,4 +118,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：10 微波传输线理论](/courses/microwave-engineering/10-microwave-transmission-lines/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：12 微波网络分析](/courses/microwave-engineering/12-microwave-network-analysis/)
+**课程导航：** [上一篇：10 微波传输线理论](/courses/microwave-engineering/10-microwave-transmission-lines/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：12 微波网络分析](/courses/microwave-engineering/12-microwave-network-analysis/)

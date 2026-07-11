@@ -59,6 +59,10 @@ updated_option: mtime
 per_page: 10
 pagination_dir: page
 
+category_generator:
+  per_page: 0
+  order_by: title
+
 theme: butterfly
 
 search:

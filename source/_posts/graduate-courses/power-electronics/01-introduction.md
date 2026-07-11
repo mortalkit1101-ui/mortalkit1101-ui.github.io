@@ -2,16 +2,17 @@
 title: 01 电力电子绪论
 date: 2026-07-08 17:34:24
 updated: 2026-07-08 17:34:24
-categories:
-  - 研究生课程
-  - 电源硬件与数字电源
 tags:
   - 电力电子
   - 功率变换
 permalink: courses/power-electronics/01-introduction/
 description: 电力电子变换器的基本概念、分类、能量流动和开关型变换思想。
+categories:
+  - 电源硬件与数字电源
+series: 电源硬件与数字电源
 cover: /img/courses/power-electronics/01-introduction/01-01-power-electronics-overview.png
 ---
+
 ![电力电子系统概览](/img/courses/power-electronics/01-introduction/01-01-power-electronics-overview.png)
 
 *图：电力电子系统及其基本组成*
@@ -165,4 +166,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：电源硬件研发与数字电源一年半学习路线](/courses/power-electronics/learning-roadmap/) · [返回电源硬件与数字电源分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/) · [下一篇：02 功率二极管](/courses/power-electronics/02-power-diode/)
+**课程导航：** [上一篇：00 电源硬件与数字电源学习路线](/courses/power-electronics/learning-roadmap/) · [返回电源硬件与数字电源分类](/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/) · [下一篇：02 功率二极管](/courses/power-electronics/02-power-diode/)

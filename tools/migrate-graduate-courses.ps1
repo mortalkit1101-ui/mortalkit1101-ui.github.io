@@ -331,6 +331,12 @@ $config = [IO.File]::ReadAllText($configPath, [Text.Encoding]::UTF8)
 $config = [regex]::Replace($config, '(?ms)^skip_render:\r?\n(?:  - [^\r\n]+\r?\n)+\r?', '')
 Write-Utf8File $configPath $config
 
+& node (Join-Path $blogRoot 'tools\generate-course-covers.js')
+if ($LASTEXITCODE -ne 0) { throw 'Failed to generate course covers.' }
+
+& node (Join-Path $blogRoot 'tools\apply-course-metadata.js')
+if ($LASTEXITCODE -ne 0) { throw 'Failed to apply course metadata.' }
+
 [pscustomobject]@{
   PowerArticles = $powerArticles.Count
   MicrowaveArticles = $microwaveArticles.Count

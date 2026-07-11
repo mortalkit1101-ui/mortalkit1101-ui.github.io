@@ -2,16 +2,18 @@
 title: 07 均匀传输线
 date: 2026-07-07 08:17:28
 updated: 2026-07-07 08:17:28
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 传输线
 permalink: courses/microwave-engineering/07-uniform-transmission-lines/
 description: 均匀传输线模型与基本方程。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/07-uniform-transmission-lines.svg
 ---
+
 > 主线：微波频率下，电压电流沿线传播；负载不匹配会产生反射，输入阻抗随位置变化。
 
 ## 分布参数
@@ -170,4 +172,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：06 平面电磁波](/courses/microwave-engineering/06-plane-waves/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：08 波导与谐振腔](/courses/microwave-engineering/08-waveguides-and-cavities/)
+**课程导航：** [上一篇：06 平面电磁波](/courses/microwave-engineering/06-plane-waves/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：08 波导与谐振腔](/courses/microwave-engineering/08-waveguides-and-cavities/)

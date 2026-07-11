@@ -2,17 +2,18 @@
 title: 02 功率二极管
 date: 2026-07-08 19:35:52
 updated: 2026-07-08 19:35:52
-categories:
-  - 研究生课程
-  - 电源硬件与数字电源
 tags:
   - 功率二极管
   - PN结
   - 电力电子器件
 permalink: courses/power-electronics/02-power-diode/
 description: 功率二极管的 PN 结基础、结构、静态特性与动态恢复过程。
+categories:
+  - 电源硬件与数字电源
+series: 电源硬件与数字电源
 cover: /img/courses/power-electronics/02-power-diode/02-06-power-diode-structure.png
 ---
+
 ## 1. PN结基础
 
 半导体中的最外层电子会和相邻硅原子共享，形成**共价键**。在一定温度下，半导体中会产生少量**自由电子**和**空穴对**；温度升高时，自由电子和空穴数量也会增加。
@@ -315,4 +316,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：01 电力电子绪论](/courses/power-electronics/01-introduction/) · [返回电源硬件与数字电源分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/) · [下一篇：03 双极结型晶体管 BJT](/courses/power-electronics/03-bjt/)
+**课程导航：** [上一篇：01 电力电子绪论](/courses/power-electronics/01-introduction/) · [返回电源硬件与数字电源分类](/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/) · [下一篇：03 双极结型晶体管 BJT](/courses/power-electronics/03-bjt/)

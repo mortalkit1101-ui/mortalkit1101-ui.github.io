@@ -2,16 +2,18 @@
 title: 02 场、电位与高斯定律
 date: 2026-07-04 21:44:21
 updated: 2026-07-04 21:44:21
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 电磁场
 permalink: courses/microwave-engineering/02-field-and-potential/
 description: 场、电位与高斯定律的基础关系。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/02-field-and-potential.svg
 ---
+
 > 主线：电荷产生电场，电场可以用电位描述；高斯定律用“穿过闭合面的通量”统计内部电荷。
 
 ## 场的基本概念
@@ -181,4 +183,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：01 微波工程学习框架](/courses/microwave-engineering/01-learning-framework/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：03 静电边界条件与电容](/courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/)
+**课程导航：** [上一篇：01 微波工程学习框架](/courses/microwave-engineering/01-learning-framework/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：03 静电边界条件与电容](/courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/)

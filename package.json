@@ -5,9 +5,11 @@
   "description": "Mortal blog powered by Hexo and the Butterfly theme.",
   "scripts": {
     "clean": "hexo clean",
+    "covers": "node tools/generate-course-covers.js",
     "generate": "hexo generate",
     "server": "hexo server",
-    "deploy": "hexo deploy"
+    "deploy": "hexo deploy",
+    "verify": "node tools/verify-course-site.js"
   },
   "dependencies": {
     "hexo": "^8.1.1",

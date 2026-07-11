@@ -299,7 +299,7 @@ aside:
       link: https://github.com/mortalkit1101-ui
   card_announcement:
     enable: true
-    content: Welcome to Mortal
+    content: 记录电源硬件、数字电源与微波工程学习笔记
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -348,9 +348,9 @@ aside:
     # The title shows the series name
     series_title: false
     # Order by title or date
-    orderBy: 'date'
+    orderBy: 'title'
     # Sort of order. 1, asc for ascending; -1, desc for descending
-    order: -1
+    order: 1
   card_webinfo:
     enable: true
     post_count: true
@@ -924,7 +924,7 @@ lightbox:
 
 # Series
 series:
-  enable: false
+  enable: true
   # Order by title or date
   orderBy: 'title'
   # Sort of order. 1, asc for ascending; -1, desc for descending

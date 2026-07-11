@@ -2,16 +2,18 @@
 title: 10 微波传输线理论
 date: 2026-07-05 15:52:49
 updated: 2026-07-05 15:52:49
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 微波传输线
 permalink: courses/microwave-engineering/10-microwave-transmission-lines/
 description: 微波传输线的分析方法。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/10-microwave-transmission-lines.svg
 ---
+
 > 主线：传输线理论把沿线传播的电磁波写成电压电流波；反射系数、输入阻抗、驻波比和 Smith 圆图是核心工具。
 
 ## 核心对象
@@ -144,4 +146,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：09 微波电磁理论](/courses/microwave-engineering/09-microwave-electromagnetics/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：11 传输线和波导](/courses/microwave-engineering/11-transmission-lines-and-waveguides/)
+**课程导航：** [上一篇：09 微波电磁理论](/courses/microwave-engineering/09-microwave-electromagnetics/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：11 传输线和波导](/courses/microwave-engineering/11-transmission-lines-and-waveguides/)

@@ -2,16 +2,18 @@
 title: 13 阻抗匹配和调谐
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 阻抗匹配
 permalink: courses/microwave-engineering/13-impedance-matching/
 description: 阻抗匹配与调谐方法。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/13-impedance-matching.svg
 ---
+
 > 主线：阻抗匹配的目标是减少反射，让源、传输线和负载之间尽可能传递功率。
 
 ## 匹配目标
@@ -145,4 +147,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：12 微波网络分析](/courses/microwave-engineering/12-microwave-network-analysis/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：14 微波谐振器](/courses/microwave-engineering/14-microwave-resonators/)
+**课程导航：** [上一篇：12 微波网络分析](/courses/microwave-engineering/12-microwave-network-analysis/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：14 微波谐振器](/courses/microwave-engineering/14-microwave-resonators/)

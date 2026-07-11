@@ -2,16 +2,18 @@
 title: 14 微波谐振器
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 谐振器
 permalink: courses/microwave-engineering/14-microwave-resonators/
 description: 微波谐振器的参数与结构。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/14-microwave-resonators.svg
 ---
+
 > 主线：谐振器是在某些频率上强烈储存电磁能量的结构；Q 值描述储能和损耗的比例。
 
 ## 谐振的基本图像
@@ -128,4 +130,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：13 阻抗匹配和调谐](/courses/microwave-engineering/13-impedance-matching/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：15 功分器与定向耦合器](/courses/microwave-engineering/15-power-dividers-and-couplers/)
+**课程导航：** [上一篇：13 阻抗匹配和调谐](/courses/microwave-engineering/13-impedance-matching/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：15 功分器与定向耦合器](/courses/microwave-engineering/15-power-dividers-and-couplers/)

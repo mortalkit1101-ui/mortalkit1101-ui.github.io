@@ -2,16 +2,18 @@
 title: 00 微波工程与工程电磁场学习计划
 date: 2026-07-01 16:40:05
 updated: 2026-07-01 16:40:05
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 学习计划
 permalink: courses/microwave-engineering/00-study-plan/
 description: 课程学习安排与阶段目标。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/00-study-plan.svg
 ---
+
 当前日期：2026-06-30  
 目标期限：2026-07-31 前  
 学习对象：
@@ -374,4 +376,4 @@ Pozar《微波工程》：
 
 ---
 
-**课程导航：** [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：01 微波工程学习框架](/courses/microwave-engineering/01-learning-framework/)
+**课程导航：** [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：01 微波工程学习框架](/courses/microwave-engineering/01-learning-framework/)

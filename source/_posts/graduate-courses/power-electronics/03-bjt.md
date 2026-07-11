@@ -2,17 +2,18 @@
 title: 03 双极结型晶体管 BJT
 date: 2026-07-09 18:34:24
 updated: 2026-07-09 18:34:24
-categories:
-  - 研究生课程
-  - 电源硬件与数字电源
 tags:
   - BJT
   - 功率晶体管
   - 电力电子器件
 permalink: courses/power-electronics/03-bjt/
 description: NPN 型三极管的基本工作原理、功率 BJT 结构与输入特性笔记。
+categories:
+  - 电源硬件与数字电源
+series: 电源硬件与数字电源
 cover: /img/courses/power-electronics/03-bjt/03-05-power-bjt-structure.png
 ---
+
 ## 1. NPN 型三极管的工作原理
 
 NPN 型三极管由两个 N 型区和中间的 P 型区构成，形成发射极 E、基极 B 和集电极 C 三个端子，以及两个 PN 结。
@@ -87,4 +88,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：02 功率二极管](/courses/power-electronics/02-power-diode/) · [返回电源硬件与数字电源分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/)
+**课程导航：** [上一篇：02 功率二极管](/courses/power-electronics/02-power-diode/) · [返回电源硬件与数字电源分类](/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/)

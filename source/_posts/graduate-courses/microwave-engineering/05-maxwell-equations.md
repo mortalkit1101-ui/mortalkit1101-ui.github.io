@@ -2,16 +2,18 @@
 title: 05 Maxwell 方程与时变场
 date: 2026-07-04 16:03:30
 updated: 2026-07-04 16:03:30
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - Maxwell方程
 permalink: courses/microwave-engineering/05-maxwell-equations/
 description: Maxwell 方程组与时变电磁场。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/05-maxwell-equations.svg
 ---
+
 > 主线：静态场只看电荷或电流；时变场里，变化的电场和变化的磁场会互相激发，形成电磁波。
 
 ## Maxwell 方程组
@@ -153,4 +155,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：04 恒定磁场与电感](/courses/microwave-engineering/04-static-magnetic-field-and-inductance/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：06 平面电磁波](/courses/microwave-engineering/06-plane-waves/)
+**课程导航：** [上一篇：04 恒定磁场与电感](/courses/microwave-engineering/04-static-magnetic-field-and-inductance/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：06 平面电磁波](/courses/microwave-engineering/06-plane-waves/)

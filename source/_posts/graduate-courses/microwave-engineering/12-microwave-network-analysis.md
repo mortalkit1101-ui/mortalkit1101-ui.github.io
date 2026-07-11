@@ -2,16 +2,18 @@
 title: 12 微波网络分析
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 微波网络
 permalink: courses/microwave-engineering/12-microwave-network-analysis/
 description: 散射参数与微波网络分析。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/12-microwave-network-analysis.svg
 ---
+
 > 主线：微波网络不用直接测电压电流，而用端口波变量描述反射、传输、匹配和隔离。
 
 ## 二端口网络
@@ -156,4 +158,4 @@ S 参数是微波测量和设计的核心语言。后面的匹配、功分器、
 
 ---
 
-**课程导航：** [上一篇：11 传输线和波导](/courses/microwave-engineering/11-transmission-lines-and-waveguides/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：13 阻抗匹配和调谐](/courses/microwave-engineering/13-impedance-matching/)
+**课程导航：** [上一篇：11 传输线和波导](/courses/microwave-engineering/11-transmission-lines-and-waveguides/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：13 阻抗匹配和调谐](/courses/microwave-engineering/13-impedance-matching/)

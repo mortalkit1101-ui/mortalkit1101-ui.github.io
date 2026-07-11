@@ -2,16 +2,18 @@
 title: 03 静电边界条件与电容
 date: 2026-07-04 21:44:23
 updated: 2026-07-04 21:44:23
-categories:
-  - 研究生课程
-  - 微波工程与电磁场
 tags:
   - 微波工程
   - 电磁场
   - 静电场
 permalink: courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/
 description: 静电边界条件、电容及相关计算。
+categories:
+  - 微波工程与工程电磁场
+series: 微波工程与工程电磁场
+cover: /img/courses/covers/03-electrostatic-boundary-and-capacitance.svg
 ---
+
 > 主线：电场遇到导体和介质分界面时会受到约束；电容是几何结构和介质对电场分布的结果。
 
 ## 静电场基本方程
@@ -222,4 +224,4 @@ $$
 
 ---
 
-**课程导航：** [上一篇：02 场、电位与高斯定律](/courses/microwave-engineering/02-field-and-potential/) · [返回微波工程与电磁场分类](/categories/%E7%A0%94%E7%A9%B6%E7%94%9F%E8%AF%BE%E7%A8%8B/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：04 恒定磁场与电感](/courses/microwave-engineering/04-static-magnetic-field-and-inductance/)
+**课程导航：** [上一篇：02 场、电位与高斯定律](/courses/microwave-engineering/02-field-and-potential/) · [返回微波工程与工程电磁场分类](/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/) · [下一篇：04 恒定磁场与电感](/courses/microwave-engineering/04-static-magnetic-field-and-inductance/)

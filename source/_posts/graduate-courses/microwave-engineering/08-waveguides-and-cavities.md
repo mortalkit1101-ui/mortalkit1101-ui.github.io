@@ -2,12 +2,10 @@
 title: 08 波导与谐振腔
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 波导
 permalink: courses/microwave-engineering/08-waveguides-and-cavities/
 description: 波导模式与谐振腔基础。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

@@ -2,12 +2,10 @@
 title: 11 传输线和波导
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 传输线
 permalink: courses/microwave-engineering/11-transmission-lines-and-waveguides/
 description: 传输线与波导的联系和区别。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

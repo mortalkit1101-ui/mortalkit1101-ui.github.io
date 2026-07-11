@@ -2,12 +2,10 @@
 title: 02 功率二极管
 date: 2026-07-08 19:35:52
 updated: 2026-07-08 19:35:52
-tags:
-  - 功率二极管
-  - PN结
-  - 电力电子器件
 permalink: courses/power-electronics/02-power-diode/
 description: 功率二极管的 PN 结基础、结构、静态特性与动态恢复过程。
+tags:
+  - 电力电子
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源

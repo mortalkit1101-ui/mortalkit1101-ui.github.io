@@ -19,7 +19,16 @@ function readFrontMatter(file) {
   const match = markdown.match(/^---\n([\s\S]*?)\n---/)
   assert(match, `Missing front matter: ${file}`)
   const value = key => match[1].match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))?.[1]
-  return { title: value('title'), series: value('series'), cover: value('cover'), markdown }
+  const tagBlock = match[1].match(/^tags:\n((?:  - .+(?:\n|$))+)/m)?.[1] || ''
+  const tags = [...tagBlock.matchAll(/^  - (.+)$/gm)].map(tagMatch => tagMatch[1])
+  return { title: value('title'), series: value('series'), cover: value('cover'), tags, markdown }
+}
+
+function expectedTag(post) {
+  if (post.series === '电源硬件与数字电源') return '电力电子'
+  if (post.title.startsWith('00 ')) return '微波工程与工程电磁场学习计划'
+  const number = Number(post.title.slice(0, 2))
+  return number >= 2 && number <= 8 ? '电磁场' : '微波工程'
 }
 
 const posts = []
@@ -46,6 +55,8 @@ for (const [course, numbers] of Object.entries(expected)) {
 }
 
 for (const post of posts) {
+  assert(post.tags.length === 1, `${post.title} expected one tag, found ${post.tags.length}`)
+  assert(post.tags[0] === expectedTag(post), `${post.title} has incorrect tag: ${post.tags.join(', ')}`)
   assert(post.cover?.startsWith('/img/'), `Invalid cover for ${post.title}`)
   const sourceCover = path.join(root, 'source', ...post.cover.slice(1).split('/'))
   const publicCover = path.join(publicRoot, ...post.cover.slice(1).split('/'))
@@ -58,6 +69,13 @@ const categoryNames = [...homepage.matchAll(/card-category-list-name">([^<]+)</g
 assert(categoryNames.length === 2, `Expected two sidebar categories, found ${categoryNames.length}`)
 assert(categoryNames.every(name => Object.hasOwn(expected, name)), `Unexpected sidebar category: ${categoryNames.join(', ')}`)
 assert(!homepage.includes('Welcome to Mortal'), 'Homepage still contains Welcome to Mortal')
+
+const expectedTags = ['电力电子', '电磁场', '微波工程', '微波工程与工程电磁场学习计划'].sort((a, b) => a.localeCompare(b, 'zh-CN'))
+const generatedTags = fs.readdirSync(path.join(publicRoot, 'tags'), { withFileTypes: true })
+  .filter(entry => entry.isDirectory())
+  .map(entry => entry.name)
+  .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+assert(generatedTags.join('|') === expectedTags.join('|'), `Unexpected generated tags: ${generatedTags.join(', ')}`)
 
 const imageReferences = new Set()
 for (const file of walk(publicRoot).filter(file => file.endsWith('.html'))) {
@@ -75,4 +93,4 @@ function walk(directory) {
   })
 }
 
-console.log('Course site verification passed: 22 posts, 2 categories, ordered series, 22 covers, no missing local images.')
+console.log('Course site verification passed: 22 posts, 2 categories, 4 course tags, ordered series, 22 covers, no missing local images.')

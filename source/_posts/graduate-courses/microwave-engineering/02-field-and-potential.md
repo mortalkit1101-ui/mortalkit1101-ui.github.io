@@ -2,12 +2,10 @@
 title: 02 场、电位与高斯定律
 date: 2026-07-04 21:44:21
 updated: 2026-07-04 21:44:21
-tags:
-  - 微波工程
-  - 电磁场
-  - 电磁场
 permalink: courses/microwave-engineering/02-field-and-potential/
 description: 场、电位与高斯定律的基础关系。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

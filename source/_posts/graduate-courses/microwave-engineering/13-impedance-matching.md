@@ -2,12 +2,10 @@
 title: 13 阻抗匹配和调谐
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 阻抗匹配
 permalink: courses/microwave-engineering/13-impedance-matching/
 description: 阻抗匹配与调谐方法。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

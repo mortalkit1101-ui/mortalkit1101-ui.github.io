@@ -2,12 +2,10 @@
 title: 07 均匀传输线
 date: 2026-07-07 08:17:28
 updated: 2026-07-07 08:17:28
-tags:
-  - 微波工程
-  - 电磁场
-  - 传输线
 permalink: courses/microwave-engineering/07-uniform-transmission-lines/
 description: 均匀传输线模型与基本方程。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

@@ -2,12 +2,10 @@
 title: 05 Maxwell 方程与时变场
 date: 2026-07-04 16:03:30
 updated: 2026-07-04 16:03:30
-tags:
-  - 微波工程
-  - 电磁场
-  - Maxwell方程
 permalink: courses/microwave-engineering/05-maxwell-equations/
 description: Maxwell 方程组与时变电磁场。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

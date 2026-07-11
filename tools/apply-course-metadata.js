@@ -30,12 +30,19 @@ const courses = [
   }
 ]
 
-function rewriteFrontMatter(markdown, course, title, cover) {
+function tagFor(course, slug) {
+  if (course.directory === 'power-electronics') return '电力电子'
+  if (slug === '00-study-plan') return '微波工程与工程电磁场学习计划'
+  const number = Number(slug.slice(0, 2))
+  return number >= 2 && number <= 8 ? '电磁场' : '微波工程'
+}
+
+function rewriteFrontMatter(markdown, course, title, cover, tag) {
   const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)
   if (!match) throw new Error('Missing front matter')
   const lines = match[1].split(/\r?\n/)
   const kept = []
-  const replacedKeys = new Set(['categories', 'series', 'cover'])
+  const replacedKeys = new Set(['tags', 'categories', 'series', 'cover'])
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index]
@@ -49,6 +56,8 @@ function rewriteFrontMatter(markdown, course, title, cover) {
 
   const frontMatter = [
     ...kept,
+    'tags:',
+    `  - ${tag}`,
     'categories:',
     `  - ${course}`,
     `series: ${course}`,
@@ -104,7 +113,7 @@ for (const course of courses) {
     const [title, cover] = course.posts[slug]
     const target = path.join(directory, file)
     let markdown = fs.readFileSync(target, 'utf8')
-    markdown = rewriteFrontMatter(markdown, course.name, title, cover)
+    markdown = rewriteFrontMatter(markdown, course.name, title, cover, tagFor(course, slug))
     markdown = rewriteCategoryLink(markdown, course.name)
     markdown = rewriteCourseNavigation(markdown, course, slug)
     fs.writeFileSync(target, markdown.replace(/\r\n/g, '\n'), 'utf8')

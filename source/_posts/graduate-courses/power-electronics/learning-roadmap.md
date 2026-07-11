@@ -2,12 +2,10 @@
 title: 00 电源硬件与数字电源学习路线
 date: 2026-07-07 14:10:54
 updated: 2026-07-07 14:10:54
-tags:
-  - 学习路线
-  - 电源硬件
-  - 数字电源
 permalink: courses/power-electronics/learning-roadmap/
 description: 面向电源硬件研发与数字电源方向的一年半学习路线。
+tags:
+  - 电力电子
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源

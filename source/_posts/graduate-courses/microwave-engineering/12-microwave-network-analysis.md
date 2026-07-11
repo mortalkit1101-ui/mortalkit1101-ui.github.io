@@ -2,12 +2,10 @@
 title: 12 微波网络分析
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波网络
 permalink: courses/microwave-engineering/12-microwave-network-analysis/
 description: 散射参数与微波网络分析。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

@@ -2,12 +2,10 @@
 title: 09 微波电磁理论
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波理论
 permalink: courses/microwave-engineering/09-microwave-electromagnetics/
 description: 微波频段中的电磁理论基础。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

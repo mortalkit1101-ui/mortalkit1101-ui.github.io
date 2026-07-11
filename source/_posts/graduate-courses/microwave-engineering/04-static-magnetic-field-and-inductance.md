@@ -2,12 +2,10 @@
 title: 04 恒定磁场与电感
 date: 2026-07-04 16:03:29
 updated: 2026-07-04 16:03:29
-tags:
-  - 微波工程
-  - 电磁场
-  - 磁场
 permalink: courses/microwave-engineering/04-static-magnetic-field-and-inductance/
 description: 恒定磁场与电感的核心概念。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

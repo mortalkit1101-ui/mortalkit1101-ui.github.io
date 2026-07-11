@@ -2,11 +2,10 @@
 title: 01 电力电子绪论
 date: 2026-07-08 17:34:24
 updated: 2026-07-08 17:34:24
-tags:
-  - 电力电子
-  - 功率变换
 permalink: courses/power-electronics/01-introduction/
 description: 电力电子变换器的基本概念、分类、能量流动和开关型变换思想。
+tags:
+  - 电力电子
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源

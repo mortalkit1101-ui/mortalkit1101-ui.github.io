@@ -2,12 +2,10 @@
 title: 10 微波传输线理论
 date: 2026-07-05 15:52:49
 updated: 2026-07-05 15:52:49
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波传输线
 permalink: courses/microwave-engineering/10-microwave-transmission-lines/
 description: 微波传输线的分析方法。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

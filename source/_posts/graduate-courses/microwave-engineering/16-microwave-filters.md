@@ -2,12 +2,10 @@
 title: 16 微波滤波器
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波滤波器
 permalink: courses/microwave-engineering/16-microwave-filters/
 description: 微波滤波器的基本理论与实现。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

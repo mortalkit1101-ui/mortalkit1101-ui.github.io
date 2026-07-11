@@ -2,12 +2,10 @@
 title: 06 平面电磁波
 date: 2026-07-04 21:44:12
 updated: 2026-07-04 21:44:12
-tags:
-  - 微波工程
-  - 电磁场
-  - 电磁波
 permalink: courses/microwave-engineering/06-plane-waves/
 description: 平面电磁波的传播与基本参数。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

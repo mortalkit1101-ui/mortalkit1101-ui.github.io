@@ -2,12 +2,10 @@
 title: 03 静电边界条件与电容
 date: 2026-07-04 21:44:23
 updated: 2026-07-04 21:44:23
-tags:
-  - 微波工程
-  - 电磁场
-  - 静电场
 permalink: courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/
 description: 静电边界条件、电容及相关计算。
+tags:
+  - 电磁场
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

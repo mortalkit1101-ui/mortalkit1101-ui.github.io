@@ -2,12 +2,10 @@
 title: 01 微波工程学习框架
 date: 2026-07-04 21:44:31
 updated: 2026-07-04 21:44:31
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波工程
 permalink: courses/microwave-engineering/01-learning-framework/
 description: 微波工程知识结构与学习主线。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

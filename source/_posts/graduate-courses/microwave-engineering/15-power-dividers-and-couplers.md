@@ -2,12 +2,10 @@
 title: 15 功分器与定向耦合器
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波器件
 permalink: courses/microwave-engineering/15-power-dividers-and-couplers/
 description: 功分器与定向耦合器基础。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

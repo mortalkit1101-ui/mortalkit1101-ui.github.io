@@ -2,12 +2,10 @@
 title: 17 微波系统与选学专题
 date: 2026-07-01 16:37:37
 updated: 2026-07-01 16:37:37
-tags:
-  - 微波工程
-  - 电磁场
-  - 微波系统
 permalink: courses/microwave-engineering/17-microwave-systems/
 description: 微波系统分析与后续选学方向。
+tags:
+  - 微波工程
 categories:
   - 微波工程与工程电磁场
 series: 微波工程与工程电磁场

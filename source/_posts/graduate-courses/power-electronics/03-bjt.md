@@ -2,12 +2,10 @@
 title: 03 双极结型晶体管 BJT
 date: 2026-07-09 18:34:24
 updated: 2026-07-09 18:34:24
-tags:
-  - BJT
-  - 功率晶体管
-  - 电力电子器件
 permalink: courses/power-electronics/03-bjt/
 description: NPN 型三极管的基本工作原理、功率 BJT 结构与输入特性笔记。
+tags:
+  - 电力电子
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源

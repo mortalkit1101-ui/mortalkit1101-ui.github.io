@@ -9,7 +9,7 @@ tags:
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源
-cover: /img/courses/power-electronics/03-bjt/03-05-power-bjt-structure.png
+cover: /img/courses/covers/power-03-bjt.svg
 ---
 
 ## 1. NPN 型三极管的工作原理

@@ -9,7 +9,7 @@ tags:
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源
-cover: /img/courses/power-electronics/01-introduction/01-01-power-electronics-overview.png
+cover: /img/courses/covers/power-01-introduction.svg
 ---
 
 ![电力电子系统概览](/img/courses/power-electronics/01-introduction/01-01-power-electronics-overview.png)

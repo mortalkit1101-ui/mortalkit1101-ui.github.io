@@ -66,11 +66,12 @@ for (const post of posts) {
 
 const homepage = fs.readFileSync(path.join(publicRoot, 'index.html'), 'utf8')
 const categoryNames = [...homepage.matchAll(/card-category-list-name">([^<]+)</g)].map(match => match[1])
-assert(categoryNames.length === 2, `Expected two sidebar categories, found ${categoryNames.length}`)
-assert(categoryNames.every(name => Object.hasOwn(expected, name)), `Unexpected sidebar category: ${categoryNames.join(', ')}`)
+const expectedCategories = [...Object.keys(expected), '规划']
+assert(categoryNames.length === 3, `Expected three sidebar categories, found ${categoryNames.length}`)
+assert(categoryNames.every(name => expectedCategories.includes(name)), `Unexpected sidebar category: ${categoryNames.join(', ')}`)
 assert(!homepage.includes('Welcome to Mortal'), 'Homepage still contains Welcome to Mortal')
 
-const expectedTags = ['电力电子', '电磁场', '微波工程', '微波工程与工程电磁场学习计划'].sort((a, b) => a.localeCompare(b, 'zh-CN'))
+const expectedTags = ['电力电子', '电磁场', '微波工程', '微波工程与工程电磁场学习计划', '研究生期间规划'].sort((a, b) => a.localeCompare(b, 'zh-CN'))
 const generatedTags = fs.readdirSync(path.join(publicRoot, 'tags'), { withFileTypes: true })
   .filter(entry => entry.isDirectory())
   .map(entry => entry.name)
@@ -93,4 +94,4 @@ function walk(directory) {
   })
 }
 
-console.log('Course site verification passed: 22 posts, 2 categories, 4 course tags, ordered series, 22 covers, no missing local images.')
+console.log('Site verification passed: 22 course posts, 3 categories, 5 tags, ordered series, 22 covers, no missing local images.')

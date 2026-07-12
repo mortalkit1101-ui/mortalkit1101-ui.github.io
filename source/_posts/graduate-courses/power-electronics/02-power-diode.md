@@ -9,7 +9,7 @@ tags:
 categories:
   - 电源硬件与数字电源
 series: 电源硬件与数字电源
-cover: /img/courses/power-electronics/02-power-diode/02-06-power-diode-structure.png
+cover: /img/courses/covers/power-02-power-diode.svg
 ---
 
 ## 1. PN结基础

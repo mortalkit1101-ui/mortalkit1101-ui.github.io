@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>12 微波网络分析 | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="散射参数与微波网络分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="12 微波网络分析">
+<meta property="og:url" content="https://041101.xyz/courses/microwave-engineering/12-microwave-network-analysis/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="散射参数与微波网络分析。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/courses/covers/12-microwave-network-analysis.svg">
+<meta property="article:published_time" content="2026-07-01T08:37:37.000Z">
+<meta property="article:modified_time" content="2026-07-01T08:37:37.000Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="微波工程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/courses/covers/12-microwave-network-analysis.svg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "12 微波网络分析",
+  "url": "https://041101.xyz/courses/microwave-engineering/12-microwave-network-analysis/",
+  "image": "https://041101.xyz/img/courses/covers/12-microwave-network-analysis.svg",
+  "datePublished": "2026-07-01T08:37:37.000Z",
+  "dateModified": "2026-07-01T08:37:37.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://041101.xyz/courses/microwave-engineering/12-microwave-network-analysis/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '12 微波网络分析',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/courses/covers/12-microwave-network-analysis.svg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">12 微波网络分析</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">12 微波网络分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-01T08:37:37.000Z" title="更新于 2026-07-01 16:37:37">2026-07-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p>主线：微波网络不用直接测电压电流，而用端口波变量描述反射、传输、匹配和隔离。</p>
+</blockquote>
+<h2 id="二端口网络"><a href="#二端口网络" class="headerlink" title="二端口网络"></a>二端口网络</h2><p>常见端口参数：</p>
+<ul>
+<li>Z 参数。</li>
+<li>Y 参数。</li>
+<li>S 参数。</li>
+<li>ABCD 参数。</li>
+</ul>
+<p>每种参数都是同一个网络的不同描述方式。</p>
+<h2 id="Z-参数"><a href="#Z-参数" class="headerlink" title="Z 参数"></a>Z 参数</h2><p>$$<br>V_1&#x3D;Z_{11}I_1+Z_{12}I_2<br>$$</p>
+<p>$$<br>V_2&#x3D;Z_{21}I_1+Z_{22}I_2<br>$$</p>
+<p>适合低频电路直观理解。</p>
+<h2 id="Y-参数"><a href="#Y-参数" class="headerlink" title="Y 参数"></a>Y 参数</h2><p>$$<br>I_1&#x3D;Y_{11}V_1+Y_{12}V_2<br>$$</p>
+<p>$$<br>I_2&#x3D;Y_{21}V_1+Y_{22}V_2<br>$$</p>
+<p>适合并联网络。</p>
+<h2 id="S-参数"><a href="#S-参数" class="headerlink" title="S 参数"></a>S 参数</h2><p>S 参数描述入射波和反射波：</p>
+<p>$$<br>b_1&#x3D;S_{11}a_1+S_{12}a_2<br>$$</p>
+<p>$$<br>b_2&#x3D;S_{21}a_1+S_{22}a_2<br>$$</p>
+<p>四个量的含义：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$S_{11}$</td>
+<td>输入端反射</td>
+</tr>
+<tr>
+<td>$S_{21}$</td>
+<td>正向传输</td>
+</tr>
+<tr>
+<td>$S_{12}$</td>
+<td>反向传输</td>
+</tr>
+<tr>
+<td>$S_{22}$</td>
+<td>输出端反射</td>
+</tr>
+</tbody></table>
+<p>常用判断：</p>
+<ul>
+<li>$S_{11}$ 小：输入匹配好。</li>
+<li>$S_{21}$ 大：传输强，放大器中代表增益。</li>
+<li>$S_{12}$ 小：反向隔离好。</li>
+<li>$S_{22}$ 小：输出匹配好。</li>
+</ul>
+<h2 id="互易、无耗、匹配"><a href="#互易、无耗、匹配" class="headerlink" title="互易、无耗、匹配"></a>互易、无耗、匹配</h2><p>互易网络：</p>
+<p>$$<br>S_{ij}&#x3D;S_{ji}<br>$$</p>
+<p>二端口中：</p>
+<p>$$<br>S_{12}&#x3D;S_{21}<br>$$</p>
+<p>无耗网络：</p>
+<p>$$<br>[S]^*[S]&#x3D;[I]<br>$$</p>
+<p>匹配端口：</p>
+<p>$$<br>S_{ii}&#x3D;0<br>$$</p>
+<h2 id="ABCD-参数"><a href="#ABCD-参数" class="headerlink" title="ABCD 参数"></a>ABCD 参数</h2><p>ABCD 参数适合级联：</p>
+<h1 id="begin-bmatrix-V-1-I-1-end-bmatrix"><a href="#begin-bmatrix-V-1-I-1-end-bmatrix" class="headerlink" title="$$\begin{bmatrix}V_1\I_1\end{bmatrix}"></a>$$<br>\begin{bmatrix}<br>V_1\<br>I_1<br>\end{bmatrix}</h1><p>\begin{bmatrix}<br>A&amp;B\<br>C&amp;D<br>\end{bmatrix}<br>\begin{bmatrix}<br>V_2\<br>-I_2<br>\end{bmatrix}<br>$$</p>
+<p>多个网络级联时，ABCD 矩阵直接相乘。</p>
+<h2 id="信号流图"><a href="#信号流图" class="headerlink" title="信号流图"></a>信号流图</h2><p>信号流图用于处理多次反射和多个端口之间的波关系。</p>
+<p>核心对象仍然是：</p>
+<p>$$<br>a_i,\quad b_i,\quad S_{ij}<br>$$</p>
+<h2 id="典型任务"><a href="#典型任务" class="headerlink" title="典型任务"></a>典型任务</h2><table>
+<thead>
+<tr>
+<th>任务</th>
+<th>入口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>看匹配</td>
+<td>$S_{11},S_{22}$</td>
+</tr>
+<tr>
+<td>看传输</td>
+<td>$S_{21}$</td>
+</tr>
+<tr>
+<td>看隔离</td>
+<td>$S_{12}$</td>
+</tr>
+<tr>
+<td>看是否互易</td>
+<td>$S_{12}&#x3D;S_{21}$</td>
+</tr>
+<tr>
+<td>看是否无耗</td>
+<td>$[S]^*[S]&#x3D;[I]$</td>
+</tr>
+<tr>
+<td>分析级联</td>
+<td>ABCD 矩阵</td>
+</tr>
+</tbody></table>
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><p>S 参数是微波测量和设计的核心语言。后面的匹配、功分器、耦合器、滤波器和放大器，都要用 S 参数描述性能。</p>
+<hr>
+<h2 id="前后链接"><a href="#前后链接" class="headerlink" title="前后链接"></a>前后链接</h2><hr>
+<p><strong>课程导航：</strong> <a href="/courses/microwave-engineering/11-transmission-lines-and-waveguides/">上一篇：11 传输线和波导</a> · <a href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">返回微波工程与工程电磁场分类</a> · <a href="/courses/microwave-engineering/13-impedance-matching/">下一篇：13 阻抗匹配和调谐</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/courses/microwave-engineering/12-microwave-network-analysis/">https://041101.xyz/courses/microwave-engineering/12-microwave-network-analysis/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B/">微波工程</a></div><div class="post-share"><div class="social-share" data-image="/img/courses/covers/12-microwave-network-analysis.svg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/courses/microwave-engineering/13-impedance-matching/" title="13 阻抗匹配和调谐"><img class="cover" src="/img/courses/covers/13-impedance-matching.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">13 阻抗匹配和调谐</div></div><div class="info-2"><div class="info-item-1"> 主线：阻抗匹配的目标是减少反射，让源、传输线和负载之间尽可能传递功率。  匹配目标传输线负载匹配： $$Z_L&#x3D;Z_0$$ 此时： $$\Gamma&#x3D;0$$ 源和负载共轭匹配： $$Z_L&#x3D;Z_S^*$$ 此时负载获得最大功率。 L 型匹配网络由一个串联电抗和一个并联电抗组成。 作用：  用电感、电容抵消虚部。 改变实部到目标阻抗。  适合窄带匹配。 四分之一波长变换器对纯实负载： $$Z_1&#x3D;\sqrt{Z_0Z_L}$$ 长度： $$l&#x3D;\frac{\lambda}{4}$$ 输入阻抗： $$Z_{\mathrm{in}}&#x3D;\frac{Z_1^2}{Z_L}$$ 特点：  结构简单。 窄带。 负载最好是实数。  单短截线匹配思路：  把负载归一化为导纳。 沿主线移动到实部为 1 的位置。 用短路或开路短截线提供相反电纳。  短截线本质：  用一段传输线实现可调电抗。  双短截线匹配两个短截线间距固定。 特点：  实际调节更方便。 存在匹配盲区。  小反射理论多个小反射叠加，可以形成指定频率响应。 图像：  渐变线和...</div></div></div></a><a class="pagination-related" href="/courses/microwave-engineering/09-microwave-electromagnetics/" title="09 微波电磁理论"><img class="cover" src="/img/courses/covers/09-microwave-electromagnetics.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">09 微波电磁理论</div></div><div class="info-2"><div class="info-item-1"> 主线：Pozar 第 1 章把 Maxwell 方程、边界条件、平面波、功率流和反射透射整理成微波工程的底层语言。  核心对象 Maxwell 方程组。 本构关系：$\mathbf{D}&#x3D;\varepsilon\mathbf{E}$，$\mathbf{B}&#x3D;\mu\mathbf{H}$，$\mathbf{J}&#x3D;\sigma\mathbf{E}$。 边界条件。 平面波。 功率流与能量守恒。  常用频域形式$$\nabla\times\mathbf{E}&#x3D;-j\omega\mu\mathbf{H}$$ $$\nabla\times\mathbf{H}&#x3D;(\sigma+j\omega\varepsilon)\mathbf{E}$$ 复介电常数： $$\varepsilon_c&#x3D;\varepsilon-j\frac{\sigma}{\omega}$$ 边界条件速查   边界 关系    电场切向 $\mathbf{n}\times(\mathbf{E}_2-\mathbf{E}_1)&#x3D;0$   磁场切向 $\math...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/courses/microwave-engineering/01-learning-framework/" title="01 微波工程学习框架"><img class="cover" src="/img/courses/covers/01-learning-framework.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-04</div><div class="info-item-2">01 微波工程学习框架</div></div><div class="info-2"><div class="info-item-1"> 电荷产生电场 磁场线永远闭合 变化的磁场会产生电场（法拉第电磁感应定律） 电流和变化的电场会产生磁场（变化的电场产生磁场，变化的磁场又产生电场，相互激发传播）  电磁波怎么来的 电场和磁场互相“接力”，就形成了向前传播的电磁波。  电磁波有三个方向：$E$、$H$、$k$（三者相互垂直）  $E$：电场方向 $H$：磁场方向 $k$：传播方向  公式：$v &#x3D; f \times \lambda$ 波速 &#x3D; 频率 × 波长 为什么有传输线在高频中，波长很短，此时导线长度可能与波长差不多，因此 不能认为整根线上电压相同！ 传输线里最核心的几个量是： $$Z_0,\quad Z_L,\quad \Gamma,\quad Z_{in},\quad VSWR$$ 分别是：  $Z_0$：特性阻抗 $Z_L$：负载阻抗 $\Gamma$：反射系数 $Z_{in}$：输入阻抗 $VSWR$：驻波比   负载与传输线不匹配，信号传输到末端会反射回来。入射波和反射波叠加，形成驻波。因此传输线的电压电流会随着位置变化。  $$\Gamma &#x3D; \frac{Z_L - ...</div></div></div></a><a class="pagination-related" href="/courses/microwave-engineering/17-microwave-systems/" title="17 微波系统与选学专题"><img class="cover" src="/img/courses/covers/17-microwave-systems.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-01</div><div class="info-item-2">17 微波系统与选学专题</div></div><div class="info-2"><div class="info-item-1"> 主线：系统层面不只看一个器件，而是看增益、噪声、非线性、频率变换和链路预算如何共同决定整机性能。  噪声热噪声功率： $$N&#x3D;kTB$$ 噪声系数： $$F&#x3D;\frac{SNR_{\text{in}}}{SNR_{\text{out}}}$$ 分贝形式： $$NF&#x3D;10\log F$$ 级联系统 Friis 噪声公式： $$F_{\text{total}}&#x3D;F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1G_2}+\cdots$$ 图像：  第一级低噪声放大器最关键，因为后级噪声会被前级增益压下去。  非线性常见指标：  1 dB 压缩点。 三阶交调。 三阶截点 IP3。 动态范围。  图像：  信号太强时，器件不再线性放大，会产生新的频率分量。  有源器件微波有源器件主要看：  增益。 匹配。 稳定性。 噪声。 线性度。 带宽。  S 参数仍然是小信号分析的基础。 放大器设计目标可能不同：  最大增益。 最低噪声。 最大输出功率。 宽带匹配。 稳定性。  稳定性因子常用来判断是否可能自激。 振荡器振荡条件： ...</div></div></div></a><a class="pagination-related" href="/courses/microwave-engineering/09-microwave-electromagnetics/" title="09 微波电磁理论"><img class="cover" src="/img/courses/covers/09-microwave-electromagnetics.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-01</div><div class="info-item-2">09 微波电磁理论</div></div><div class="info-2"><div class="info-item-1"> 主线：Pozar 第 1 章把 Maxwell 方程、边界条件、平面波、功率流和反射透射整理成微波工程的底层语言。  核心对象 Maxwell 方程组。 本构关系：$\mathbf{D}&#x3D;\varepsilon\mathbf{E}$，$\mathbf{B}&#x3D;\mu\mathbf{H}$，$\mathbf{J}&#x3D;\sigma\mathbf{E}$。 边界条件。 平面波。 功率流与能量守恒。  常用频域形式$$\nabla\times\mathbf{E}&#x3D;-j\omega\mu\mathbf{H}$$ $$\nabla\times\mathbf{H}&#x3D;(\sigma+j\omega\varepsilon)\mathbf{E}$$ 复介电常数： $$\varepsilon_c&#x3D;\varepsilon-j\frac{\sigma}{\omega}$$ 边界条件速查   边界 关系    电场切向 $\mathbf{n}\times(\mathbf{E}_2-\mathbf{E}_1)&#x3D;0$   磁场切向 $\math...</div></div></div></a><a class="pagination-related" href="/courses/microwave-engineering/15-power-dividers-and-couplers/" title="15 功分器与定向耦合器"><img class="cover" src="/img/courses/covers/15-power-dividers-and-couplers.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-01</div><div class="info-item-2">15 功分器与定向耦合器</div></div><div class="info-2"><div class="info-item-1"> 主线：功分器负责把功率分配到多个端口；耦合器负责按方向取出一部分功率。  三端口网络的限制理想三端口若同时满足：  无耗。 互易。 所有端口匹配。  通常无法同时做到完全隔离。 Wilkinson 功分器通过隔离电阻解决输出端隔离问题。 Wilkinson 功分器等分功分器典型结构：  两段 $\lambda&#x2F;4$ 传输线。 一个隔离电阻。  等分时： $$Z_{\lambda&#x2F;4}&#x3D;\sqrt{2}Z_0$$ 隔离电阻： $$R&#x3D;2Z_0$$ 特性：  输入端匹配。 输出端匹配。 两输出端隔离。 理想情况下无耗功分；隔离电阻只在不平衡时耗能。  定向耦合器四端口：  输入端。 直通端。 耦合端。 隔离端。  核心指标： 耦合度： $$C&#x3D;-20\log\left|\frac{V_{\text{coupled}}}{V_{\text{in}}}\right|$$ 方向性： $$D&#x3D;20\log\left|\frac{V_{\text{coupled}}}{V_{\text{isolated}}}\right|$$ 隔离...</div></div></div></a><a class="pagination-related" href="/courses/microwave-engineering/14-microwave-resonators/" title="14 微波谐振器"><img class="cover" src="/img/courses/covers/14-microwave-resonators.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-01</div><div class="info-item-2">14 微波谐振器</div></div><div class="info-2"><div class="info-item-1"> 主线：谐振器是在某些频率上强烈储存电磁能量的结构；Q 值描述储能和损耗的比例。  谐振的基本图像电场能量和磁场能量周期性交换： $$W_e\leftrightarrow W_m$$ 在谐振频率附近，结构容易储存能量。 Q 值定义： $$Q&#x3D;\omega_0\frac{\text{平均储存能量}}{\text{平均损耗功率}}$$ 频域近似： $$Q&#x3D;\frac{f_0}{\Delta f}$$ 图像：  Q 高：损耗小，选择性强，带宽窄。 Q 低：损耗大，选择性弱，带宽宽。  串联谐振串联 RLC： $$Z&#x3D;R+j\omega L+\frac{1}{j\omega C}$$ 谐振条件： $$\omega_0&#x3D;\frac{1}{\sqrt{LC}}$$ 谐振时阻抗最小。 并联谐振并联 RLC 谐振时输入阻抗最大。 图像：  串联谐振像短路。 并联谐振像开路。  传输线谐振器短路线： $$Z_{\mathrm{in}}&#x3D;jZ_0\tan\beta l$$ 开路线： $$Z_{\mathrm{in}}&#x3D;-jZ_0\cot\b...</div></div></div></a><a class="pagination-related" href="/courses/microwave-engineering/13-impedance-matching/" title="13 阻抗匹配和调谐"><img class="cover" src="/img/courses/covers/13-impedance-matching.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-01</div><div class="info-item-2">13 阻抗匹配和调谐</div></div><div class="info-2"><div class="info-item-1"> 主线：阻抗匹配的目标是减少反射，让源、传输线和负载之间尽可能传递功率。  匹配目标传输线负载匹配： $$Z_L&#x3D;Z_0$$ 此时： $$\Gamma&#x3D;0$$ 源和负载共轭匹配： $$Z_L&#x3D;Z_S^*$$ 此时负载获得最大功率。 L 型匹配网络由一个串联电抗和一个并联电抗组成。 作用：  用电感、电容抵消虚部。 改变实部到目标阻抗。  适合窄带匹配。 四分之一波长变换器对纯实负载： $$Z_1&#x3D;\sqrt{Z_0Z_L}$$ 长度： $$l&#x3D;\frac{\lambda}{4}$$ 输入阻抗： $$Z_{\mathrm{in}}&#x3D;\frac{Z_1^2}{Z_L}$$ 特点：  结构简单。 窄带。 负载最好是实数。  单短截线匹配思路：  把负载归一化为导纳。 沿主线移动到实部为 1 的位置。 用短路或开路短截线提供相反电纳。  短截线本质：  用一段传输线实现可调电抗。  双短截线匹配两个短截线间距固定。 特点：  实际调节更方便。 存在匹配盲区。  小反射理论多个小反射叠加，可以形成指定频率响应。 图像：  渐变线和...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录电源硬件、数字电源与微波工程学习笔记</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%AB%AF%E5%8F%A3%E7%BD%91%E7%BB%9C"><span class="toc-number">1.</span> <span class="toc-text">二端口网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Z-%E5%8F%82%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">Z 参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Y-%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">Y 参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#S-%E5%8F%82%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">S 参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%92%E6%98%93%E3%80%81%E6%97%A0%E8%80%97%E3%80%81%E5%8C%B9%E9%85%8D"><span class="toc-number">5.</span> <span class="toc-text">互易、无耗、匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ABCD-%E5%8F%82%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">ABCD 参数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#begin-bmatrix-V-1-I-1-end-bmatrix"><span class="toc-number">7.</span> <span class="toc-text">$$\begin{bmatrix}V_1\I_1\end{bmatrix}</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E6%B5%81%E5%9B%BE"><span class="toc-number">7.1.</span> <span class="toc-text">信号流图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B8%E5%9E%8B%E4%BB%BB%E5%8A%A1"><span class="toc-number">7.2.</span> <span class="toc-text">典型任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.3.</span> <span class="toc-text">连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E5%90%8E%E9%93%BE%E6%8E%A5"><span class="toc-number">7.4.</span> <span class="toc-text">前后链接</span></a></li></ol></li></ol></div></div><div class="card-widget card-post-series"><div class="item-headline"><i class="fa-solid fa-layer-group"></i><span>系列文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/00-study-plan/" title="00 微波工程与工程电磁场学习计划"><img src="/img/courses/covers/00-study-plan.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="00 微波工程与工程电磁场学习计划"></a><div class="content"><a class="title" href="/courses/microwave-engineering/00-study-plan/" title="00 微波工程与工程电磁场学习计划">00 微波工程与工程电磁场学习计划</a><time datetime="2026-07-01T08:40:05.000Z" title="发表于 2026-07-01 16:40:05">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/01-learning-framework/" title="01 微波工程学习框架"><img src="/img/courses/covers/01-learning-framework.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="01 微波工程学习框架"></a><div class="content"><a class="title" href="/courses/microwave-engineering/01-learning-framework/" title="01 微波工程学习框架">01 微波工程学习框架</a><time datetime="2026-07-04T13:44:31.000Z" title="发表于 2026-07-04 21:44:31">2026-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/02-field-and-potential/" title="02 场、电位与高斯定律"><img src="/img/courses/covers/02-field-and-potential.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="02 场、电位与高斯定律"></a><div class="content"><a class="title" href="/courses/microwave-engineering/02-field-and-potential/" title="02 场、电位与高斯定律">02 场、电位与高斯定律</a><time datetime="2026-07-04T13:44:21.000Z" title="发表于 2026-07-04 21:44:21">2026-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/" title="03 静电边界条件与电容"><img src="/img/courses/covers/03-electrostatic-boundary-and-capacitance.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="03 静电边界条件与电容"></a><div class="content"><a class="title" href="/courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/" title="03 静电边界条件与电容">03 静电边界条件与电容</a><time datetime="2026-07-04T13:44:23.000Z" title="发表于 2026-07-04 21:44:23">2026-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/04-static-magnetic-field-and-inductance/" title="04 恒定磁场与电感"><img src="/img/courses/covers/04-static-magnetic-field-and-inductance.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="04 恒定磁场与电感"></a><div class="content"><a class="title" href="/courses/microwave-engineering/04-static-magnetic-field-and-inductance/" title="04 恒定磁场与电感">04 恒定磁场与电感</a><time datetime="2026-07-04T08:03:29.000Z" title="发表于 2026-07-04 16:03:29">2026-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/05-maxwell-equations/" title="05 Maxwell 方程与时变场"><img src="/img/courses/covers/05-maxwell-equations.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="05 Maxwell 方程与时变场"></a><div class="content"><a class="title" href="/courses/microwave-engineering/05-maxwell-equations/" title="05 Maxwell 方程与时变场">05 Maxwell 方程与时变场</a><time datetime="2026-07-04T08:03:30.000Z" title="发表于 2026-07-04 16:03:30">2026-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/06-plane-waves/" title="06 平面电磁波"><img src="/img/courses/covers/06-plane-waves.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="06 平面电磁波"></a><div class="content"><a class="title" href="/courses/microwave-engineering/06-plane-waves/" title="06 平面电磁波">06 平面电磁波</a><time datetime="2026-07-04T13:44:12.000Z" title="发表于 2026-07-04 21:44:12">2026-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/07-uniform-transmission-lines/" title="07 均匀传输线"><img src="/img/courses/covers/07-uniform-transmission-lines.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="07 均匀传输线"></a><div class="content"><a class="title" href="/courses/microwave-engineering/07-uniform-transmission-lines/" title="07 均匀传输线">07 均匀传输线</a><time datetime="2026-07-07T00:17:28.000Z" title="发表于 2026-07-07 08:17:28">2026-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/08-waveguides-and-cavities/" title="08 波导与谐振腔"><img src="/img/courses/covers/08-waveguides-and-cavities.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="08 波导与谐振腔"></a><div class="content"><a class="title" href="/courses/microwave-engineering/08-waveguides-and-cavities/" title="08 波导与谐振腔">08 波导与谐振腔</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/09-microwave-electromagnetics/" title="09 微波电磁理论"><img src="/img/courses/covers/09-microwave-electromagnetics.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="09 微波电磁理论"></a><div class="content"><a class="title" href="/courses/microwave-engineering/09-microwave-electromagnetics/" title="09 微波电磁理论">09 微波电磁理论</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/10-microwave-transmission-lines/" title="10 微波传输线理论"><img src="/img/courses/covers/10-microwave-transmission-lines.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="10 微波传输线理论"></a><div class="content"><a class="title" href="/courses/microwave-engineering/10-microwave-transmission-lines/" title="10 微波传输线理论">10 微波传输线理论</a><time datetime="2026-07-05T07:52:49.000Z" title="发表于 2026-07-05 15:52:49">2026-07-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/11-transmission-lines-and-waveguides/" title="11 传输线和波导"><img src="/img/courses/covers/11-transmission-lines-and-waveguides.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="11 传输线和波导"></a><div class="content"><a class="title" href="/courses/microwave-engineering/11-transmission-lines-and-waveguides/" title="11 传输线和波导">11 传输线和波导</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/12-microwave-network-analysis/" title="12 微波网络分析"><img src="/img/courses/covers/12-microwave-network-analysis.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="12 微波网络分析"></a><div class="content"><a class="title" href="/courses/microwave-engineering/12-microwave-network-analysis/" title="12 微波网络分析">12 微波网络分析</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/13-impedance-matching/" title="13 阻抗匹配和调谐"><img src="/img/courses/covers/13-impedance-matching.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="13 阻抗匹配和调谐"></a><div class="content"><a class="title" href="/courses/microwave-engineering/13-impedance-matching/" title="13 阻抗匹配和调谐">13 阻抗匹配和调谐</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/14-microwave-resonators/" title="14 微波谐振器"><img src="/img/courses/covers/14-microwave-resonators.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="14 微波谐振器"></a><div class="content"><a class="title" href="/courses/microwave-engineering/14-microwave-resonators/" title="14 微波谐振器">14 微波谐振器</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/15-power-dividers-and-couplers/" title="15 功分器与定向耦合器"><img src="/img/courses/covers/15-power-dividers-and-couplers.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="15 功分器与定向耦合器"></a><div class="content"><a class="title" href="/courses/microwave-engineering/15-power-dividers-and-couplers/" title="15 功分器与定向耦合器">15 功分器与定向耦合器</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/16-microwave-filters/" title="16 微波滤波器"><img src="/img/courses/covers/16-microwave-filters.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="16 微波滤波器"></a><div class="content"><a class="title" href="/courses/microwave-engineering/16-microwave-filters/" title="16 微波滤波器">16 微波滤波器</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/microwave-engineering/17-microwave-systems/" title="17 微波系统与选学专题"><img src="/img/courses/covers/17-microwave-systems.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="17 微波系统与选学专题"></a><div class="content"><a class="title" href="/courses/microwave-engineering/17-microwave-systems/" title="17 微波系统与选学专题">17 微波系统与选学专题</a><time datetime="2026-07-01T08:37:37.000Z" title="发表于 2026-07-01 16:37:37">2026-07-01</time></div></div></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/text-frequency-project/" title="文本词频统计项目实战">文本词频统计项目实战</a><time datetime="2026-07-15T01:50:00.000Z" title="发表于 2026-07-15 09:50:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/files-json-csv-and-exceptions/" title="文件、JSON、CSV 与异常处理">文件、JSON、CSV 与异常处理</a><time datetime="2026-07-15T01:40:00.000Z" title="发表于 2026-07-15 09:40:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/conditionals-loops-and-functions/" title="条件判断、循环与函数">条件判断、循环与函数</a><time datetime="2026-07-15T01:30:00.000Z" title="发表于 2026-07-15 09:30:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/lists-dictionaries-sets-and-tuples/" title="列表、字典、集合与元组">列表、字典、集合与元组</a><time datetime="2026-07-15T01:20:00.000Z" title="发表于 2026-07-15 09:20:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/variables-data-types-and-strings/" title="变量、数据类型与字符串">变量、数据类型与字符串</a><time datetime="2026-07-15T01:10:00.000Z" title="发表于 2026-07-15 09:10:00">2026-07-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/mortal-bg.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/mortal-site-stats.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

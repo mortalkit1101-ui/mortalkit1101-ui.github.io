@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<meta property="og:title" content="Mortal">
+<meta property="og:url" content="https://041101.xyz/page/2/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/avatar.JPG">
+<meta property="article:author" content="Mortal">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/avatar.JPG"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://041101.xyz/page/2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Mortal',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/mortal-bg.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">Mortal</h1><div id="site_social_icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/courses/power-electronics/learning-roadmap/" title="00 电源硬件与数字电源学习路线"><img class="post-bg" src="/img/courses/covers/power-learning-roadmap.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="00 电源硬件与数字电源学习路线"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/power-electronics/learning-roadmap/" title="00 电源硬件与数字电源学习路线">00 电源硬件与数字电源学习路线</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-07T06:10:54.000Z" title="发表于 2026-07-07 14:10:54">2026-07-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/">电源硬件与数字电源</a></span></div><div class="content"> 主线：电源硬件研发 + 数字控制 + EMI&#x2F;EMC目标岗位：电源硬件工程师 &#x2F; 数字电源工程师 &#x2F; 电力电子硬件工程师 &#x2F; 电源应用工程师对标方向：大疆偏消费级高功率密度电源，阳光电源偏新能源逆变器与储能电力电子，TI &#x2F; 英飞凌偏电源芯片应用。  这条路线的核心不是“学很多知识点”，而是做出 2-3 个能证明工程能力的电源项目：会拓扑分析、会器件选型、会仿真、会 PCB Layout、会调试波形、会写基础控制代码，还能分析 EMI&#x2F;EMC 风险。 1. 最终能力画像不要把自己定位成：  我会 STM32。我懂一点电源。我也做射频。  更好的定位是：  具备电磁场 &#x2F; 射频背景的电源硬件研发候选人，熟悉 DC-DC 拓扑、数字电源控制、功率器件选型、PCB Layout 和 EMI&#x2F;EMC 分析。  简历和面试里可以浓缩为：  方向：高功率密度电源硬件 &#x2F; 数字电源 &#x2F; 新能源电力电子。     公司类型 适配方向    大疆 便携储能、无人机电源、电池充电、快充、电源管理、高...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/courses/microwave-engineering/07-uniform-transmission-lines/" title="07 均匀传输线"><img class="post-bg" src="/img/courses/covers/07-uniform-transmission-lines.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="07 均匀传输线"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/07-uniform-transmission-lines/" title="07 均匀传输线">07 均匀传输线</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-07T00:17:28.000Z" title="发表于 2026-07-07 08:17:28">2026-07-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：微波频率下，电压电流沿线传播；负载不匹配会产生反射，输入阻抗随位置变化。  分布参数单位长度参数： $$R’,\quad L’,\quad G’,\quad C’$$ 含义：  $R’$：导体损耗。 $L’$：单位长度电感。 $G’$：介质损耗。 $C’$：单位长度电容。  传输线方程频域形式： $$\frac{dV}{dz}&#x3D;-(R’+j\omega L’)I$$ $$\frac{dI}{dz}&#x3D;-(G’+j\omega C’)V$$ 传播常数： $$\gamma&#x3D;\sqrt{(R’+j\omega L’)(G’+j\omega C’)}$$ 特性阻抗： $$Z_0&#x3D;\sqrt{\frac{R’+j\omega L’}{G’+j\omega C’}}$$ 无耗线： $$Z_0&#x3D;\sqrt{\frac{L’}{C’}}$$ $$\beta&#x3D;\omega\sqrt{L’C’}$$ $$v&#x3D;\frac{1}{\sqrt{L’C’}}$$ 行波解电压： $$V(z)&#x3D;V_0^+e^{-\gamma ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/courses/microwave-engineering/10-microwave-transmission-lines/" title="10 微波传输线理论"><img class="post-bg" src="/img/courses/covers/10-microwave-transmission-lines.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="10 微波传输线理论"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/10-microwave-transmission-lines/" title="10 微波传输线理论">10 微波传输线理论</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-05T07:52:49.000Z" title="发表于 2026-07-05 15:52:49">2026-07-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：传输线理论把沿线传播的电磁波写成电压电流波；反射系数、输入阻抗、驻波比和 Smith 圆图是核心工具。  核心对象$$V^+,\quad V^-,\quad \Gamma,\quad Z_0,\quad Z_L,\quad Z_{\mathrm{in}},\quad VSWR$$ 图像：  负载不匹配 $\rightarrow$ 反射 $\rightarrow$ 入射波和反射波叠加 $\rightarrow$ 驻波 $\rightarrow$ 输入阻抗随位置变化。  反射系数负载处： $$\Gamma_L&#x3D;\frac{Z_L-Z_0}{Z_L+Z_0}$$ 任意位置： $$\Gamma(z)&#x3D;\Gamma_L e^{-j2\beta z}$$ 只要沿无耗传输线移动，$|\Gamma|$ 不变，相位改变。 驻波比$$VSWR&#x3D;\frac{1+|\Gamma|}{1-|\Gamma|}$$ 反射越大，驻波比越大。 输入阻抗$$Z_{\mathrm{in}}&#x3D;Z_0\frac{Z_L+jZ_0\tan\beta l}{Z_0+jZ_L\t...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/courses/microwave-engineering/01-learning-framework/" title="01 微波工程学习框架"><img class="post-bg" src="/img/courses/covers/01-learning-framework.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="01 微波工程学习框架"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/01-learning-framework/" title="01 微波工程学习框架">01 微波工程学习框架</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-04T13:44:31.000Z" title="发表于 2026-07-04 21:44:31">2026-07-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 电荷产生电场 磁场线永远闭合 变化的磁场会产生电场（法拉第电磁感应定律） 电流和变化的电场会产生磁场（变化的电场产生磁场，变化的磁场又产生电场，相互激发传播）  电磁波怎么来的 电场和磁场互相“接力”，就形成了向前传播的电磁波。  电磁波有三个方向：$E$、$H$、$k$（三者相互垂直）  $E$：电场方向 $H$：磁场方向 $k$：传播方向  公式：$v &#x3D; f \times \lambda$ 波速 &#x3D; 频率 × 波长 为什么有传输线在高频中，波长很短，此时导线长度可能与波长差不多，因此 不能认为整根线上电压相同！ 传输线里最核心的几个量是： $$Z_0,\quad Z_L,\quad \Gamma,\quad Z_{in},\quad VSWR$$ 分别是：  $Z_0$：特性阻抗 $Z_L$：负载阻抗 $\Gamma$：反射系数 $Z_{in}$：输入阻抗 $VSWR$：驻波比   负载与传输线不匹配，信号传输到末端会反射回来。入射波和反射波叠加，形成驻波。因此传输线的电压电流会随着位置变化。  $$\Gamma &#x3D; \frac{Z_L - ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/" title="03 静电边界条件与电容"><img class="post-bg" src="/img/courses/covers/03-electrostatic-boundary-and-capacitance.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="03 静电边界条件与电容"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/03-electrostatic-boundary-and-capacitance/" title="03 静电边界条件与电容">03 静电边界条件与电容</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-04T13:44:23.000Z" title="发表于 2026-07-04 21:44:23">2026-07-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：电场遇到导体和介质分界面时会受到约束；电容是几何结构和介质对电场分布的结果。  静电场基本方程$$\nabla\times\mathbf{E}&#x3D;0$$ $$\nabla\cdot\mathbf{D}&#x3D;\rho$$ $$\mathbf{D}&#x3D;\varepsilon\mathbf{E}$$ 对应图像：  $\nabla\times\mathbf{E}&#x3D;0$：静电场是保守场，可以写成 $\mathbf{E}&#x3D;-\nabla\varphi$。 $\nabla\cdot\mathbf{D}&#x3D;\rho$：自由电荷是电位移矢量的源。  介质分界面边界条件电场分成切向和法向： $$\mathbf{E}&#x3D;\mathbf{E}_t+\mathbf{E}_n$$ 切向条件： $$E_{1t}&#x3D;E_{2t}$$ 或写成： $$\mathbf{n}\times(\mathbf{E}_2-\mathbf{E}_1)&#x3D;0$$ 法向条件： $$D_{2n}-D_{1n}&#x3D;\rho_s$$ 或写成： $$\...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/courses/microwave-engineering/02-field-and-potential/" title="02 场、电位与高斯定律"><img class="post-bg" src="/img/courses/covers/02-field-and-potential.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="02 场、电位与高斯定律"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/02-field-and-potential/" title="02 场、电位与高斯定律">02 场、电位与高斯定律</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-04T13:44:21.000Z" title="发表于 2026-07-04 21:44:21">2026-07-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：电荷产生电场，电场可以用电位描述；高斯定律用“穿过闭合面的通量”统计内部电荷。  场的基本概念   类型 含义 例子    标量场 空间每一点对应一个数值 温度场、电位场   矢量场 空间每一点对应一个有大小和方向的矢量 电场 $\mathbf{E}$、磁场 $\mathbf{B}$   电磁场里最常见的三个场量：  $\mathbf{E}$：电场强度，单位正电荷受到的力。 $\mathbf{D}$：电位移矢量，用来描述自由电荷和介质中的电场关系。 $\varphi$：电位，标量。  $\nabla$ 算子直角坐标系中： $$\nabla&#x3D;\mathbf{a}_x\frac{\partial}{\partial x}+\mathbf{a}_y\frac{\partial}{\partial y}+\mathbf{a}_z\frac{\partial}{\partial z}$$    运算 表达式 输入 输出 物理图像    梯度 $\nabla \varphi$ 标量场 矢量场 变化最快的方向   散度 $\nabla\cdot\mathbf{A}$ 矢量场 ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/courses/microwave-engineering/06-plane-waves/" title="06 平面电磁波"><img class="post-bg" src="/img/courses/covers/06-plane-waves.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="06 平面电磁波"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/06-plane-waves/" title="06 平面电磁波">06 平面电磁波</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-04T13:44:12.000Z" title="发表于 2026-07-04 21:44:12">2026-07-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：时变电场和时变磁场互相激发，形成向前传播的电磁波；平面波是最基本的波模型。  波动方程在无源、均匀、无耗介质中： $$\nabla^2\mathbf{E}-\mu\varepsilon\frac{\partial^2\mathbf{E}}{\partial t^2}&#x3D;0$$ $$\nabla^2\mathbf{H}-\mu\varepsilon\frac{\partial^2\mathbf{H}}{\partial t^2}&#x3D;0$$ 波速： $$v&#x3D;\frac{1}{\sqrt{\mu\varepsilon}}$$ 真空中： $$c&#x3D;\frac{1}{\sqrt{\mu_0\varepsilon_0}}$$ 均匀平面波沿 $+z$ 方向传播的形式： $$\mathbf{E}(z)&#x3D;\mathbf{E}_0e^{-j\beta z}$$ $$\mathbf{H}(z)&#x3D;\mathbf{H}_0e^{-j\beta z}$$ 相位常数： $$\beta&#x3D;\omega\sqrt{\mu\varepsilon}...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/courses/microwave-engineering/05-maxwell-equations/" title="05 Maxwell 方程与时变场"><img class="post-bg" src="/img/courses/covers/05-maxwell-equations.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="05 Maxwell 方程与时变场"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/05-maxwell-equations/" title="05 Maxwell 方程与时变场">05 Maxwell 方程与时变场</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-04T08:03:30.000Z" title="发表于 2026-07-04 16:03:30">2026-07-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：静态场只看电荷或电流；时变场里，变化的电场和变化的磁场会互相激发，形成电磁波。  Maxwell 方程组微分形式： $$\nabla\cdot\mathbf{D}&#x3D;\rho$$ $$\nabla\cdot\mathbf{B}&#x3D;0$$ $$\nabla\times\mathbf{E}&#x3D;-\frac{\partial\mathbf{B}}{\partial t}$$ $$\nabla\times\mathbf{H}&#x3D;\mathbf{J}+\frac{\partial\mathbf{D}}{\partial t}$$ 积分形式： $$\oint_S\mathbf{D}\cdot d\mathbf{S}&#x3D;Q$$ $$\oint_S\mathbf{B}\cdot d\mathbf{S}&#x3D;0$$ $$\oint_C\mathbf{E}\cdot d\mathbf{l}&#x3D;-\frac{d}{dt}\int_S\mathbf{B}\cdot d\mathbf{S}$$ $$\oint_C\mathbf{H}\cdot ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/courses/microwave-engineering/04-static-magnetic-field-and-inductance/" title="04 恒定磁场与电感"><img class="post-bg" src="/img/courses/covers/04-static-magnetic-field-and-inductance.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="04 恒定磁场与电感"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/04-static-magnetic-field-and-inductance/" title="04 恒定磁场与电感">04 恒定磁场与电感</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-04T08:03:29.000Z" title="发表于 2026-07-04 16:03:29">2026-07-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content"> 主线：恒定电流产生恒定磁场；磁场形成磁通和磁链，由此定义电感；磁能储存在磁场中。  基本场量$$\mathbf{B}&#x3D;\mu\mathbf{H}$$    量 含义 单位    $\mathbf{B}$ 磁感应强度，实际磁通密度 T   $\mathbf{H}$ 磁场强度，更偏向电流激发的场 A&#x2F;m   $\mu$ 磁导率 H&#x2F;m   介质中： $$\mu&#x3D;\mu_0\mu_r$$ 安培环路定律积分形式： $$\oint\mathbf{H}\cdot d\mathbf{l}&#x3D;I$$ 微分形式： $$\nabla\times\mathbf{H}&#x3D;\mathbf{J}$$ 图像：  电流产生环绕它的磁场。  与静电场对照： $$\nabla\cdot\mathbf{D}&#x3D;\rho$$ $$\nabla\times\mathbf{H}&#x3D;\mathbf{J}$$ 电荷让电场发散，电流让磁场旋转。 典型磁场无限长直导线取半径 $r$ 的圆形安培环路： $$H\cdot2\pi r&#x3D;I$$ $$H&#...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/courses/microwave-engineering/00-study-plan/" title="00 微波工程与工程电磁场学习计划"><img class="post-bg" src="/img/courses/covers/00-study-plan.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="00 微波工程与工程电磁场学习计划"></a></div><div class="recent-post-info"><a class="article-title" href="/courses/microwave-engineering/00-study-plan/" title="00 微波工程与工程电磁场学习计划">00 微波工程与工程电磁场学习计划</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2026-07-01T08:40:05.000Z" title="发表于 2026-07-01 16:40:05">2026-07-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/">微波工程与工程电磁场</a></span></div><div class="content">当前日期：2026-06-30目标期限：2026-07-31 前学习对象：  《工程电磁场导论 第2版》：约 436 页，8 章 Pozar《微波工程》第四版：约 603 页，14 章  一、总目标到 7 月底，不追求把两本书逐字精读完，而是达到：  能说清 Maxwell 方程、边界条件、平面波、反射折射、传输线、波导的物理意义。 能计算传输线输入阻抗、反射系数、驻波比、Smith 圆图匹配。 能读懂 S 参数、ABCD 矩阵、阻抗匹配、谐振器、功分器、滤波器等微波设计章节。 对放大器、振荡器、混频器、系统章节做到知道结构、指标和公式怎么用。  一句话：先补电磁场基础，再建立微波工程主线，最后按方向选读器件和系统。 二、学习顺序不要两本书从第一页硬啃到最后。推荐顺序：  用《工程电磁场导论》补电磁场主干。 用 Pozar《微波工程》第 1-5 章建立微波工程核心框架。 用 Pozar 第 6-8 章理解微波器件和网络设计。 用 Pozar 第 10-14 章按方向选读。  三、章节优先级《工程电磁场导论 第2版》必学：  第 1 章 静电场 第 3 章 恒定磁场 第 4 章 时...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录电源硬件、数字电源与微波工程学习笔记</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/text-frequency-project/" title="文本词频统计项目实战">文本词频统计项目实战</a><time datetime="2026-07-15T01:50:00.000Z" title="发表于 2026-07-15 09:50:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/files-json-csv-and-exceptions/" title="文件、JSON、CSV 与异常处理">文件、JSON、CSV 与异常处理</a><time datetime="2026-07-15T01:40:00.000Z" title="发表于 2026-07-15 09:40:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/conditionals-loops-and-functions/" title="条件判断、循环与函数">条件判断、循环与函数</a><time datetime="2026-07-15T01:30:00.000Z" title="发表于 2026-07-15 09:30:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/lists-dictionaries-sets-and-tuples/" title="列表、字典、集合与元组">列表、字典、集合与元组</a><time datetime="2026-07-15T01:20:00.000Z" title="发表于 2026-07-15 09:20:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/variables-data-types-and-strings/" title="变量、数据类型与字符串">变量、数据类型与字符串</a><time datetime="2026-07-15T01:10:00.000Z" title="发表于 2026-07-15 09:10:00">2026-07-15</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Python/"><span class="card-category-list-name">Python</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA/"><span class="card-category-list-name">微波工程与工程电磁场</span><span class="card-category-list-count">18</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/"><span class="card-category-list-name">电源硬件与数字电源</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%A7%84%E5%88%92/"><span class="card-category-list-name">规划</span><span class="card-category-list-count">1</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B%E4%B8%8E%E5%B7%A5%E7%A8%8B%E7%94%B5%E7%A3%81%E5%9C%BA%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/" style="font-size: 1.1em; color: #999">微波工程与工程电磁场学习计划</a> <a href="/tags/%E7%A0%94%E7%A9%B6%E7%94%9F%E6%9C%9F%E9%97%B4%E8%A7%84%E5%88%92/" style="font-size: 1.1em; color: #999">研究生期间规划</a> <a href="/tags/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90/" style="font-size: 1.2em; color: #999da3">电力电子</a> <a href="/tags/%E5%BE%AE%E6%B3%A2%E5%B7%A5%E7%A8%8B/" style="font-size: 1.5em; color: #99a9bf">微波工程</a> <a href="/tags/%E7%94%B5%E7%A3%81%E5%9C%BA/" style="font-size: 1.4em; color: #99a5b6">电磁场</a> <a href="/tags/Python/" style="font-size: 1.3em; color: #99a1ac">Python</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2026/07/">
+            <span class="card-archive-list-date">
+              七月 2026
+            </span>
+            <span class="card-archive-list-count">29</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">29</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-07-15T11:48:49.190Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/mortal-bg.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"></div><script src="/js/mortal-site-stats.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

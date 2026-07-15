@@ -1,0 +1,447 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>02 功率二极管 | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="功率二极管的 PN 结基础、结构、静态特性与动态恢复过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="02 功率二极管">
+<meta property="og:url" content="https://041101.xyz/courses/power-electronics/02-power-diode/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="功率二极管的 PN 结基础、结构、静态特性与动态恢复过程。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/courses/covers/power-02-power-diode.svg">
+<meta property="article:published_time" content="2026-07-08T11:35:52.000Z">
+<meta property="article:modified_time" content="2026-07-08T11:35:52.000Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="电力电子">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/courses/covers/power-02-power-diode.svg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "02 功率二极管",
+  "url": "https://041101.xyz/courses/power-electronics/02-power-diode/",
+  "image": "https://041101.xyz/img/courses/covers/power-02-power-diode.svg",
+  "datePublished": "2026-07-08T11:35:52.000Z",
+  "dateModified": "2026-07-08T11:35:52.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://041101.xyz/courses/power-electronics/02-power-diode/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '02 功率二极管',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/courses/covers/power-02-power-diode.svg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">02 功率二极管</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">02 功率二极管</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-08T11:35:52.000Z" title="发表于 2026-07-08 19:35:52">2026-07-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-08T11:35:52.000Z" title="更新于 2026-07-08 19:35:52">2026-07-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/">电源硬件与数字电源</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-PN结基础"><a href="#1-PN结基础" class="headerlink" title="1. PN结基础"></a>1. PN结基础</h2><p>半导体中的最外层电子会和相邻硅原子共享，形成<strong>共价键</strong>。在一定温度下，半导体中会产生少量<strong>自由电子</strong>和<strong>空穴对</strong>；温度升高时，自由电子和空穴数量也会增加。</p>
+<h3 id="1-1-N型半导体"><a href="#1-1-N型半导体" class="headerlink" title="1.1 N型半导体"></a>1.1 N型半导体</h3><ul>
+<li>掺杂价电子为 5 的磷原子。</li>
+<li>多出来的 1 个电子可以自由移动。</li>
+<li><strong>自由电子为多子</strong>，空穴为少子。</li>
+</ul>
+<h3 id="1-2-P型半导体"><a href="#1-2-P型半导体" class="headerlink" title="1.2 P型半导体"></a>1.2 P型半导体</h3><ul>
+<li>掺杂价电子为 3 的铝原子。</li>
+<li>会形成 1 个可以接收电子的空穴。</li>
+<li>相邻电子可以随时填补空穴，因此表现为空穴在相对运动。</li>
+<li><strong>空穴为多子</strong>，自由电子为少子。</li>
+</ul>
+<h2 id="2-PN结的形成"><a href="#2-PN结的形成" class="headerlink" title="2. PN结的形成"></a>2. PN结的形成</h2><p>P型半导体和N型半导体接触后，会形成PN结。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-01-pn-carriers.png" alt="PN 结载流子分布"></p>
+<p><em>图：P 型与 N 型半导体接触前后的载流子分布</em></p>
+<p>N区自由电子浓度较高，会向P区扩散，并在交界处与空穴复合，这属于<strong>扩散运动</strong>。</p>
+<p>复合后，中间区域缺少可移动的自由电子和空穴，形成<strong>耗尽层</strong>。耗尽层中，N区失去电子后留下正离子，P区失去空穴后留下负离子，因此中间形成<strong>空间电荷区</strong>，也就是PN结的<strong>静电场势垒区</strong>。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-02-depletion-region.png" alt="PN 结耗尽层"></p>
+<p><em>图：PN 结形成后的耗尽层与空间电荷区</em></p>
+<blockquote>
+<p><strong>笔记｜我的理解</strong><br>PN结一形成，交界处就不再是简单的P区和N区相接，而是多了一个由固定离子构成的耗尽层。这个区域会形成内电场，阻止载流子继续自由扩散。</p>
+</blockquote>
+<h2 id="3-PN结的偏置"><a href="#3-PN结的偏置" class="headerlink" title="3. PN结的偏置"></a>3. PN结的偏置</h2><h3 id="3-1-正向偏置"><a href="#3-1-正向偏置" class="headerlink" title="3.1 正向偏置"></a>3.1 正向偏置</h3><p><img src="/img/courses/power-electronics/02-power-diode/02-03-forward-bias.png" alt="PN 结正向偏置"></p>
+<p><em>图：正向偏置削弱内建电场</em></p>
+<p>正向偏置时，外加电场方向与PN结内电场方向相反，因此会削弱内电场，使势垒区变窄。</p>
+<p>当外加电压足够大时，载流子可以越过势垒区并形成电流，这个电压称为<strong>正向偏置电压</strong>。典型值为：</p>
+<ul>
+<li>硅二极管：约 $0.7V$</li>
+<li>锗二极管：约 $0.3V$</li>
+</ul>
+<p>导通过程可以这样理解：</p>
+<ol>
+<li>电子从N区逐步向P区扩散。</li>
+<li>外部电路持续给N区补充电子。</li>
+<li>电子经PN结和外部电路形成连续通路。</li>
+</ol>
+<p>因此，二极管在正向偏置且电压足够大时导通。</p>
+<h3 id="3-2-反向偏置"><a href="#3-2-反向偏置" class="headerlink" title="3.2 反向偏置"></a>3.2 反向偏置</h3><p><img src="/img/courses/power-electronics/02-power-diode/02-04-reverse-bias.png" alt="PN 结反向偏置"></p>
+<p><em>图：反向偏置增强内建电场</em></p>
+<p>反向偏置时，外加电场方向与PN结内电场方向一致，因此会增强内电场，使势垒区变宽。</p>
+<p>此时多数载流子难以通过PN结，二极管基本不导通。但P区和N区中的少子仍然会在电场作用下运动，产生很小的漏电流，称为<strong>反向饱和电流</strong>。</p>
+<blockquote>
+<p><strong>要点｜关键点</strong><br>正向偏置主要削弱势垒、促进多数载流子扩散；反向偏置主要增强势垒、只剩少子漂移形成很小的电流。</p>
+</blockquote>
+<h2 id="4-反向击穿"><a href="#4-反向击穿" class="headerlink" title="4. 反向击穿"></a>4. 反向击穿</h2><p>当反向电压继续增大到一定程度时，PN结会发生击穿。击穿并不一定意味着器件立刻损坏，关键取决于电流是否被外部电路限制。</p>
+<h3 id="4-1-雪崩击穿"><a href="#4-1-雪崩击穿" class="headerlink" title="4.1 雪崩击穿"></a>4.1 雪崩击穿</h3><p>反向偏置时，耗尽区电场强度增大，少数载流子在电场中获得更高动能。</p>
+<p>高速运动的自由电子撞击原子，可能产生新的电子-空穴对。新产生的载流子继续被电场加速，并进一步撞击其他原子，最终使耗尽区内电子和空穴数量成倍增加，形成<strong>雪崩击穿</strong>。</p>
+<h3 id="4-2-齐纳击穿"><a href="#4-2-齐纳击穿" class="headerlink" title="4.2 齐纳击穿"></a>4.2 齐纳击穿</h3><p>在高掺杂浓度的PN结中，P区和N区之间的耗尽层很窄。</p>
+<p>当反向电压产生的电场足够强时，电场可以直接把共价键中的电子拉出，产生大量载流子，从而形成<strong>齐纳击穿</strong>。</p>
+<h2 id="5-PN结电容"><a href="#5-PN结电容" class="headerlink" title="5. PN结电容"></a>5. PN结电容</h2><p>PN结存在结电容，通常可以分为势垒电容和扩散电容。</p>
+<h3 id="5-1-势垒电容-C-b"><a href="#5-1-势垒电容-C-b" class="headerlink" title="5.1 势垒电容 $C_b$"></a>5.1 势垒电容 $C_b$</h3><p>当外加偏置电压不足以使PN结导通时，耗尽层仍然存在。外加电压变化会使耗尽层宽度变化，因此可以把耗尽层看作一种电容，称为<strong>势垒电容</strong>。</p>
+<h3 id="5-2-扩散电容-C-d"><a href="#5-2-扩散电容-C-d" class="headerlink" title="5.2 扩散电容 $C_d$"></a>5.2 扩散电容 $C_d$</h3><p>正向偏置较大时，耗尽层明显变窄甚至近似消失，大量载流子会在PN结两侧存储和扩散，这种由载流子存储效应形成的电容称为<strong>扩散电容</strong>。</p>
+<p>势垒电容和扩散电容统称为<strong>结电容</strong>。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-05-junction-capacitance.png" alt="PN 结结电容"></p>
+<p><em>图：势垒电容与扩散电容示意</em></p>
+<h2 id="6-功率二极管的结构"><a href="#6-功率二极管的结构" class="headerlink" title="6. 功率二极管的结构"></a>6. 功率二极管的结构</h2><p>普通二极管的PN结原理同样适用于功率二极管。功率二极管需要承受更高反向电压和更大正向电流，因此不能只用简单的 $P^+N^+$ 结构。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-06-power-diode-structure.png" alt="功率二极管结构"></p>
+<p><em>图：功率二极管的基本层结构</em></p>
+<p>功率二极管通常会在重掺杂的 $P^+$ 区和 $N^+$ 区之间加入一层轻掺杂、较厚的 $N^-$ 区。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-07-drift-region.png" alt="功率二极管漂移区"></p>
+<p><em>图：轻掺杂漂移区在功率二极管中的位置</em></p>
+<p>$N^-$ 区与 $P^+$ 区交界处会形成耗尽层。由于 $N^-$ 区掺杂浓度低、厚度较大，在反向偏置时耗尽层可以向 $N^-$ 区扩展，从而承受更高反向电压。</p>
+<h3 id="6-1-反向偏置"><a href="#6-1-反向偏置" class="headerlink" title="6.1 反向偏置"></a>6.1 反向偏置</h3><p><img src="/img/courses/power-electronics/02-power-diode/02-08-reverse-blocking.png" alt="功率二极管反向阻断"></p>
+<p><em>图：反向偏置时耗尽层向漂移区扩展</em></p>
+<p>反向偏置时，$N^-$ 区主要用于承受反向电压。一般来说：</p>
+<ul>
+<li>$N^-$ 区越宽，耐压能力越强。</li>
+<li>$N^-$ 区掺杂越轻，空间电荷区越容易扩展，也越有利于提高耐压。</li>
+<li>如果反向电压继续升高，耗尽区甚至可以扩展到 $N^+$ 区附近。</li>
+</ul>
+<h3 id="6-2-正向偏置"><a href="#6-2-正向偏置" class="headerlink" title="6.2 正向偏置"></a>6.2 正向偏置</h3><p><img src="/img/courses/power-electronics/02-power-diode/02-09-forward-conduction.png" alt="功率二极管正向导通"></p>
+<p><em>图：正向偏置时的载流子注入与导通过程</em></p>
+<p>正向偏置时，势垒区变窄甚至近似消失，电子从 $N^+$ 区向 $N^-$ 区和 $P^+$ 区扩散，空穴也会从 $P^+$ 区注入 $N^-$ 区，最终形成导通。</p>
+<p>加入 $N^-$ 区的影响：</p>
+<ul>
+<li>优点：提高反向耐压。</li>
+<li>代价：正向通态压降和导通电阻增大。</li>
+<li>动态影响：存储电荷和反向恢复问题更明显。</li>
+</ul>
+<blockquote>
+<p><strong>笔记｜我的理解</strong><br>功率二极管的核心取舍是：为了提高耐压，需要加入较厚、轻掺杂的漂移区；但漂移区会带来更大的导通压降和更明显的动态恢复问题。</p>
+</blockquote>
+<h3 id="6-3-管脚与偏置方向"><a href="#6-3-管脚与偏置方向" class="headerlink" title="6.3 管脚与偏置方向"></a>6.3 管脚与偏置方向</h3><p>二极管有阳极A和阴极K。通常：</p>
+<ul>
+<li>A接正、K接负：正向偏置，二极管导通。</li>
+<li>A接负、K接正：反向偏置，二极管截止。</li>
+</ul>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-10-polarity.png" alt="二极管极性与偏置"></p>
+<p><em>图：二极管阳极、阴极与偏置方向</em></p>
+<h2 id="7-功率二极管的静态特性"><a href="#7-功率二极管的静态特性" class="headerlink" title="7. 功率二极管的静态特性"></a>7. 功率二极管的静态特性</h2><p>静态特性主要描述二极管在稳定电压、电流条件下的伏安关系。</p>
+<h3 id="7-1-反向特性"><a href="#7-1-反向特性" class="headerlink" title="7.1 反向特性"></a>7.1 反向特性</h3><p>反向偏置时，二极管承受反向电压，只有少数载流子引起很小的反向饱和电流。</p>
+<p>当反向电压达到击穿电压 $V_B$ 附近时，反向电流急剧增大，器件进入反向击穿状态。环境温度升高时，反向漏电流增大，曲线通常会下移。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-11-reverse-characteristic.png" alt="功率二极管反向特性"></p>
+<p><em>图：功率二极管的反向伏安特性</em></p>
+<p>常见反向参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$V_{RDC}$</td>
+<td>直流阻断电压，器件允许承受的最大直流反向电压，必须小于击穿电压</td>
+</tr>
+<tr>
+<td>$V_{RRM}$</td>
+<td>反向重复峰值电压，器件允许周期性重复出现的最大反向峰值电压</td>
+</tr>
+<tr>
+<td>$V_{RSM}$</td>
+<td>反向不可重复峰值电压，器件允许的短时、不可重复反向峰值电压</td>
+</tr>
+<tr>
+<td>$I_R$</td>
+<td>反向饱和电流或反向漏电流</td>
+</tr>
+</tbody></table>
+<h3 id="7-2-正向特性"><a href="#7-2-正向特性" class="headerlink" title="7.2 正向特性"></a>7.2 正向特性</h3><p>正向偏置时，耗尽层变窄。当正向电压达到门槛电压 $V_{T0}$ 后，正向电流明显增大，器件进入稳定导通状态。</p>
+<p>稳定导通段可近似看作一条斜线，斜率的倒数为斜坡电阻 $r_T$。环境温度升高时，正向导通曲线通常会上移，即同一电压下电流更大。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-12-forward-characteristic.png" alt="功率二极管正向特性"></p>
+<p><em>图：功率二极管的正向伏安特性</em></p>
+<p>常见正向参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$I_{FRMS}$</td>
+<td>导通有效电流，导通时器件允许流过的最大电流有效值</td>
+</tr>
+<tr>
+<td>$I_{FAVM}$</td>
+<td>导通平均电流，导通时器件允许流过的最大电流平均值</td>
+</tr>
+<tr>
+<td>$I_{FSM}$</td>
+<td>正向浪涌电流，器件允许承受的最大短时瞬时电流</td>
+</tr>
+<tr>
+<td>$\int i^2 dt$</td>
+<td>浪涌电流积分，反映浪涌期间的发热能量，单位通常为 $A^2s$</td>
+</tr>
+<tr>
+<td>$V_F$</td>
+<td>导通压降，二极管导通时器件两端的电压</td>
+</tr>
+<tr>
+<td>$V_{T0}$</td>
+<td>门槛电压，器件进入稳定导通区的近似最低电压</td>
+</tr>
+<tr>
+<td>$T_{vj}$</td>
+<td>最高工作结温</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>要点｜区分平均值和有效值</strong><br>平均电流主要与器件长期发热和允许载流能力有关；有效电流更直接对应电流热效应，因为发热功率与 $i^2$ 有关。</p>
+</blockquote>
+<h2 id="8-功率二极管的动态特性"><a href="#8-功率二极管的动态特性" class="headerlink" title="8. 功率二极管的动态特性"></a>8. 功率二极管的动态特性</h2><p>动态特性描述二极管从关断到导通、从导通到关断的过渡过程。实际功率电路中，动态过程会带来电压过冲、电流尖峰和开关损耗。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-13-switching-states.png" alt="功率二极管开关状态"></p>
+<p><em>图：功率二极管在不同开关状态间的转换</em></p>
+<h3 id="8-1-正向恢复过程：S2-到-S1"><a href="#8-1-正向恢复过程：S2-到-S1" class="headerlink" title="8.1 正向恢复过程：S2 到 S1"></a>8.1 正向恢复过程：S2 到 S1</h3><p>从反向截止切换到正向导通时，二极管电流逐渐增大，最后进入稳定导通。电流上升斜率通常与电路电感有关。</p>
+<p>在刚开始导通的瞬间，二极管两端可能出现正向电压过冲 $V_{FP}$。随后，由于载流子注入增加，二极管等效电阻下降，导通压降逐渐接近稳态值。$t_{fr}$ 表示正向恢复时间。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-14-forward-recovery.png" alt="功率二极管正向恢复"></p>
+<p><em>图：从反向阻断切换到正向导通的恢复过程</em></p>
+<h3 id="8-2-反向恢复过程：S1-到-S2"><a href="#8-2-反向恢复过程：S1-到-S2" class="headerlink" title="8.2 反向恢复过程：S1 到 S2"></a>8.2 反向恢复过程：S1 到 S2</h3><p>从正向导通切换到反向偏置时，二极管电流不会立刻变为零，因为导通时存储在PN结附近的载流子需要被抽走。</p>
+<p>电流先下降到零，然后反向流过一段时间，达到反向恢复电流峰值 $I_{rr}$，再逐渐恢复到反向漏电流。反向电流部分对应的电荷称为<strong>反向恢复电荷</strong> $Q_{rr}$。</p>
+<p>寄生电感或杂散电感会在电流快速变化时产生电压过冲，因此反向恢复越剧烈，电路中的尖峰和电磁干扰风险越大。</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-15-reverse-recovery-current.png" alt="功率二极管反向恢复电流"></p>
+<p><em>图：从正向导通切换到反向阻断时的恢复电流</em></p>
+<p>完整动态曲线：</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-16-reverse-recovery-waveform.png" alt="功率二极管反向恢复波形"></p>
+<p><em>图：完整的反向恢复过程波形</em></p>
+<p>补充图：</p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-17-recovery-detail-a.png" alt="反向恢复过程补充图一"></p>
+<p><em>图：反向恢复过程的细节示意之一</em></p>
+<p><img src="/img/courses/power-electronics/02-power-diode/02-18-recovery-detail-b.png" alt="反向恢复过程补充图二"></p>
+<p><em>图：反向恢复过程的细节示意之二</em></p>
+<h2 id="9-P2问题：功率二极管是否可以直接并联？"><a href="#9-P2问题：功率二极管是否可以直接并联？" class="headerlink" title="9. P2问题：功率二极管是否可以直接并联？"></a>9. P2问题：功率二极管是否可以直接并联？</h2><p><img src="/img/courses/power-electronics/02-power-diode/02-19-parallel-current-sharing.png" alt="功率二极管并联均流问题"></p>
+<p><em>图：功率二极管并联时的电流分配与热失控风险</em></p>
+<h3 id="9-1-结论"><a href="#9-1-结论" class="headerlink" title="9.1 结论"></a>9.1 结论</h3><p>功率二极管<strong>不建议直接并联使用</strong>。理论上并联可以分流，但实际器件参数不可能完全一致，直接并联容易造成电流分配不均，严重时会使某一只二极管过热甚至失效。</p>
+<h3 id="9-2-为什么不能直接并联？"><a href="#9-2-为什么不能直接并联？" class="headerlink" title="9.2 为什么不能直接并联？"></a>9.2 为什么不能直接并联？</h3><p>主要原因是<strong>电流不均流</strong>和<strong>热失控风险</strong>。</p>
+<p>二极管并联时，两只二极管两端电压相同。但每只二极管的正向压降 $V_F$、动态电阻、结温、封装热阻都存在差异。如果其中一只二极管的 $V_F$ 略低，它会先流过更大的电流。</p>
+<p>电流变大后，该二极管发热增加，结温升高。温度升高又可能使它在相同电压下更容易导通，于是电流进一步向它集中，形成：</p>
+<p>$$<br>V_F\text{略低} \rightarrow I_F\text{更大} \rightarrow 温度升高 \rightarrow 更容易导通 \rightarrow I_F\text{继续增大}<br>$$</p>
+<p>结果就是：并联支路看似能分流，实际可能变成一只二极管承担大部分电流。</p>
+<p>动态过程中还会有额外问题：</p>
+<ul>
+<li>反向恢复时间不同，关断时某些二极管可能承担更大的反向恢复电流。</li>
+<li>线路寄生电感不同，会导致瞬态电压、电流分配不均。</li>
+<li>散热条件不同，会进一步放大静态参数差异。</li>
+</ul>
+<h3 id="9-3-有哪些解决方案？"><a href="#9-3-有哪些解决方案？" class="headerlink" title="9.3 有哪些解决方案？"></a>9.3 有哪些解决方案？</h3><p>如果必须并联功率二极管，可以采用以下方法改善均流：</p>
+<ol>
+<li>选用同型号、同批次、参数匹配的二极管。</li>
+<li>让并联器件共用散热器，尽量保持结温一致。</li>
+<li>每个二极管串联小电阻作为均流电阻，用电阻压降抵消 $V_F$ 差异。</li>
+<li>大电流或高频场景中，尽量让走线长度、铜箔阻抗和寄生电感保持对称。</li>
+<li>对高频整流或开关场景，优先选择带均流设计的整流模块，或直接选用额定电流更大的单只器件。</li>
+<li>设计时留出电流降额，不要按理想平均分流来使用。</li>
+</ol>
+<blockquote>
+<p><strong>小结｜一句话记忆</strong><br>功率二极管可以“工程上受控并联”，但不适合“直接裸并联”。并联设计的关键不是接在一起，而是让每个支路能够稳定均流。</p>
+</blockquote>
+<hr>
+<p><strong>课程导航：</strong> <a href="/courses/power-electronics/01-introduction/">上一篇：01 电力电子绪论</a> · <a href="/categories/%E7%94%B5%E6%BA%90%E7%A1%AC%E4%BB%B6%E4%B8%8E%E6%95%B0%E5%AD%97%E7%94%B5%E6%BA%90/">返回电源硬件与数字电源分类</a> · <a href="/courses/power-electronics/03-bjt/">下一篇：03 双极结型晶体管 BJT</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/courses/power-electronics/02-power-diode/">https://041101.xyz/courses/power-electronics/02-power-diode/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90/">电力电子</a></div><div class="post-share"><div class="social-share" data-image="/img/courses/covers/power-02-power-diode.svg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/courses/power-electronics/03-bjt/" title="03 双极结型晶体管 BJT"><img class="cover" src="/img/courses/covers/power-03-bjt.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">03 双极结型晶体管 BJT</div></div><div class="info-2"><div class="info-item-1">1. NPN 型三极管的工作原理NPN 型三极管由两个 N 型区和中间的 P 型区构成，形成发射极 E、基极 B 和集电极 C 三个端子，以及两个 PN 结。  图：NPN 三极管由 N 型发射区、P 型基区和 N 型集电区构成 1.1 仅施加一个偏置电压 图：仅施加单一偏置时，两个 PN 结不能同时满足放大区工作条件 仅施加一个偏置电压时，一个势垒区减弱，另一个势垒区增强，NPN 型三极管不能形成完整的集电极电流通路。 1.2 同时设置发射结与集电结偏置 图：发射结正偏、集电结反偏时的载流子运动 当发射结正向偏置、集电结反向偏置时，发射极向基区注入电子。由于基区较薄，大部分电子穿过基区并在集电结电场作用下进入集电区，最终形成集电极电流。 基极电流增大时，发射极注入基区的电子数量增加，集电极电流也随之增大。直流电流放大倍数可写为： $$\beta &#x3D; \frac{i_C}{i_B}$$  直观理解可以用水流与闸门作类比：基极控制量相当于闸门开度，较小的控制变化可以调节较大的集电极—发射极电流。这个类比有助于建立直观认识，但不能替代半导体载流子模型。   图：用水流和闸门...</div></div></div></a><a class="pagination-related" href="/courses/power-electronics/01-introduction/" title="01 电力电子绪论"><img class="cover" src="/img/courses/covers/power-01-introduction.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">01 电力电子绪论</div></div><div class="info-2"><div class="info-item-1"> 图：电力电子系统及其基本组成 图：电力电子变换器中的主要器件与功能模块 1. 电力电子变换器的基本概念电力电子的核心任务，是通过功率半导体开关器件和储能元件，实现电能形式的变换与控制。 变换器通常包含：  功率半导体开关器件 储能元件：电感、电容 必要的控制与驱动电路   笔记｜我的理解电力电子不是简单地“消耗电压”来得到想要的输出，而是尽量通过开关、电感、电容这些低损耗元件，把能量从一种形式“搬运”到另一种形式。   要点｜关键点为了避免降低效率，电力电子变换器中应尽量避免使用电阻作为主要变换元件。因为电阻会直接把电能转化为热能，造成明显的功率损耗。  2. 变换器的分类按照输入与输出电能形式的不同，电力电子变换器可以分为四类：    类型 名称 功能    AC&#x2F;DC 整流器 交流变直流   DC&#x2F;AC 逆变器 直流变交流   DC&#x2F;DC 直流变换器 直流变直流   AC&#x2F;AC 交流变换器 交流变交流    笔记｜我的理解分类的本质就是看输入、输出分别是 AC 还是 DC。只要抓住“电能形式怎么变”，这四类就比较好记。  3. 能量流...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/courses/power-electronics/01-introduction/" title="01 电力电子绪论"><img class="cover" src="/img/courses/covers/power-01-introduction.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-08</div><div class="info-item-2">01 电力电子绪论</div></div><div class="info-2"><div class="info-item-1"> 图：电力电子系统及其基本组成 图：电力电子变换器中的主要器件与功能模块 1. 电力电子变换器的基本概念电力电子的核心任务，是通过功率半导体开关器件和储能元件，实现电能形式的变换与控制。 变换器通常包含：  功率半导体开关器件 储能元件：电感、电容 必要的控制与驱动电路   笔记｜我的理解电力电子不是简单地“消耗电压”来得到想要的输出，而是尽量通过开关、电感、电容这些低损耗元件，把能量从一种形式“搬运”到另一种形式。   要点｜关键点为了避免降低效率，电力电子变换器中应尽量避免使用电阻作为主要变换元件。因为电阻会直接把电能转化为热能，造成明显的功率损耗。  2. 变换器的分类按照输入与输出电能形式的不同，电力电子变换器可以分为四类：    类型 名称 功能    AC&#x2F;DC 整流器 交流变直流   DC&#x2F;AC 逆变器 直流变交流   DC&#x2F;DC 直流变换器 直流变直流   AC&#x2F;AC 交流变换器 交流变交流    笔记｜我的理解分类的本质就是看输入、输出分别是 AC 还是 DC。只要抓住“电能形式怎么变”，这四类就比较好记。  3. 能量流...</div></div></div></a><a class="pagination-related" href="/courses/power-electronics/learning-roadmap/" title="00 电源硬件与数字电源学习路线"><img class="cover" src="/img/courses/covers/power-learning-roadmap.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-07</div><div class="info-item-2">00 电源硬件与数字电源学习路线</div></div><div class="info-2"><div class="info-item-1"> 主线：电源硬件研发 + 数字控制 + EMI&#x2F;EMC目标岗位：电源硬件工程师 &#x2F; 数字电源工程师 &#x2F; 电力电子硬件工程师 &#x2F; 电源应用工程师对标方向：大疆偏消费级高功率密度电源，阳光电源偏新能源逆变器与储能电力电子，TI &#x2F; 英飞凌偏电源芯片应用。  这条路线的核心不是“学很多知识点”，而是做出 2-3 个能证明工程能力的电源项目：会拓扑分析、会器件选型、会仿真、会 PCB Layout、会调试波形、会写基础控制代码，还能分析 EMI&#x2F;EMC 风险。 1. 最终能力画像不要把自己定位成：  我会 STM32。我懂一点电源。我也做射频。  更好的定位是：  具备电磁场 &#x2F; 射频背景的电源硬件研发候选人，熟悉 DC-DC 拓扑、数字电源控制、功率器件选型、PCB Layout 和 EMI&#x2F;EMC 分析。  简历和面试里可以浓缩为：  方向：高功率密度电源硬件 &#x2F; 数字电源 &#x2F; 新能源电力电子。     公司类型 适配方向    大疆 便携储能、无人机电源、电池充电、快充、电源管理、高...</div></div></div></a><a class="pagination-related" href="/courses/power-electronics/03-bjt/" title="03 双极结型晶体管 BJT"><img class="cover" src="/img/courses/covers/power-03-bjt.svg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-09</div><div class="info-item-2">03 双极结型晶体管 BJT</div></div><div class="info-2"><div class="info-item-1">1. NPN 型三极管的工作原理NPN 型三极管由两个 N 型区和中间的 P 型区构成，形成发射极 E、基极 B 和集电极 C 三个端子，以及两个 PN 结。  图：NPN 三极管由 N 型发射区、P 型基区和 N 型集电区构成 1.1 仅施加一个偏置电压 图：仅施加单一偏置时，两个 PN 结不能同时满足放大区工作条件 仅施加一个偏置电压时，一个势垒区减弱，另一个势垒区增强，NPN 型三极管不能形成完整的集电极电流通路。 1.2 同时设置发射结与集电结偏置 图：发射结正偏、集电结反偏时的载流子运动 当发射结正向偏置、集电结反向偏置时，发射极向基区注入电子。由于基区较薄，大部分电子穿过基区并在集电结电场作用下进入集电区，最终形成集电极电流。 基极电流增大时，发射极注入基区的电子数量增加，集电极电流也随之增大。直流电流放大倍数可写为： $$\beta &#x3D; \frac{i_C}{i_B}$$  直观理解可以用水流与闸门作类比：基极控制量相当于闸门开度，较小的控制变化可以调节较大的集电极—发射极电流。这个类比有助于建立直观认识，但不能替代半导体载流子模型。   图：用水流和闸门...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录电源硬件、数字电源与微波工程学习笔记</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-PN%E7%BB%93%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">1. PN结基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-N%E5%9E%8B%E5%8D%8A%E5%AF%BC%E4%BD%93"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 N型半导体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-P%E5%9E%8B%E5%8D%8A%E5%AF%BC%E4%BD%93"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 P型半导体</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-PN%E7%BB%93%E7%9A%84%E5%BD%A2%E6%88%90"><span class="toc-number">2.</span> <span class="toc-text">2. PN结的形成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-PN%E7%BB%93%E7%9A%84%E5%81%8F%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">3. PN结的偏置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E6%AD%A3%E5%90%91%E5%81%8F%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 正向偏置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%8F%8D%E5%90%91%E5%81%8F%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 反向偏置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%8F%8D%E5%90%91%E5%87%BB%E7%A9%BF"><span class="toc-number">4.</span> <span class="toc-text">4. 反向击穿</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E9%9B%AA%E5%B4%A9%E5%87%BB%E7%A9%BF"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 雪崩击穿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%BD%90%E7%BA%B3%E5%87%BB%E7%A9%BF"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 齐纳击穿</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-PN%E7%BB%93%E7%94%B5%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text">5. PN结电容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%8A%BF%E5%9E%92%E7%94%B5%E5%AE%B9-C-b"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 势垒电容 $C_b$</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%89%A9%E6%95%A3%E7%94%B5%E5%AE%B9-C-d"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 扩散电容 $C_d$</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%8A%9F%E7%8E%87%E4%BA%8C%E6%9E%81%E7%AE%A1%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">6.</span> <span class="toc-text">6. 功率二极管的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%8F%8D%E5%90%91%E5%81%8F%E7%BD%AE"><span class="toc-number">6.1.</span> <span class="toc-text">6.1 反向偏置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E6%AD%A3%E5%90%91%E5%81%8F%E7%BD%AE"><span class="toc-number">6.2.</span> <span class="toc-text">6.2 正向偏置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E7%AE%A1%E8%84%9A%E4%B8%8E%E5%81%8F%E7%BD%AE%E6%96%B9%E5%90%91"><span class="toc-number">6.3.</span> <span class="toc-text">6.3 管脚与偏置方向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%8A%9F%E7%8E%87%E4%BA%8C%E6%9E%81%E7%AE%A1%E7%9A%84%E9%9D%99%E6%80%81%E7%89%B9%E6%80%A7"><span class="toc-number">7.</span> <span class="toc-text">7. 功率二极管的静态特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%8F%8D%E5%90%91%E7%89%B9%E6%80%A7"><span class="toc-number">7.1.</span> <span class="toc-text">7.1 反向特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E6%AD%A3%E5%90%91%E7%89%B9%E6%80%A7"><span class="toc-number">7.2.</span> <span class="toc-text">7.2 正向特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%8A%9F%E7%8E%87%E4%BA%8C%E6%9E%81%E7%AE%A1%E7%9A%84%E5%8A%A8%E6%80%81%E7%89%B9%E6%80%A7"><span class="toc-number">8.</span> <span class="toc-text">8. 功率二极管的动态特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E6%AD%A3%E5%90%91%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%EF%BC%9AS2-%E5%88%B0-S1"><span class="toc-number">8.1.</span> <span class="toc-text">8.1 正向恢复过程：S2 到 S1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%8F%8D%E5%90%91%E6%81%A2%E5%A4%8D%E8%BF%87%E7%A8%8B%EF%BC%9AS1-%E5%88%B0-S2"><span class="toc-number">8.2.</span> <span class="toc-text">8.2 反向恢复过程：S1 到 S2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-P2%E9%97%AE%E9%A2%98%EF%BC%9A%E5%8A%9F%E7%8E%87%E4%BA%8C%E6%9E%81%E7%AE%A1%E6%98%AF%E5%90%A6%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%B9%B6%E8%81%94%EF%BC%9F"><span class="toc-number">9.</span> <span class="toc-text">9. P2问题：功率二极管是否可以直接并联？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-%E7%BB%93%E8%AE%BA"><span class="toc-number">9.1.</span> <span class="toc-text">9.1 结论</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E7%9B%B4%E6%8E%A5%E5%B9%B6%E8%81%94%EF%BC%9F"><span class="toc-number">9.2.</span> <span class="toc-text">9.2 为什么不能直接并联？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-%E6%9C%89%E5%93%AA%E4%BA%9B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9F"><span class="toc-number">9.3.</span> <span class="toc-text">9.3 有哪些解决方案？</span></a></li></ol></li></ol></div></div><div class="card-widget card-post-series"><div class="item-headline"><i class="fa-solid fa-layer-group"></i><span>系列文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/courses/power-electronics/learning-roadmap/" title="00 电源硬件与数字电源学习路线"><img src="/img/courses/covers/power-learning-roadmap.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="00 电源硬件与数字电源学习路线"></a><div class="content"><a class="title" href="/courses/power-electronics/learning-roadmap/" title="00 电源硬件与数字电源学习路线">00 电源硬件与数字电源学习路线</a><time datetime="2026-07-07T06:10:54.000Z" title="发表于 2026-07-07 14:10:54">2026-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/power-electronics/01-introduction/" title="01 电力电子绪论"><img src="/img/courses/covers/power-01-introduction.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="01 电力电子绪论"></a><div class="content"><a class="title" href="/courses/power-electronics/01-introduction/" title="01 电力电子绪论">01 电力电子绪论</a><time datetime="2026-07-08T09:34:24.000Z" title="发表于 2026-07-08 17:34:24">2026-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/power-electronics/02-power-diode/" title="02 功率二极管"><img src="/img/courses/covers/power-02-power-diode.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="02 功率二极管"></a><div class="content"><a class="title" href="/courses/power-electronics/02-power-diode/" title="02 功率二极管">02 功率二极管</a><time datetime="2026-07-08T11:35:52.000Z" title="发表于 2026-07-08 19:35:52">2026-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/courses/power-electronics/03-bjt/" title="03 双极结型晶体管 BJT"><img src="/img/courses/covers/power-03-bjt.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="03 双极结型晶体管 BJT"></a><div class="content"><a class="title" href="/courses/power-electronics/03-bjt/" title="03 双极结型晶体管 BJT">03 双极结型晶体管 BJT</a><time datetime="2026-07-09T10:34:24.000Z" title="发表于 2026-07-09 18:34:24">2026-07-09</time></div></div></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/text-frequency-project/" title="文本词频统计项目实战">文本词频统计项目实战</a><time datetime="2026-07-15T01:50:00.000Z" title="发表于 2026-07-15 09:50:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/files-json-csv-and-exceptions/" title="文件、JSON、CSV 与异常处理">文件、JSON、CSV 与异常处理</a><time datetime="2026-07-15T01:40:00.000Z" title="发表于 2026-07-15 09:40:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/conditionals-loops-and-functions/" title="条件判断、循环与函数">条件判断、循环与函数</a><time datetime="2026-07-15T01:30:00.000Z" title="发表于 2026-07-15 09:30:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/lists-dictionaries-sets-and-tuples/" title="列表、字典、集合与元组">列表、字典、集合与元组</a><time datetime="2026-07-15T01:20:00.000Z" title="发表于 2026-07-15 09:20:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/variables-data-types-and-strings/" title="变量、数据类型与字符串">变量、数据类型与字符串</a><time datetime="2026-07-15T01:10:00.000Z" title="发表于 2026-07-15 09:10:00">2026-07-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/mortal-bg.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/mortal-site-stats.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

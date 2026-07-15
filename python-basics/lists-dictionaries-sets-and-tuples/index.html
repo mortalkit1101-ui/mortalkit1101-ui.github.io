@@ -1,0 +1,301 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>列表、字典、集合与元组 | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="掌握 Python 列表、字典、集合和元组的特点、操作方法与适用场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="列表、字典、集合与元组">
+<meta property="og:url" content="https://041101.xyz/python-basics/lists-dictionaries-sets-and-tuples/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="掌握 Python 列表、字典、集合和元组的特点、操作方法与适用场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/avatar.JPG">
+<meta property="article:published_time" content="2026-07-15T01:20:00.000Z">
+<meta property="article:modified_time" content="2026-07-15T01:20:00.000Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/avatar.JPG"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "列表、字典、集合与元组",
+  "url": "https://041101.xyz/python-basics/lists-dictionaries-sets-and-tuples/",
+  "image": "https://041101.xyz/img/avatar.JPG",
+  "datePublished": "2026-07-15T01:20:00.000Z",
+  "dateModified": "2026-07-15T01:20:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://041101.xyz/python-basics/lists-dictionaries-sets-and-tuples/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '列表、字典、集合与元组',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/mortal-bg.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">列表、字典、集合与元组</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">列表、字典、集合与元组</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-07-15T01:20:00.000Z" title="发表于 2026-07-15 09:20:00">2026-07-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-15T01:20:00.000Z" title="更新于 2026-07-15 09:20:00">2026-07-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Python/">Python</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>上一篇：<a href="/python-basics/variables-data-types-and-strings/">变量、数据类型与字符串</a>　下一篇：<a href="/python-basics/conditionals-loops-and-functions/">条件判断、循环与函数</a></p>
+<h2 id="1-列表-list"><a href="#1-列表-list" class="headerlink" title="1. 列表 list"></a>1. 列表 <code>list</code></h2><p>列表保存有顺序、可以修改的一组数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">scores = [<span class="number">80</span>, <span class="number">92</span>, <span class="number">75</span>, <span class="number">88</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(scores[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(scores[-<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(scores[<span class="number">1</span>:<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">scores.append(<span class="number">100</span>)</span><br><span class="line">scores.remove(<span class="number">75</span>)</span><br><span class="line">last = scores.pop()</span><br></pre></td></tr></table></figure>
+
+<p>常用统计与排序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(scores))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">max</span>(scores))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">min</span>(scores))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sum</span>(scores) / <span class="built_in">len</span>(scores))</span><br><span class="line"></span><br><span class="line">scores.sort()</span><br><span class="line">scores.sort(reverse=<span class="literal">True</span>)</span><br><span class="line">new_scores = <span class="built_in">sorted</span>(scores)</span><br></pre></td></tr></table></figure>
+
+<p><code>sort()</code> 修改原列表；<code>sorted()</code> 返回新列表。</p>
+<h2 id="2-字典-dict"><a href="#2-字典-dict" class="headerlink" title="2. 字典 dict"></a>2. 字典 <code>dict</code></h2><p>字典使用“键：值”保存有明确字段的数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">student = &#123;</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;张三&quot;</span>,</span><br><span class="line">    <span class="string">&quot;age&quot;</span>: <span class="number">20</span>,</span><br><span class="line">    <span class="string">&quot;score&quot;</span>: <span class="number">92</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">student[<span class="string">&quot;score&quot;</span>] = <span class="number">100</span></span><br><span class="line">student[<span class="string">&quot;major&quot;</span>] = <span class="string">&quot;通信工程&quot;</span></span><br><span class="line">student.pop(<span class="string">&quot;age&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>键可能不存在时使用 <code>get()</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(student.get(<span class="string">&quot;phone&quot;</span>, <span class="string">&quot;没有手机号&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>遍历键和值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> student.items():</span><br><span class="line">    <span class="built_in">print</span>(key, value)</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态统计词频"><a href="#动态统计词频" class="headerlink" title="动态统计词频"></a>动态统计词频</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">words = [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;llm&quot;</span>, <span class="string">&quot;python&quot;</span>, <span class="string">&quot;rag&quot;</span>]</span><br><span class="line">word_count = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">    word_count[word] = word_count.get(word, <span class="number">0</span>) + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>这比提前写死单词名称更通用，文章中新出现的单词也能自动统计。</p>
+<h2 id="3-集合-set"><a href="#3-集合-set" class="headerlink" title="3. 集合 set"></a>3. 集合 <code>set</code></h2><p>集合用于去重和集合运算，元素没有固定顺序。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">words = [<span class="string">&quot;python&quot;</span>, <span class="string">&quot;llm&quot;</span>, <span class="string">&quot;python&quot;</span>, <span class="string">&quot;rag&quot;</span>]</span><br><span class="line">unique_words = <span class="built_in">set</span>(words)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(unique_words))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = &#123;<span class="string">&quot;python&quot;</span>, <span class="string">&quot;rag&quot;</span>, <span class="string">&quot;llm&quot;</span>&#125;</span><br><span class="line">b = &#123;<span class="string">&quot;python&quot;</span>, <span class="string">&quot;docker&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(a &amp; b)  <span class="comment"># 交集</span></span><br><span class="line"><span class="built_in">print</span>(a | b)  <span class="comment"># 并集</span></span><br><span class="line"><span class="built_in">print</span>(a - b)  <span class="comment"># 差集</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-元组-tuple"><a href="#4-元组-tuple" class="headerlink" title="4. 元组 tuple"></a>4. 元组 <code>tuple</code></h2><p>元组有顺序，但创建后不能修改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">position = (<span class="number">126.5</span>, <span class="number">30.2</span>)</span><br><span class="line"><span class="built_in">print</span>(position[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+<p>函数可以使用元组形式返回多个值：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_min_max</span>(<span class="params">numbers</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">min</span>(numbers), <span class="built_in">max</span>(numbers)</span><br><span class="line"></span><br><span class="line">lowest, highest = get_min_max([<span class="number">3</span>, <span class="number">8</span>, <span class="number">1</span>, <span class="number">9</span>])</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-选择方法"><a href="#5-选择方法" class="headerlink" title="5. 选择方法"></a>5. 选择方法</h2><table>
+<thead>
+<tr>
+<th>需求</th>
+<th>数据结构</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>保存有顺序且需要修改的数据</td>
+<td>列表</td>
+</tr>
+<tr>
+<td>保存字段和对应值</td>
+<td>字典</td>
+</tr>
+<tr>
+<td>去重或进行集合运算</td>
+<td>集合</td>
+</tr>
+<tr>
+<td>保存不应该修改的数据</td>
+<td>元组</td>
+</tr>
+</tbody></table>
+<h2 id="常见错误"><a href="#常见错误" class="headerlink" title="常见错误"></a>常见错误</h2><ul>
+<li>使用不存在的字典键：优先考虑 <code>get()</code>。</li>
+<li>认为集合有固定顺序：不要依赖集合的显示顺序。</li>
+<li>混淆 <code>sort()</code> 与 <code>sorted()</code>：前者修改原列表，后者返回新列表。</li>
+</ul>
+<h2 id="自测"><a href="#自测" class="headerlink" title="自测"></a>自测</h2><ol>
+<li>如何求列表中不同元素的数量？</li>
+<li>如何让字典中某个单词的计数自动加一？</li>
+<li>学生信息为什么更适合字典而不是集合？</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/python-basics/lists-dictionaries-sets-and-tuples/">https://041101.xyz/python-basics/lists-dictionaries-sets-and-tuples/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Python/">Python</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.JPG" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/python-basics/conditionals-loops-and-functions/" title="条件判断、循环与函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">条件判断、循环与函数</div></div><div class="info-2"><div class="info-item-1">上一篇：列表、字典、集合与元组　下一篇：文件、JSON、CSV 与异常处理 1. 条件判断12345678score = 85if score &gt;= 90:    print(&quot;优秀&quot;)elif score &gt;= 60:    print(&quot;及格&quot;)else:    print(&quot;不及格&quot;)  逻辑运算： 12345678if age &gt;= 18 and score &gt;= 80:    print(&quot;两个条件都满足&quot;)if age &lt; 18 or score &gt;= 80:    print(&quot;至少满足一个条件&quot;)if not is_deleted:    print(&quot;数据可用&quot;)  空字符串、空列表、空字典、空集合、0 和 None 在判断中都相当于 False。 2. for 循环1234names = [&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;]for index, n...</div></div></div></a><a class="pagination-related" href="/python-basics/variables-data-types-and-strings/" title="变量、数据类型与字符串"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">变量、数据类型与字符串</div></div><div class="info-2"><div class="info-item-1">返回：Python 基础学习索引　下一篇：列表、字典、集合与元组 1. 变量变量是数据的名字，= 表示把右侧的值赋给左侧变量。 1234name = &quot;张三&quot;age = 20height = 1.75is_student = True  推荐使用小写字母和下划线命名： 12user_name = &quot;张三&quot;total_score = 95  2. 基本数据类型   类型 含义 示例    int 整数 20   float 小数 1.75   str 字符串 &quot;Python&quot;   bool 布尔值 True、False   使用 type() 查看类型： 1234age = 20height = 1.75print(type(age))print(type(height))  3. 类型转换input() 得到的内容永远是字符串。做数学运算前需要转换： 12age = int(input(&quot;请输入年龄：&quot;))print(age + 1)  常见转换： 1234int(&quot;20&quot;)flo...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/python-basics/variables-data-types-and-strings/" title="变量、数据类型与字符串"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-15</div><div class="info-item-2">变量、数据类型与字符串</div></div><div class="info-2"><div class="info-item-1">返回：Python 基础学习索引　下一篇：列表、字典、集合与元组 1. 变量变量是数据的名字，= 表示把右侧的值赋给左侧变量。 1234name = &quot;张三&quot;age = 20height = 1.75is_student = True  推荐使用小写字母和下划线命名： 12user_name = &quot;张三&quot;total_score = 95  2. 基本数据类型   类型 含义 示例    int 整数 20   float 小数 1.75   str 字符串 &quot;Python&quot;   bool 布尔值 True、False   使用 type() 查看类型： 1234age = 20height = 1.75print(type(age))print(type(height))  3. 类型转换input() 得到的内容永远是字符串。做数学运算前需要转换： 12age = int(input(&quot;请输入年龄：&quot;))print(age + 1)  常见转换： 1234int(&quot;20&quot;)flo...</div></div></div></a><a class="pagination-related" href="/python-basics/files-json-csv-and-exceptions/" title="文件、JSON、CSV 与异常处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-15</div><div class="info-item-2">文件、JSON、CSV 与异常处理</div></div><div class="info-2"><div class="info-item-1">上一篇：条件判断、循环与函数　下一篇：文本词频统计项目实战 1. 使用 Path 构造路径1234from pathlib import PathBASE_DIR = Path(__file__).resolve().parentfile_path = BASE_DIR / &quot;data&quot; / &quot;article.txt&quot;   __file__：当前 Python 文件。 resolve()：得到绝对路径。 parent：得到所在文件夹。 /：拼接路径。  这种写法不依赖终端当前目录。 2. 读取和写入文本12with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as file:    content = file.read()  with 结束时自动关闭文件。按行读取： 12345with open(file_path, &quot;r&quot;, encoding=&quot;utf-8&quot;) as file:    for line in file:   ...</div></div></div></a><a class="pagination-related" href="/python-basics/index/" title="Python 基础学习索引"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-15</div><div class="info-item-2">Python 基础学习索引</div></div><div class="info-2"><div class="info-item-1">学习目标完成这一组笔记后，能够：  使用变量、字符串和常见数据类型处理信息。 根据需求选择列表、字典、集合或元组。 使用判断、循环和函数组织程序。 读写 TXT、JSON、CSV 文件并处理常见异常。 独立解释并复现文本词频统计项目。  推荐顺序 变量、数据类型与字符串 列表、字典、集合与元组 条件判断、循环与函数 文件、JSON、CSV 与异常处理 文本词频统计项目实战  对应练习代码123F:\AAAAA\python\learn\01.pyF:\AAAAA\python\learn\02.pyF:\AAAAA\python\text-analyzer\  掌握标准  能解释 int、float、str、bool 的区别。  能独立完成字符串切分、替换、清理和格式化。  能用字典动态统计任意单词出现次数。  能写出 if、for、while 和带返回值的函数。  能用 Path 构造不依赖终端位置的文件路径。  能读写 JSON 和 CSV，并处理文件不存在等异常。  能解释 text-analyzer 中三个 Python 文件的职责。  建议练习方式每学完一篇，先运行其中...</div></div></div></a><a class="pagination-related" href="/python-basics/conditionals-loops-and-functions/" title="条件判断、循环与函数"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-15</div><div class="info-item-2">条件判断、循环与函数</div></div><div class="info-2"><div class="info-item-1">上一篇：列表、字典、集合与元组　下一篇：文件、JSON、CSV 与异常处理 1. 条件判断12345678score = 85if score &gt;= 90:    print(&quot;优秀&quot;)elif score &gt;= 60:    print(&quot;及格&quot;)else:    print(&quot;不及格&quot;)  逻辑运算： 12345678if age &gt;= 18 and score &gt;= 80:    print(&quot;两个条件都满足&quot;)if age &lt; 18 or score &gt;= 80:    print(&quot;至少满足一个条件&quot;)if not is_deleted:    print(&quot;数据可用&quot;)  空字符串、空列表、空字典、空集合、0 和 None 在判断中都相当于 False。 2. for 循环1234names = [&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;]for index, n...</div></div></div></a><a class="pagination-related" href="/python-basics/text-frequency-project/" title="文本词频统计项目实战"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-15</div><div class="info-item-2">文本词频统计项目实战</div></div><div class="info-2"><div class="info-item-1">上一篇：文件、JSON、CSV 与异常处理　返回：Python 基础学习索引 1. 项目目标读取 article.txt，清理多余空白，统计总词数、不同词数、最高频词及每个词的出现次数，最后保存为 JSON。 项目位置： 1F:\AAAAA\python\text-analyzer\  2. 项目结构12345678text-analyzer/├── data/│   └── article.txt├── output/│   └── result.json├── main.py├── file_utils.py└── text_utils.py     文件 职责    main.py 组织读取、清洗、统计和保存流程   file_utils.py 读取文本、创建输出目录、保存 JSON   text_utils.py 清洗文本、统计词频   article.txt 输入数据   result.json 输出结果   3. 数据流12345678article.txt  → read_text()  → clean_text()  → split()  → count_word...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">记录电源硬件、数字电源与微波工程学习笔记</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%88%97%E8%A1%A8-list"><span class="toc-number">1.</span> <span class="toc-text">1. 列表 list</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AD%97%E5%85%B8-dict"><span class="toc-number">2.</span> <span class="toc-text">2. 字典 dict</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E7%BB%9F%E8%AE%A1%E8%AF%8D%E9%A2%91"><span class="toc-number">2.1.</span> <span class="toc-text">动态统计词频</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%9B%86%E5%90%88-set"><span class="toc-number">3.</span> <span class="toc-text">3. 集合 set</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%85%83%E7%BB%84-tuple"><span class="toc-number">4.</span> <span class="toc-text">4. 元组 tuple</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E9%80%89%E6%8B%A9%E6%96%B9%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">5. 选择方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF"><span class="toc-number">6.</span> <span class="toc-text">常见错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E6%B5%8B"><span class="toc-number">7.</span> <span class="toc-text">自测</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/text-frequency-project/" title="文本词频统计项目实战">文本词频统计项目实战</a><time datetime="2026-07-15T01:50:00.000Z" title="发表于 2026-07-15 09:50:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/files-json-csv-and-exceptions/" title="文件、JSON、CSV 与异常处理">文件、JSON、CSV 与异常处理</a><time datetime="2026-07-15T01:40:00.000Z" title="发表于 2026-07-15 09:40:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/conditionals-loops-and-functions/" title="条件判断、循环与函数">条件判断、循环与函数</a><time datetime="2026-07-15T01:30:00.000Z" title="发表于 2026-07-15 09:30:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/lists-dictionaries-sets-and-tuples/" title="列表、字典、集合与元组">列表、字典、集合与元组</a><time datetime="2026-07-15T01:20:00.000Z" title="发表于 2026-07-15 09:20:00">2026-07-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/python-basics/variables-data-types-and-strings/" title="变量、数据类型与字符串">变量、数据类型与字符串</a><time datetime="2026-07-15T01:10:00.000Z" title="发表于 2026-07-15 09:10:00">2026-07-15</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/mortal-bg.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/mortal-site-stats.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

@@ -75,4 +75,7 @@ search:
   format: html
 
 deploy:
-  type:
+  type: git
+  repo: https://github.com/mortalkit1101-ui/mortalkit1101-ui.github.io.git
+  branch: main
+  message: "Deploy blog: {{ now('YYYY-MM-DD HH:mm:ss') }}"

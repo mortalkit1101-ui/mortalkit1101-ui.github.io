@@ -7,6 +7,7 @@
     "clean": "hexo clean",
     "covers": "node tools/generate-course-covers.js",
     "generate": "hexo generate",
+    "publish": "hexo clean && hexo generate && hexo deploy",
     "server": "hexo server",
     "deploy": "hexo deploy",
     "verify": "node tools/verify-course-site.js"
@@ -28,5 +29,8 @@
   },
   "hexo": {
     "version": "8.1.2"
+  },
+  "devDependencies": {
+    "hexo-deployer-git": "^4.0.0"
   }
 }

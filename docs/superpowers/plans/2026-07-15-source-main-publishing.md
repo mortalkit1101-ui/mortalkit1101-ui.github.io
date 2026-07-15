@@ -6,7 +6,7 @@
 
 **Architecture:** The remote `source` branch stores Hexo source and becomes the repository default branch. Hexo Git deployment builds the site and commits generated output to the existing unrelated `main` history used by GitHub Pages.
 
-**Tech Stack:** Git, GitHub CLI, Hexo 8, `hexo-deployer-git`, npm, Butterfly theme, in-app browser verification
+**Tech Stack:** Git, GitHub CLI, Hexo 8, Node.js, npm, Butterfly theme, in-app browser verification
 
 ## Global Constraints
 
@@ -49,18 +49,18 @@ Expected: repository metadata reports `source` as `defaultBranchRef.name`.
 
 **Files:**
 - Modify: `package.json`
-- Modify: `package-lock.json`
 - Modify: `_config.yml`
+- Create: `tools/publish-blog.js`
 
 **Interfaces:**
 - Consumes: Hexo-generated `public/` directory
-- Produces: `npm run publish` and Hexo deployment to remote `main`
+- Produces: `npm run publish` and ordinary Git deployment to remote `main`
 
-- [ ] **Step 1: Install the deployment adapter**
+- [ ] **Step 1: Add the safe deployment script**
 
-Run: `npm.cmd install --save-dev hexo-deployer-git`
+Create `tools/publish-blog.js` to fetch `origin/main` into `.deploy_pages/`, clear only generated files after verifying the path is inside the workspace, copy `public/`, commit only when changed, and run `git push origin main` without force.
 
-Expected: dependency is added to `devDependencies` and the lockfile resolves successfully.
+Expected: `node --check tools/publish-blog.js` exits successfully and the script contains no force-push argument.
 
 - [ ] **Step 2: Add the publish script and deployment target**
 
@@ -70,14 +70,11 @@ Add this script to `package.json`:
 "publish": "hexo clean && hexo generate && hexo deploy"
 ```
 
-Add this configuration to `_config.yml`:
+Keep Hexo's unused deploy adapter disabled in `_config.yml`:
 
 ```yaml
 deploy:
-  type: git
-  repo: https://github.com/mortalkit1101-ui/mortalkit1101-ui.github.io.git
-  branch: main
-  message: "Deploy blog: {{ now('YYYY-MM-DD HH:mm:ss') }}"
+  type:
 ```
 
 - [ ] **Step 3: Validate generation before deployment**
@@ -88,7 +85,7 @@ Expected: Hexo reports successful generation of the six `/python-basics/` routes
 
 - [ ] **Step 4: Commit and push source configuration**
 
-Run: `git add package.json package-lock.json _config.yml docs/superpowers/plans/2026-07-15-source-main-publishing.md && git commit -m "Configure Hexo publishing workflow" && git push`
+Run: `git add package.json package-lock.json _config.yml tools/publish-blog.js docs/superpowers/plans/2026-07-15-source-main-publishing.md && git commit -m "Configure safe blog publishing workflow" && git push`
 
 Expected: source configuration is present on remote `source`.
 
@@ -105,7 +102,7 @@ Expected: source configuration is present on remote `source`.
 
 Run: `npm.cmd run publish`
 
-Expected: `hexo-deployer-git` fetches the existing `main` history, creates a normal deployment commit, and pushes without `--force`.
+Expected: the publishing script fetches the existing `main` history, creates a normal deployment commit only when generated files differ, and pushes without force.
 
 - [ ] **Step 2: Confirm remote branch state**
 

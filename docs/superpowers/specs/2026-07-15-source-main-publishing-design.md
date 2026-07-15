@@ -23,17 +23,17 @@ Make the Hexo blog reliably publishable from one instruction while preserving so
 1. Inspect the source worktree and confirm that all changes are intended blog updates.
 2. Run `npm.cmd run generate` and stop if Hexo reports an error.
 3. Commit and push source changes to `source` with the `mortalkit` GitHub account.
-4. Run Hexo Git deployment to publish the generated `public/` tree to `main`.
+4. Run the repository publishing script to synchronize the generated `public/` tree into a checked-out copy of `main`, commit, and push normally.
 5. Verify the live domain `https://041101.xyz` in desktop and mobile viewports.
 
 The default meaning of “上线更新的笔记” is the complete flow above, including online verification.
 
 ## Deployment Configuration
 
-- Add `hexo-deployer-git` as a development dependency.
-- Configure `_config.yml` with the existing GitHub repository and `main` as the deployment branch.
+- Add `tools/publish-blog.js` as the only generated-site publishing entry point.
+- The script fetches the existing `main`, copies `public/` into the ignored `.deploy_pages/` checkout, commits only when the generated tree changed, and pushes without force.
 - Keep `source/CNAME` and `source/.nojekyll` in the generated output so the custom domain and GitHub Pages behavior remain stable.
-- Add a single publication script that cleans, generates, and deploys the site using Windows-compatible npm invocation when run from PowerShell.
+- Add `npm run publish` to clean, generate, and invoke the publishing script using Windows-compatible npm invocation when run from PowerShell.
 
 ## Failure Handling
 
@@ -58,3 +58,4 @@ The default meaning of “上线更新的笔记” is the complete flow above, i
 - Merging unrelated histories would mix editable source with generated output and make future diffs unsafe.
 - Replacing `main` with the source history would break the current branch-based GitHub Pages setup until repository settings were migrated.
 - Migrating immediately to GitHub Actions would add repository-settings and workflow complexity without improving this first publication.
+- `hexo-deployer-git` was rejected after verification because it force-updates the deployment branch instead of preserving ordinary deployment history.

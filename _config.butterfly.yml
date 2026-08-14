@@ -73,7 +73,7 @@ disable_top_img: false
 default_top_img: /img/mortal-bg.jpg
 
 # The banner image of index page
-index_img: /img/mortal-bg.jpg
+index_img: /img/home-bg.png
 
 # The banner image of archive page
 archive_img:
@@ -1069,7 +1069,6 @@ inject:
     - <link rel="stylesheet" href="/css/empty-home.css">
   bottom:
     # - <script src="xxxx"></script>
-    - <script src="/js/mortal-site-stats.js"></script>
     - <script src="/js/empty-home.js"></script>
 
 # CDN Settings

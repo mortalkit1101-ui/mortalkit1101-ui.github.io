@@ -1,7 +1,11 @@
 (() => {
   const renderEmptyHome = () => {
+    const isHomepage = window.location.pathname === '/'
+      || window.location.pathname === '/index.html';
+    if (!isHomepage) return;
+
     const postList = document.querySelector(
-      '.type-empty-home #recent-posts .recent-post-items',
+      '#recent-posts .recent-post-items',
     );
 
     if (!postList || postList.children.length !== 0) return;

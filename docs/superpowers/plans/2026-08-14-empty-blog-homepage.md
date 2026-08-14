@@ -81,7 +81,7 @@ Expected: FAIL with `public/index.html must exist`.
 
 **Interfaces:**
 - Consumes: Hexo `locals.posts` and the empty Butterfly `.recent-post-items` container.
-- Produces: root `index.html` marked as `type-empty-home` with a theme-native empty-state card inserted at runtime.
+- Produces: root `index.html` recognized as the true homepage, with a theme-native empty-state card inserted at runtime.
 
 - [x] **Step 1: Add the zero-post generator**
 
@@ -96,7 +96,7 @@ hexo.extend.generator.register('empty-home', function emptyHome(locals) {
     layout: ['index', 'archive'],
     data: {
       __index: true,
-      type: 'empty-home',
+      type: false,
       posts: locals.posts,
       current: 1,
       total: 1,
@@ -115,8 +115,11 @@ hexo.extend.generator.register('empty-home', function emptyHome(locals) {
 ```js
 (() => {
   const renderEmptyHome = () => {
+    const isHomepage = window.location.pathname === '/'
+      || window.location.pathname === '/index.html';
+    if (!isHomepage) return;
     const postList = document.querySelector(
-      '.type-empty-home #recent-posts .recent-post-items',
+      '#recent-posts .recent-post-items',
     );
     if (!postList || postList.children.length !== 0) return;
     const emptyState = document.createElement('div');
@@ -133,7 +136,7 @@ hexo.extend.generator.register('empty-home', function emptyHome(locals) {
 - [x] **Step 3: Add theme-native site styling**
 
 ```css
-.type-empty-home #recent-posts .recent-post-empty {
+#recent-posts .recent-post-empty {
   display: flex;
   align-items: center;
   justify-content: center;

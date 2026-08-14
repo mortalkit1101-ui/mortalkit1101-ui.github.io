@@ -8,7 +8,7 @@ hexo.extend.generator.register('empty-home', function emptyHome(locals) {
     layout: ['index', 'archive'],
     data: {
       __index: true,
-      type: 'empty-home',
+      type: false,
       posts: locals.posts,
       current: 1,
       total: 1,

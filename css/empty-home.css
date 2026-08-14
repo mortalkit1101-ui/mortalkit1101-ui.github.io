@@ -1,4 +1,4 @@
-.type-empty-home #recent-posts .recent-post-empty {
+#recent-posts .recent-post-empty {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,6 +12,6 @@
   transition: all 0.3s;
 }
 
-.type-empty-home #recent-posts .recent-post-empty:hover {
+#recent-posts .recent-post-empty:hover {
   box-shadow: var(--card-hover-box-shadow);
 }

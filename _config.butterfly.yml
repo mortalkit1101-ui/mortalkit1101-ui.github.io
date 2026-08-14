@@ -299,7 +299,7 @@ aside:
       link: https://github.com/mortalkit1101-ui
   card_announcement:
     enable: true
-    content: 记录从 0 开始的转码学习
+    content: 从 0 开始的转码学习
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -1066,9 +1066,11 @@ css_prefix: true
 inject:
   head:
     # - <link rel="stylesheet" href="/xxx.css">
+    - <link rel="stylesheet" href="/css/empty-home.css">
   bottom:
     # - <script src="xxxx"></script>
     - <script src="/js/mortal-site-stats.js"></script>
+    - <script src="/js/empty-home.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work

@@ -1,0 +1,17 @@
+.type-empty-home #recent-posts .recent-post-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  min-height: 16.8em;
+  border-radius: 8px;
+  background: var(--card-bg);
+  box-shadow: var(--card-box-shadow);
+  color: var(--font-color);
+  font-size: 1.25em;
+  transition: all 0.3s;
+}
+
+.type-empty-home #recent-posts .recent-post-empty:hover {
+  box-shadow: var(--card-hover-box-shadow);
+}

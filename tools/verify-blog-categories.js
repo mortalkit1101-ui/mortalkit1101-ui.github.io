@@ -24,6 +24,15 @@ function markdownFiles(directory) {
   });
 }
 
+function filesUnder(directory) {
+  if (!fs.existsSync(directory)) return [];
+
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const target = path.join(directory, entry.name);
+    return entry.isDirectory() ? filesUnder(target) : [target];
+  });
+}
+
 assert.deepEqual(normalizeCategoryNames(['大模型']), [CANONICAL_LLM_CATEGORY]);
 assert.deepEqual(normalizeCategoryNames(['LLM']), [CANONICAL_LLM_CATEGORY]);
 assert.deepEqual(
@@ -40,6 +49,33 @@ for (const file of markdownFiles(postsRoot)) {
   assert(
     date && !Number.isNaN(Date.parse(date[1].trim())),
     `Invalid date: ${file}`,
+  );
+}
+
+const themeConfig = fs.readFileSync(
+  path.join(root, '_config.butterfly.yml'),
+  'utf8',
+);
+for (const key of ['default_top_img', 'index_img', 'footer_img']) {
+  assert.match(
+    themeConfig,
+    new RegExp(`^${key}: /img/home-bg\\.png$`, 'm'),
+  );
+}
+assert.equal(
+  fs.existsSync(path.join(root, 'source', 'img', 'mortal-bg.jpg')),
+  false,
+);
+assert.equal(
+  fs.existsSync(path.join(publicRoot, 'img', 'mortal-bg.jpg')),
+  false,
+);
+for (const file of filesUnder(publicRoot).filter(
+  file => /\.(?:html|css|js|xml)$/.test(file),
+)) {
+  assert(
+    !fs.readFileSync(file, 'utf8').includes('/img/mortal-bg.jpg'),
+    `Legacy background reference: ${file}`,
   );
 }
 

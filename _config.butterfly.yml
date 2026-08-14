@@ -70,7 +70,7 @@ avatar:
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img: /img/mortal-bg.jpg
+default_top_img: /img/home-bg.png
 
 # The banner image of index page
 index_img: /img/home-bg.png
@@ -95,7 +95,7 @@ category_img:
 category_per_img:
 
 # The background image of footer
-footer_img: /img/mortal-bg.jpg
+footer_img: /img/home-bg.png
 
 # Website Background
 # Can set it to color, image URL or an array containing colors and/or image URLs

@@ -299,7 +299,7 @@ aside:
       link: https://github.com/mortalkit1101-ui
   card_announcement:
     enable: true
-    content: 记录电源硬件、数字电源与微波工程学习笔记
+    content: 记录从 0 开始的转码学习
   card_recent_post:
     enable: true
     # If set 0 will show all

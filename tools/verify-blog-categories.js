@@ -11,6 +11,11 @@ const {
 const root = path.resolve(__dirname, '..');
 const postsRoot = path.join(root, 'source', '_posts');
 const publicRoot = path.join(root, 'public');
+const pytorchArticleSegments = [
+  'blog',
+  '大模型llm',
+  '01 从数据生成到模型保存的完整二分类流程',
+];
 
 function markdownFiles(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -51,6 +56,34 @@ for (const file of markdownFiles(postsRoot)) {
     `Invalid date: ${file}`,
   );
 }
+
+const pytorchArticleSource = fs.readFileSync(
+  path.join(postsRoot, ...pytorchArticleSegments) + '.md',
+  'utf8',
+);
+assert.match(pytorchArticleSource, /^toc_number: false$/m);
+
+const pytorchArticleHtml = fs.readFileSync(
+  path.join(
+    publicRoot,
+    '2026',
+    '08',
+    '14',
+    ...pytorchArticleSegments,
+    'index.html',
+  ),
+  'utf8',
+);
+assert(
+  !pytorchArticleHtml.includes('<span class="toc-number">'),
+  'PyTorch article TOC still contains automatic numbering',
+);
+assert(
+  pytorchArticleHtml.includes(
+    '<span class="toc-text">1.1 数据准备</span>',
+  ),
+  'PyTorch article TOC lost its handwritten numbering',
+);
 
 const themeConfig = fs.readFileSync(
   path.join(root, '_config.butterfly.yml'),

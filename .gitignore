@@ -5,6 +5,7 @@ db.json
 .deploy_git/
 .deploy_pages/
 .DS_Store
+.obsidian/
 Thumbs.db
 npm-debug.log*
 yarn-debug.log*

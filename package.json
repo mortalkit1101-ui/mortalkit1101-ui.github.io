@@ -10,7 +10,8 @@
     "publish": "hexo clean && hexo generate && npm run deploy",
     "server": "hexo server",
     "deploy": "node tools/publish-blog.js",
-    "verify": "node tools/verify-course-site.js"
+    "verify": "node tools/verify-course-site.js",
+    "verify:blog": "node tools/verify-blog-categories.js"
   },
   "dependencies": {
     "hexo": "^8.1.1",

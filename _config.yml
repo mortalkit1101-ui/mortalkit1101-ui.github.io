@@ -61,7 +61,7 @@ pagination_dir: page
 
 category_generator:
   per_page: 0
-  order_by: title
+  order_by: -date
 
 include:
   - .nojekyll

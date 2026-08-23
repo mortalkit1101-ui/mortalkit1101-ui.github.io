@@ -1346,21 +1346,21 @@ class Transformer(nn.Module):
 
 下面将完整 Transformer 中最重要的张量集中整理。
 
-| 张量 | 形状 | 含义 |
-|---|---|---|
-| `src` | `[B,S]` | Encoder 输入的 Token ID |
-| `tgt` | `[B,T]` | Decoder 输入的 Token ID |
-| `src_x` | `[B,S,d_model]` | 源序列的 Embedding 与位置编码之和 |
-| `tgt_x` | `[B,T,d_model]` | 目标序列的 Embedding 与位置编码之和 |
-| Encoder 单头 `Q/K/V` | `[B,h,S,d_k]` | Encoder 自注意力的查询、键和值 |
-| Encoder 注意力分数 | `[B,h,S,S]` | 每个源 Token 对所有源 Token 的关注程度 |
-| `encoder_output` | `[B,S,d_model]` | Encoder 最后一层输出 |
-| Decoder 单头 `Q/K/V` | `[B,h,T,d_k]` | Decoder Masked Self-Attention 的查询、键和值 |
-| Decoder 自注意力分数 | `[B,h,T,T]` | 每个目标 Token 对目标序列已有位置的关注程度 |
-| Cross-Attention `Q` | `[B,h,T,d_k]` | 来自 Decoder 的查询 |
-| Cross-Attention `K/V` | `[B,h,S,d_k]` | 来自 Encoder 输出的键和值 |
-| Cross-Attention 分数 | `[B,h,T,S]` | 每个目标 Token 对所有源 Token 的关注程度 |
-| `decoder_output` | `[B,T,d_model]` | Decoder 最后一层输出 |
-| `logits` | `[B,T,V]` | 每个目标位置对词表中所有 Token 的未归一化分数 |
+| 张量                    | 形状              | 含义                                    |
+| --------------------- | --------------- | ------------------------------------- |
+| `src`                 | `[B,S]`         | Encoder 输入的 Token ID                  |
+| `tgt`                 | `[B,T]`         | Decoder 输入的 Token ID                  |
+| `src_x`               | `[B,S,d_model]` | 源序列的 Embedding 与位置编码之和                |
+| `tgt_x`               | `[B,T,d_model]` | 目标序列的 Embedding 与位置编码之和               |
+| Encoder 单头 `Q/K/V`    | `[B,h,S,d_k]`   | Encoder 自注意力的查询、键和值                   |
+| Encoder 注意力分数         | `[B,h,S,S]`     | 每个源 Token 对所有源 Token 的关注程度            |
+| `encoder_output`      | `[B,S,d_model]` | Encoder 最后一层输出                        |
+| Decoder 单头 `Q/K/V`    | `[B,h,T,d_k]`   | Decoder Masked Self-Attention 的查询、键和值 |
+| Decoder 自注意力分数        | `[B,h,T,T]`     | 每个目标 Token 对目标序列已有位置的关注程度             |
+| Cross-Attention `Q`   | `[B,h,T,d_k]`   | 来自 Decoder 的查询                        |
+| Cross-Attention `K/V` | `[B,h,S,d_k]`   | 来自 Encoder 输出的键和值                     |
+| Cross-Attention 分数    | `[B,h,T,S]`     | 每个目标 Token 对所有源 Token 的关注程度           |
+| `decoder_output`      | `[B,T,d_model]` | Decoder 最后一层输出                        |
+| `logits`              | `[B,T,V]`       | 每个目标位置对词表中所有 Token 的未归一化分数            |
 
 Transformer 的核心可以总结为：Embedding 把 Token 变成向量，位置编码加入顺序，多头注意力完成 Token 之间的信息交换，FFN 继续变换每个位置的特征，Encoder 提取源序列表示，Decoder 在 Mask 约束下结合源序列逐步生成目标序列。

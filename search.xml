@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title></title>
+      <link href="/2026/08/24/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/%E6%9C%AA%E5%91%BD%E5%90%8D/"/>
+      <url>/2026/08/24/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/%E6%9C%AA%E5%91%BD%E5%90%8D/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>03 CS224n 学习笔记（一）：词向量与语言模型</title>
       <link href="/2026/08/24/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/03%20CS224n%E8%AF%BE%E7%A8%8B_%E5%AE%8C%E7%BB%93/"/>
       <url>/2026/08/24/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/03%20CS224n%E8%AF%BE%E7%A8%8B_%E5%AE%8C%E7%BB%93/</url>
@@ -46,25 +59,6 @@
         <tags>
             
             <tag> Transformer </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>00 大模型学习路线</title>
-      <link href="/2026/08/18/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/00%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/"/>
-      <url>/2026/08/18/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/00%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</url>
-      
-        <content type="html"><![CDATA[<h1 id="1-基础架构：输入如何进入模型，Transformer-如何处理上下文"><a href="#1-基础架构：输入如何进入模型，Transformer-如何处理上下文" class="headerlink" title="1.基础架构：输入如何进入模型，Transformer 如何处理上下文"></a>1.基础架构：输入如何进入模型，Transformer 如何处理上下文</h1><ol><li>python基础</li><li>吴恩达机器学习、深度学习课程，配合李沐动手学深度学习教材</li><li>cs224n,cs336</li><li>bpe学习 实现原始文本 -&gt; tokenizer -&gt; token -&gt; token id -&gt; embedding -&gt; Transformer</li><li>transformer，一种是 Encoder–Decoder ，另一种 Decoder-only（现代常用）</li><li>attention机制（token之间如何互相读取信息）</li><li>位置编码：RoPE、ALiBi、长上下文位置扩展</li><li>qkv bias：Q&#x2F;K&#x2F;V 投影、head 组织、bias</li><li>激活函数：GELU、SiLU&#x2F;SwiGLU、Sqrt-Softplus</li><li>qwen2：visual token、placeholder replacement、MRoPE、VLM 融合</li><li>chat-template：chat template、message schema、tool calling、stop token</li></ol><h1 id="2-预训练：模型如何获得基础语言和知识能力"><a href="#2-预训练：模型如何获得基础语言和知识能力" class="headerlink" title="2.预训练：模型如何获得基础语言和知识能力"></a>2.预训练：模型如何获得基础语言和知识能力</h1><ol><li>next token prediction &#x2F; causal LM objective</li><li>loss、backward、optimizer、scheduler</li><li>Scaling Law：数据、参数、算力如何分配</li><li>大模型资源分析：参数量、FLOPs、训练&#x2F;推理显存</li><li>数据来源、清洗、去重、data mixture、token budget</li><li>context extension、RoPE 扩展、长序列 curriculum</li><li>AdamW、Muon、梯度裁剪、训练不稳定</li></ol><h1 id="3-后训练与对齐：模型如何变得会协作、可控、能推理"><a href="#3-后训练与对齐：模型如何变得会协作、可控、能推理" class="headerlink" title="3.后训练与对齐：模型如何变得会协作、可控、能推理"></a>3.后训练与对齐：模型如何变得会协作、可控、能推理</h1><ol><li>SFT：学指令格式、任务接口、基础助手行为</li><li>Reward Model、Preference Data：</li><li>RLHF：SFT + RM + PPO</li><li>Rollout,PPO,GRPO：采样 response，再用 reward &#x2F; advantage 更新策略</li><li>DPO：不显式训练 RM + PPO，直接用偏好对优化</li><li>Expert lteration：采样、验证、过滤、再训练</li><li>LLM后训练：reward、return、value、advantage、GAE、policy gradient</li><li>DAPO：long-CoT、可验证奖励、DAPO recipe、overlong reward shaping</li></ol>]]></content>
-      
-      
-      
-        <tags>
-            
-            <tag> 大模型学习路线 </tag>
             
         </tags>
       

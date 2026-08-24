@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>03 CS224n 学习笔记（一）：词向量与语言模型</title>
+      <link href="/2026/08/24/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/03%20CS224n%E8%AF%BE%E7%A8%8B_%E5%AE%8C%E7%BB%93/"/>
+      <url>/2026/08/24/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/03%20CS224n%E8%AF%BE%E7%A8%8B_%E5%AE%8C%E7%BB%93/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1-独热向量"><a href="#1-独热向量" class="headerlink" title="1. 独热向量"></a>1. 独热向量</h1><p>计算机不能直接理解词语，因此需要先把词转换成数值。最简单的方法之一是独热编码（One-hot Encoding）。假设词表中只有“我”“爱”“你”三个词，可以把它们分别表示为：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我 → [1, 0, 0]</span><br><span class="line">爱 → [0, 1, 0]</span><br><span class="line">你 → [0, 0, 1]</span><br></pre></td></tr></table></figure><p>独热向量中只有一个位置为 1，其余位置都为 0。这里的下标表示词在<strong>词表</strong>中的编号，而不是词在句子中的位置。</p><p>这种表示方法简单直接，也方便计算机处理，但它有一个明显的问题：任意两个不同词的独热向量彼此正交，无法直接体现词语之间的语义关系。例如，从这些向量本身看不出“我”和“你”比“我”和“苹果”更接近。</p><p>为了让词语之间能够建立语义联系，可以把每个词映射成一个低维、稠密并且可学习的向量，这就是词嵌入（Word Embedding）。Word2Vec 是学习词嵌入的一类经典方法。</p><h1 id="2-Word2Vec-与-Skip-gram"><a href="#2-Word2Vec-与-Skip-gram" class="headerlink" title="2. Word2Vec 与 Skip-gram"></a>2. Word2Vec 与 Skip-gram</h1><p>Word2Vec 的基本想法来自分布假说：经常出现在相似上下文中的词，往往具有相近的含义。</p><p>Word2Vec 主要包含 CBOW 和 Skip-gram 两种训练方式。本文讨论 CS224n 课程中介绍的 Skip-gram：给定一个中心词（Center Word），预测它周围窗口内的上下文词（Outside Word）。</p><p><img src="/img/blog/llm/03-cs224n-word2vec/01-skip-gram-context-window.png" alt="Skip-gram 使用中心词预测窗口内的上下文词"></p><p>如图所示，当窗口大小为 $m&#x3D;2$ 时，模型会根据位置 $t$ 的中心词 $w_t$，分别预测 $w_{t-2}$、$w_{t-1}$、$w_{t+1}$ 和 $w_{t+2}$。</p><h2 id="2-1-训练目标"><a href="#2-1-训练目标" class="headerlink" title="2.1 训练目标"></a>2.1 训练目标</h2><p>假设语料共有 $T$ 个词，窗口大小为 $m$。Skip-gram 希望最大化每个中心词预测其上下文词的条件概率。整个语料的似然可以写为：</p><p>$$<br>L(\theta)<br>&#x3D;\prod_{t&#x3D;1}^{T}<br>\prod_{\substack{-m\le j\le m\j\ne 0}}<br>P(w_{t+j}\mid w_t;\theta)<br>$$</p><p>其中，只计算 $t+j$ 没有超出语料边界的上下文词。第一个连乘遍历语料中的每个中心词，第二个连乘遍历该中心词窗口内的位置。$\theta$ 表示模型中所有需要学习的参数，也就是中心词向量和上下文词向量。</p><p>直接计算大量概率的乘积不仅不方便，而且数值可能非常小。因此对似然取对数，把连乘转换成求和。为了使用梯度下降最小化目标函数，再加上负号，并除以 $T$ 取平均：</p><p>$$<br>J(\theta)<br>&#x3D;-\frac{1}{T}\log L(\theta)<br>&#x3D;-\frac{1}{T}<br>\sum_{t&#x3D;1}^{T}<br>\sum_{\substack{-m\le j\le m\j\ne 0}}<br>\log P(w_{t+j}\mid w_t;\theta)<br>$$</p><p>所以，最大化似然 $L(\theta)$，等价于最小化平均负对数似然 $J(\theta)$。</p><h2 id="2-2-条件概率与-softmax"><a href="#2-2-条件概率与-softmax" class="headerlink" title="2.2 条件概率与 softmax"></a>2.2 条件概率与 softmax</h2><p>给定中心词 $c$，预测上下文词 $o$ 的概率为：</p><p>$$<br>P(o\mid c)<br>&#x3D;\frac{\exp(u_o^\top v_c)}<br>{\sum_{w\in V}\exp(u_w^\top v_c)}<br>$$</p><p>其中：</p><ul><li>$c$：中心词（Center Word）；</li><li>$o$：真实的上下文词（Outside Word）；</li><li>$v_c$：词 $c$ 作为中心词时使用的向量；</li><li>$u_o$：词 $o$ 作为上下文词时使用的向量；</li><li>$u_w$：词表中候选词 $w$ 作为上下文词时使用的向量；</li><li>$V$：整个词表；</li><li>$u_o^\top v_c$：中心词 $c$ 与候选上下文词 $o$ 的匹配分数。</li></ul><p>这里需要注意：同一个词在 Skip-gram 中通常有两套向量，一套用作中心词向量 $v$，另一套用作上下文词向量 $u$。</p><p>点积 $u_o^\top v_c$ 是一个没有范围限制的实数。对它取指数后可以得到正数，再对词表中所有候选词的分数进行归一化，就得到了一个概率分布。这个归一化函数就是 softmax：</p><p>$$<br>\operatorname{softmax}(x)_i<br>&#x3D;\frac{\exp(x_i)}{\sum_j\exp(x_j)}<br>$$</p><p>在 Word2Vec 中，每个 $x_i$ 就是某个候选上下文词与中心词的点积。真实上下文词的得分越高，它经过 softmax 后得到的概率通常也越大。</p><h2 id="2-3-梯度如何理解"><a href="#2-3-梯度如何理解" class="headerlink" title="2.3 梯度如何理解"></a>2.3 梯度如何理解</h2><p>对于一组中心词 $c$ 和真实上下文词 $o$，其负对数似然为：</p><p>$$<br>\ell(c,o)&#x3D;-\log P(o\mid c)<br>$$</p><p>它对中心词向量 $v_c$ 的梯度为：</p><p>$$<br>\frac{\partial\ell(c,o)}{\partial v_c}<br>&#x3D;\sum_{w\in V}P(w\mid c)u_w-u_o<br>$$</p><p>这个结果可以理解为：</p><p>$$<br>\text{梯度}<br>&#x3D;\text{模型预测分布下的上下文向量加权平均}<br>-\text{真实上下文词向量}<br>$$</p><p><img src="/img/blog/llm/03-cs224n-word2vec/02-word2vec-gradient-derivation.png" alt="Word2Vec 对中心词向量的梯度推导"></p><p>梯度下降会沿着负梯度方向更新参数，提高中心词与真实上下文词的相对匹配程度，并压低被模型高估的错误候选词的相对概率。经过语料中的大量样本训练后，出现在相似上下文中的词会逐渐得到相近的向量表示。</p><p>最后还要注意：梯度为 0 表示参数到达了一个驻点，并不代表损失一定为 0，也不能仅凭这一点断定找到了全局最优解。</p><h1 id="2-4-梯度下降算法"><a href="#2-4-梯度下降算法" class="headerlink" title="2.4 梯度下降算法"></a>2.4 梯度下降算法</h1><p>$$ \theta^{\text{new}} &#x3D; \theta^{\text{old}} - \alpha \nabla_{\theta} J(\theta) $$ 其中： $$ \alpha &#x3D; \text{learning rate} $$<br>是学习率，不能太大，这样会导致错过最小值点。<br>缺点：每一次进行更新都需要计算输出梯度，非常慢，因此采用随机梯度</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 大模型 LLM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> cs224n </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>02 Transformer算法</title>
       <link href="/2026/08/23/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/02%20Transformer%E7%AE%97%E6%B3%95/"/>
       <url>/2026/08/23/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/02%20Transformer%E7%AE%97%E6%B3%95/</url>
@@ -29,7 +54,26 @@
     
     
     <entry>
-      <title>从数据生成到模型保存的完整二分类流程</title>
+      <title>00 大模型学习路线</title>
+      <link href="/2026/08/18/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/00%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/"/>
+      <url>/2026/08/18/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/00%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1-基础架构：输入如何进入模型，Transformer-如何处理上下文"><a href="#1-基础架构：输入如何进入模型，Transformer-如何处理上下文" class="headerlink" title="1.基础架构：输入如何进入模型，Transformer 如何处理上下文"></a>1.基础架构：输入如何进入模型，Transformer 如何处理上下文</h1><ol><li>python基础</li><li>吴恩达机器学习、深度学习课程，配合李沐动手学深度学习教材</li><li>cs224n,cs336</li><li>bpe学习 实现原始文本 -&gt; tokenizer -&gt; token -&gt; token id -&gt; embedding -&gt; Transformer</li><li>transformer，一种是 Encoder–Decoder ，另一种 Decoder-only（现代常用）</li><li>attention机制（token之间如何互相读取信息）</li><li>位置编码：RoPE、ALiBi、长上下文位置扩展</li><li>qkv bias：Q&#x2F;K&#x2F;V 投影、head 组织、bias</li><li>激活函数：GELU、SiLU&#x2F;SwiGLU、Sqrt-Softplus</li><li>qwen2：visual token、placeholder replacement、MRoPE、VLM 融合</li><li>chat-template：chat template、message schema、tool calling、stop token</li></ol><h1 id="2-预训练：模型如何获得基础语言和知识能力"><a href="#2-预训练：模型如何获得基础语言和知识能力" class="headerlink" title="2.预训练：模型如何获得基础语言和知识能力"></a>2.预训练：模型如何获得基础语言和知识能力</h1><ol><li>next token prediction &#x2F; causal LM objective</li><li>loss、backward、optimizer、scheduler</li><li>Scaling Law：数据、参数、算力如何分配</li><li>大模型资源分析：参数量、FLOPs、训练&#x2F;推理显存</li><li>数据来源、清洗、去重、data mixture、token budget</li><li>context extension、RoPE 扩展、长序列 curriculum</li><li>AdamW、Muon、梯度裁剪、训练不稳定</li></ol><h1 id="3-后训练与对齐：模型如何变得会协作、可控、能推理"><a href="#3-后训练与对齐：模型如何变得会协作、可控、能推理" class="headerlink" title="3.后训练与对齐：模型如何变得会协作、可控、能推理"></a>3.后训练与对齐：模型如何变得会协作、可控、能推理</h1><ol><li>SFT：学指令格式、任务接口、基础助手行为</li><li>Reward Model、Preference Data：</li><li>RLHF：SFT + RM + PPO</li><li>Rollout,PPO,GRPO：采样 response，再用 reward &#x2F; advantage 更新策略</li><li>DPO：不显式训练 RM + PPO，直接用偏好对优化</li><li>Expert lteration：采样、验证、过滤、再训练</li><li>LLM后训练：reward、return、value、advantage、GAE、policy gradient</li><li>DAPO：long-CoT、可验证奖励、DAPO recipe、overlong reward shaping</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 大模型学习路线 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>01 从数据生成到模型保存的完整二分类流程</title>
       <link href="/2026/08/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/01%20%E4%BB%8E%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90%E5%88%B0%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E7%9A%84%E5%AE%8C%E6%95%B4%E4%BA%8C%E5%88%86%E7%B1%BB%E6%B5%81%E7%A8%8B/"/>
       <url>/2026/08/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/01%20%E4%BB%8E%E6%95%B0%E6%8D%AE%E7%94%9F%E6%88%90%E5%88%B0%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98%E7%9A%84%E5%AE%8C%E6%95%B4%E4%BA%8C%E5%88%86%E7%B1%BB%E6%B5%81%E7%A8%8B/</url>
       

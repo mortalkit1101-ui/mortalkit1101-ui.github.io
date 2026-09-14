@@ -67,6 +67,7 @@ include:
   - .nojekyll
 
 published_posts:
+  - blog/大模型llm/08 大模型文本生成解码策略.md
   - blog/大模型llm/01 从数据生成到模型保存的完整二分类流程.md
   - blog/大模型llm/02 Transformer算法.md
   - blog/大模型llm/03 CS224n课程_完结.md

@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>08 大模型文本生成解码策略 | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="文本生成模型会根据已有上下文，给出下一个 token 的概率分布。解码策略决定如何从这个分布中选择下一个 token。这里用“单词”帮助理解，但 token 并不一定对应一个完整的词。  常见的选择方式包括：  贪心解码（Greedy Decoding）：每一步直接选择概率最高的 token，容易出现重复，也不保证得到整体概率最高的序列。 随机采样（Random Sampling）：按概率分布随机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="08 大模型文本生成解码策略">
+<meta property="og:url" content="https://041101.xyz/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="文本生成模型会根据已有上下文，给出下一个 token 的概率分布。解码策略决定如何从这个分布中选择下一个 token。这里用“单词”帮助理解，但 token 并不一定对应一个完整的词。  常见的选择方式包括：  贪心解码（Greedy Decoding）：每一步直接选择概率最高的 token，容易出现重复，也不保证得到整体概率最高的序列。 随机采样（Random Sampling）：按概率分布随机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/avatar.JPG">
+<meta property="article:published_time" content="2026-09-14T02:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-14T14:04:46.469Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="temperature">
+<meta property="article:tag" content="top-k">
+<meta property="article:tag" content="top-p">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/avatar.JPG"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "08 大模型文本生成解码策略",
+  "url": "https://041101.xyz/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/",
+  "image": "https://041101.xyz/img/avatar.JPG",
+  "datePublished": "2026-09-14T02:00:00.000Z",
+  "dateModified": "2026-09-14T14:04:46.469Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://041101.xyz/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '08 大模型文本生成解码策略',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/empty-home.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/home-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">08 大模型文本生成解码策略</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">08 大模型文本生成解码策略</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-14T02:00:00.000Z" title="发表于 2026-09-14 10:00:00">2026-09-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-14T14:04:46.469Z" title="更新于 2026-09-14 22:04:46">2026-09-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B-LLM/">大模型 LLM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>文本生成模型会根据已有上下文，给出下一个 token 的概率分布。<strong>解码策略决定如何从这个分布中选择下一个 token</strong>。这里用“单词”帮助理解，但 token 并不一定对应一个完整的词。</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/01-decoding-overview.png" alt="语言模型根据上下文输出候选 token，再由解码策略决定输出"></p>
+<p>常见的选择方式包括：</p>
+<ul>
+<li><strong>贪心解码（Greedy Decoding）</strong>：每一步直接选择概率最高的 token，容易出现重复，也不保证得到整体概率最高的序列。</li>
+<li><strong>随机采样（Random Sampling）</strong>：按概率分布随机选择 token，能增加多样性，但也可能选中不合适的低概率 token。</li>
+<li><strong>束搜索（Beam Search）</strong>：维护若干条候选序列，每一步扩展候选，再按累计序列得分保留最好的若干条。它可能在开放式生成中产生重复或不够自然的文本。</li>
+</ul>
+<p>Top-k 和 Top-p 都属于<strong>先筛选候选，再随机采样</strong>的方法；Temperature 则用于调整概率分布的形状。</p>
+<h1 id="1-Top-k"><a href="#1-Top-k" class="headerlink" title="1. Top-k"></a>1. Top-k</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>只保留排名前 <code>k</code> 的 token，重新归一化后进行随机采样。<code>k = 1</code> 时只剩下一个候选，效果相当于贪心解码。</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/02-top-k-selection.png" alt="Top-k 保留排名前三的 token 并重新归一化的示意图"></p>
+<blockquote>
+<p>图中右侧的归一化数值有误。按左侧的 0.664、0.199、0.105 计算，保留前三项后的概率约为 <strong>68.6%、20.6%、10.8%</strong>。</p>
+</blockquote>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><p>下面用 <code>-inf</code> 屏蔽未入选的 token，使它们经过 softmax 后的概率为 0。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">logits = torch.tensor([<span class="number">3.0</span>, <span class="number">2.0</span>, <span class="number">1.0</span>, <span class="number">0.5</span>, -<span class="number">1.0</span>])</span><br><span class="line"><span class="comment"># 采用 -inf屏蔽掉其他token</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">apply_top_k</span>(<span class="params">logits, k</span>):</span><br><span class="line">    values, indices = torch.topk(logits, k)</span><br><span class="line">    <span class="comment"># 屏蔽所有位置</span></span><br><span class="line">    filtered = torch.full_like(logits, <span class="built_in">float</span>(<span class="string">&quot;-inf&quot;</span>))</span><br><span class="line">    <span class="comment"># 再放回前k个token的分数</span></span><br><span class="line">    filtered[indices] = values</span><br><span class="line">    <span class="keyword">return</span> filtered</span><br><span class="line"></span><br><span class="line">filtered = apply_top_k(logits, k=<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(filtered)</span><br><span class="line"><span class="comment"># tensor([3., 2., -inf, -inf, -inf])</span></span><br><span class="line"><span class="built_in">print</span>(torch.softmax(filtered, dim=-<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/03-top-k-output.png" alt="Top-k 代码输出：仅前两个 token 保留非零概率"></p>
+<h2 id="优点与局限"><a href="#优点与局限" class="headerlink" title="优点与局限"></a>优点与局限</h2><ul>
+<li><strong>候选数量固定</strong>：Top-k 本身不会随分布自动改变 <code>k</code>。分布平坦时，候选之间的概率可能接近；分布尖锐时，采样仍可能主要集中在少数 token 上。</li>
+<li><strong>可以控制候选范围</strong>：增大 <code>k</code> 会纳入更多候选，通常增加多样性，也可能引入不合适的低概率 token；减小 <code>k</code> 会缩小选择范围，但不保证质量一定提高。</li>
+<li><strong>可以与其他策略组合</strong>：例如温度调节、Top-p 或重复惩罚。长度惩罚通常用于序列评分，与单步候选筛选的作用不同。</li>
+</ul>
+<p>Top-k 的筛选依据是模型给出的条件概率。这个概率已经包含上下文信息，但按概率筛选并不能保证事实、逻辑或语法正确。另外，固定 <code>k</code> 也可能排除概率较低但合理、有创意的候选。因此，可以进一步考虑 Top-p。</p>
+<h1 id="2-Top-p"><a href="#2-Top-p" class="headerlink" title="2. Top-p"></a>2. Top-p</h1><h2 id="核心思路-1"><a href="#核心思路-1" class="headerlink" title="核心思路"></a>核心思路</h2><p>Top-p 也称为<strong>核采样（Nucleus Sampling）</strong>：先按概率从高到低排序，再保留累计概率<strong>首次达到或超过 <code>p</code> 的最小候选集合</strong>，重新归一化后采样。</p>
+<p>与 Top-k 不同，Top-p 的候选数量会随概率分布变化。阈值应根据任务调整，下方代码以 <code>p = 0.9</code> 为例。<a target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/main_classes/text_generation">Top-k 与 Top-p 参数定义</a></p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/04-top-p-selection.png" alt="原 Top-p 示意图：阈值与候选集合存在偏差，详见下方说明"></p>
+<blockquote>
+<p>原图把 Top-p 写成了“累计不超过 90%”，并只保留前两项，这是不准确的。前两项之和为 0.863，尚未达到 0.9；加入第三项后为 0.968，所以应保留前三项。图中右侧的 82%、18% 也不是左侧两项归一化后的结果。</p>
+</blockquote>
+<h2 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a>代码示例</h2><p>下面的实现会保留使累计概率达到阈值的那个 token：只有<strong>前面 token 的累计概率已经达到 <code>p</code></strong>，才屏蔽当前位置。<code>p = 1</code> 时不做筛选。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">logits = torch.tensor([<span class="number">3.0</span>, <span class="number">2.0</span>, <span class="number">1.0</span>, <span class="number">0.5</span>, -<span class="number">1.0</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">apply_top_p</span>(<span class="params">logits, p</span>):</span><br><span class="line">    <span class="keyword">if</span> p == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> logits.clone()</span><br><span class="line">    <span class="comment"># 按分数降序排列：顺序与概率排名相同</span></span><br><span class="line">    sorted_logits, sorted_indices = torch.sort(logits, descending=<span class="literal">True</span>)</span><br><span class="line">    <span class="comment"># 计算排序后的概率以及累计概率</span></span><br><span class="line">    sorted_probs = torch.softmax(sorted_logits, dim=-<span class="number">1</span>)</span><br><span class="line">    cumulative_probs = torch.cumsum(sorted_probs, dim=-<span class="number">1</span>) <span class="comment"># 累加求和，从开头到当前位置的所有元素之和</span></span><br><span class="line">    <span class="comment"># 当前token累计超过p，才删除当前token</span></span><br><span class="line">    remove = torch.zeros_like(sorted_probs, dtype=torch.<span class="built_in">bool</span>)</span><br><span class="line">    remove[<span class="number">1</span>:] = cumulative_probs[:-<span class="number">1</span>] &gt;= p</span><br><span class="line">    <span class="comment"># 将删除位置映射回原来的token顺序</span></span><br><span class="line">    filtered = logits.clone()</span><br><span class="line">    filtered[sorted_indices[remove]] = <span class="built_in">float</span>(<span class="string">&quot;-inf&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> filtered</span><br><span class="line"></span><br><span class="line">filtered = apply_top_p(logits, p=<span class="number">0.9</span>)</span><br><span class="line"><span class="built_in">print</span>(filtered)</span><br><span class="line"><span class="built_in">print</span>(torch.softmax(filtered, dim=-<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/05-top-p-output.png" alt="Top-p 代码输出：p 为 0.9 时保留前三个 token"></p>
+<h1 id="3-Temperature"><a href="#3-Temperature" class="headerlink" title="3. Temperature"></a>3. Temperature</h1><h2 id="核心思路-2"><a href="#核心思路-2" class="headerlink" title="核心思路"></a>核心思路</h2><p>温度调节先将 logits 除以温度 <code>T</code>，再输入 softmax，得到调整后的采样概率。这里要求 <strong><code>T &gt; 0</code></strong>。</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/06-temperature-distribution.png" alt="温度降低时概率分布更尖锐，升高时更平坦"></p>
+<ul>
+<li><code>0 &lt; T &lt; 1</code>：分布更尖锐，高概率 token 更占优势。</li>
+<li><code>T = 1</code>：保持原始分布。</li>
+<li><code>T &gt; 1</code>：分布更平坦，低概率 token 获得更多采样机会。</li>
+</ul>
+<p><strong>正温度不会改变 logits 的排名，只会改变归一化后的概率差距。</strong> 较低温度通常使采样更集中，但不等于一定生成正确内容。</p>
+<h2 id="代码示例-2"><a href="#代码示例-2" class="headerlink" title="代码示例"></a>代码示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">logits = torch.tensor([<span class="number">3.0</span>, <span class="number">2.0</span>, <span class="number">1.0</span>, <span class="number">0.5</span>, -<span class="number">1.0</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">apply_temperature</span>(<span class="params">logits, tempeature=<span class="number">1.0</span></span>):</span><br><span class="line">    <span class="keyword">return</span> logits / tempeature</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> [<span class="number">0.5</span>, <span class="number">1.0</span>, <span class="number">2.0</span>]:</span><br><span class="line">    probs = torch.softmax(apply_temperature(logits, t), dim=-<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(t, probs)</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/07-temperature-output.png" alt="温度分别为 0.5、1.0 和 2.0 时的概率分布"></p>
+<h1 id="4-Top-k、Top-p-与-Temperature-联合使用"><a href="#4-Top-k、Top-p-与-Temperature-联合使用" class="headerlink" title="4. Top-k、Top-p 与 Temperature 联合使用"></a>4. Top-k、Top-p 与 Temperature 联合使用</h1><h2 id="处理顺序与示例"><a href="#处理顺序与示例" class="headerlink" title="处理顺序与示例"></a>处理顺序与示例</h2><p><strong>下方代码采用 <code>Top-k → Top-p → Temperature → softmax</code> 的顺序。</strong> 这不是所有实现都必须遵循的顺序；尤其是 Temperature 与 Top-p 的先后，会影响候选集合，因为 Top-p 依赖调整后的累计概率。</p>
+<p>沿用开头图中的分布，先设置 <code>top-k = 3</code>，保留女孩、鞋子、大象。它们的原始概率分别为 0.664、0.199、0.105，归一化后约为 0.686、0.206、0.108。</p>
+<p>接着设置 <code>top-p = 0.8</code>：第一项尚未达到阈值，前两项累计约为 0.892，因此保留女孩和鞋子。再设置 <code>Temperature = 0.7</code>，对保留项对应的 logits 做温度调节并重新归一化，结果约为：</p>
+<ul>
+<li>女孩：<strong>0.848</strong>。</li>
+<li>鞋子：<strong>0.152</strong>。</li>
+</ul>
+<h2 id="代码示例-3"><a href="#代码示例-3" class="headerlink" title="代码示例"></a>代码示例</h2><p>下面仍使用前面代码中的 logits，并设置 <code>topk = 3</code>、<code>topp = 0.9</code>、<code>temperature = 0.75</code>，因此其输出数值与上面的文字示例不同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">logits = torch.tensor([<span class="number">3.0</span>, <span class="number">2.0</span>, <span class="number">1.0</span>, <span class="number">0.5</span>, -<span class="number">1.0</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">apply_top_p</span>(<span class="params">logits, p</span>):</span><br><span class="line">    <span class="keyword">if</span> p == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> logits.clone()</span><br><span class="line">    <span class="comment"># 按分数降序排列：顺序与概率排名相同</span></span><br><span class="line">    sorted_logits, sorted_indices = torch.sort(logits, descending=<span class="literal">True</span>)</span><br><span class="line">    <span class="comment"># 计算排序后的概率以及累计概率</span></span><br><span class="line">    sorted_probs = torch.softmax(sorted_logits, dim=-<span class="number">1</span>)</span><br><span class="line">    cumulative_probs = torch.cumsum(sorted_probs, dim=-<span class="number">1</span>) <span class="comment"># 累加求和，从开头到当前位置的所有元素之和</span></span><br><span class="line">    <span class="comment"># 当前token已经达到p，才删除当前token</span></span><br><span class="line">    remove = torch.zeros_like(sorted_probs, dtype=torch.<span class="built_in">bool</span>)</span><br><span class="line">    remove[<span class="number">1</span>:] = cumulative_probs[:-<span class="number">1</span>] &gt;= p</span><br><span class="line">    <span class="comment"># 将删除位置映射回原来的token顺序</span></span><br><span class="line">    filtered = logits.clone()</span><br><span class="line">    filtered[sorted_indices[remove]] = <span class="built_in">float</span>(<span class="string">&quot;-inf&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> filtered</span><br><span class="line"></span><br><span class="line"><span class="comment"># 采用 -inf屏蔽掉其他token</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">apply_top_k</span>(<span class="params">logits, k</span>):</span><br><span class="line">    values, indices = torch.topk(logits, k)</span><br><span class="line">    <span class="comment"># 屏蔽所有位置</span></span><br><span class="line">    filtered = torch.full_like(logits, <span class="built_in">float</span>(<span class="string">&quot;-inf&quot;</span>))</span><br><span class="line">    <span class="comment"># 再放回前k个token的分数</span></span><br><span class="line">    filtered[indices] = values</span><br><span class="line">    <span class="keyword">return</span> filtered</span><br><span class="line"></span><br><span class="line"><span class="comment"># temperature采样</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">apply_temperature</span>(<span class="params">logits, tempeature=<span class="number">1.0</span></span>):</span><br><span class="line">    <span class="keyword">return</span> logits / tempeature</span><br><span class="line"></span><br><span class="line"><span class="comment"># 联合采样</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sample_token</span>(<span class="params">logits, topk=<span class="number">1</span>, topp=<span class="number">1</span>, temperature=<span class="number">1.0</span></span>):</span><br><span class="line">    scores = apply_top_k(logits, topk)</span><br><span class="line">    scores = apply_top_p(scores, topp)</span><br><span class="line">    scores = apply_temperature(scores, temperature)</span><br><span class="line">    probs = torch.softmax(scores, dim=-<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> probs</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">42</span>)</span><br><span class="line">probs = sample_token(logits, <span class="number">3</span>, <span class="number">0.9</span>, <span class="number">0.75</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;概率：&quot;</span>, probs)</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="/img/blog/llm/08-text-generation-decoding/08-combined-output.png" alt="联合处理后的概率分布：前两个 token 约为 0.7914 和 0.2086"></p>
+<p>关于贪心解码、束搜索和采样的进一步说明，可参考 <a target="_blank" rel="noopener" href="https://huggingface.co/blog/how-to-generate">Hugging Face 解码策略教程</a>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/">https://041101.xyz/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/top-k/">top-k</a><a class="post-meta__tags" href="/tags/top-p/">top-p</a><a class="post-meta__tags" href="/tags/temperature/">temperature</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.JPG" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/31/blog/%E9%A1%B9%E7%9B%AE/%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%9ATiny-GPT%20day2/" title="第一个项目：Tiny-GPT day2"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">第一个项目：Tiny-GPT day2</div></div><div class="info-2"><div class="info-item-1">1. Day 2 学习内容今天结合 GPT-1 与 GPT-2 论文继续学习 Decoder-only Transformer。GPT-2 延续了自回归语言模型的预训练目标，并重点展示了模型在不进行特定任务微调时的零样本能力；在网络结构上采用 Decoder-only 架构，并将 LayerNorm 放在注意力层和 MLP 之前，即 Pre-Norm。 GPT-2 Small 的词表大小为 50,257，上下文长度为 1,024，隐藏维度为 768，由 12 层 Transformer Block 和 12 个注意力头组成，所有 Block 之后还有一次最终 LayerNorm。 下图展示了 GPT-2 的整体数据流：Token Embedding 与 Position Embedding 相加后，依次经过多层掩码自注意力和前馈网络，最后输出下一个 Token 的预测分数。  Transformer 的基础原理已经在《02 Transformer 算法》中整理，这里主要参考 GPT-2 和 Andrej Karpathy 的实现方式，完成适合本机 RTX 5060 8 GB 显存...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">从 0 开始的转码学习</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-Top-k"><span class="toc-text">1. Top-k</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF"><span class="toc-text">核心思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%E4%B8%8E%E5%B1%80%E9%99%90"><span class="toc-text">优点与局限</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-Top-p"><span class="toc-text">2. Top-p</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF-1"><span class="toc-text">核心思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-1"><span class="toc-text">代码示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-Temperature"><span class="toc-text">3. Temperature</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E8%B7%AF-2"><span class="toc-text">核心思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-2"><span class="toc-text">代码示例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-Top-k%E3%80%81Top-p-%E4%B8%8E-Temperature-%E8%81%94%E5%90%88%E4%BD%BF%E7%94%A8"><span class="toc-text">4. Top-k、Top-p 与 Temperature 联合使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E9%A1%BA%E5%BA%8F%E4%B8%8E%E7%A4%BA%E4%BE%8B"><span class="toc-text">处理顺序与示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-3"><span class="toc-text">代码示例</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/" title="08 大模型文本生成解码策略">08 大模型文本生成解码策略</a><time datetime="2026-09-14T02:00:00.000Z" title="发表于 2026-09-14 10:00:00">2026-09-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/31/blog/%E9%A1%B9%E7%9B%AE/%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%9ATiny-GPT%20day2/" title="第一个项目：Tiny-GPT day2">第一个项目：Tiny-GPT day2</a><time datetime="2026-08-31T02:00:00.000Z" title="发表于 2026-08-31 10:00:00">2026-08-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/30/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/06%20Tokenizer/" title="06 Tokenizer">06 Tokenizer</a><time datetime="2026-08-30T02:00:00.000Z" title="发表于 2026-08-30 10:00:00">2026-08-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/28/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/05%20Normalzation%EF%BC%88%E5%BD%92%E4%B8%80%E5%8C%96%EF%BC%89/" title="05 Normalization（归一化）">05 Normalization（归一化）</a><time datetime="2026-08-28T02:00:00.000Z" title="发表于 2026-08-28 10:00:00">2026-08-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/28/blog/%E9%A1%B9%E7%9B%AE/%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE%EF%BC%9ATiny-GPT%20day1/" title="第一个项目：Tiny-GPT day1">第一个项目：Tiny-GPT day1</a><time datetime="2026-08-28T02:00:00.000Z" title="发表于 2026-08-28 10:00:00">2026-08-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/home-bg.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/empty-home.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

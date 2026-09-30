@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>01 BUCK电路</title>
+      <link href="/2026/09/29/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/01%20BUCK%E7%94%B5%E8%B7%AF/"/>
+      <url>/2026/09/29/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/01%20BUCK%E7%94%B5%E8%B7%AF/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-基本拓扑"><a href="#1-基本拓扑" class="headerlink" title="1. 基本拓扑"></a>1. 基本拓扑</h2><p>下图是异步 Buck 电路的基本拓扑，包括开关管 Q、续流二极管 D、电感 L 和输出电容 C。</p><p><img src="/img/blog/power-electronics/01-buck-circuit/01-asynchronous-buck-topology.png" alt="异步 Buck 电路的基本拓扑"></p><ul><li><strong>Q 导通时：</strong> $V_{SW}\approx V_i$，电感电流以固定斜率上升。</li><li><strong>Q 关断时：</strong> $V_{SW}\approx -V_d$，电感电流以固定斜率下降。</li></ul><h2 id="2-参数计算"><a href="#2-参数计算" class="headerlink" title="2. 参数计算"></a>2. 参数计算</h2><h3 id="2-1-占空比计算"><a href="#2-1-占空比计算" class="headerlink" title="2.1 占空比计算"></a>2.1 占空比计算</h3><p>电感电流在开关导通期间上升、关断期间下降，变化斜率与电感两端的电压有关。</p><p><img src="/img/blog/power-electronics/01-buck-circuit/02-inductor-current-timing.png" alt="电感电流在导通与关断期间的变化"></p><p>由电感关系式：</p><p>$$<br>U&#x3D;L\frac{\mathrm{d}i}{\mathrm{d}t}<br>$$</p><p>根据伏秒平衡，导通期间电感电压与导通时间的乘积，等于关断期间电感电压绝对值与关断时间的乘积：</p><p>$$<br>(V_i-V_o)T_{\mathrm{on}}&#x3D;(V_o+V_d)T_{\mathrm{off}}<br>$$</p><p>又已知：</p><p>$$<br>T&#x3D;T_{\mathrm{on}}+T_{\mathrm{off}}&#x3D;\frac{1}{f}<br>$$</p><p>因此，导通时间为：</p><p>$$<br>T_{\mathrm{on}}&#x3D;\frac{V_o+V_d}{V_i+V_d}\cdot\frac{1}{f}<br>$$</p><p>关断时间为：</p><p>$$<br>T_{\mathrm{off}}&#x3D;\frac{V_i-V_o}{V_i+V_d}\cdot\frac{1}{f}<br>$$</p><p>占空比为：</p><p>$$<br>D&#x3D;\frac{T_{\mathrm{on}}}{T}&#x3D;\frac{V_o+V_d}{V_i+V_d}<br>$$</p><h3 id="2-2-电感电流纹波计算"><a href="#2-2-电感电流纹波计算" class="headerlink" title="2.2 电感电流纹波计算"></a>2.2 电感电流纹波计算</h3><p>电感电流纹波 $\Delta I_L$ 是一个开关周期内电感电流的峰峰值，如下图所示。</p><p><img src="/img/blog/power-electronics/01-buck-circuit/03-inductor-current-ripple.png" alt="电感电流的平均值与峰峰值纹波"></p><p>开关导通时：</p><p>$$<br>U&#x3D;V_i-V_o<br>$$</p><p>导通时间：</p><p>$$<br>\mathrm{d}t&#x3D;T_{\mathrm{on}}<br>&#x3D;\frac{V_o+V_d}{V_i+V_d}\cdot\frac{1}{f}<br>$$</p><p>根据：</p><p>$$<br>U&#x3D;L\frac{\mathrm{d}i}{\mathrm{d}t}<br>$$</p><p>则电流增大量为：</p><p>$$<br>\mathrm{d}i&#x3D;\frac{U\cdot\mathrm{d}t}{L}<br>&#x3D;\frac{V_o+V_d}{V_i+V_d}\cdot\frac{1}{fL}(V_i-V_o)<br>&#x3D;\Delta I_L<br>$$</p><p>即电流纹波为：</p><p>$$<br>\Delta I_L<br>&#x3D;\frac{V_o+V_d}{fL}\cdot\frac{V_i-V_o}{V_i+V_d}<br>$$</p><p>同步 Buck（$V_d&#x3D;0$）时：</p><p>$$<br>\Delta I_L&#x3D;\frac{V_o}{fL}\left(1-\frac{V_o}{V_i}\right)<br>$$</p><p><strong>电感峰值电流</strong>为：</p><p>$$<br>I_{LP}&#x3D;I_o+\frac{\Delta I_L}{2}<br>$$</p><p>代入电流纹波公式：</p><p>$$<br>I_{LP}<br>&#x3D;I_o+\frac{V_o+V_d}{2fL}\cdot\frac{V_i-V_o}{V_i+V_d}<br>$$</p><p>同步 Buck（$V_d&#x3D;0$）时：</p><p>$$<br>I_{LP}<br>&#x3D;I_o+\frac{V_o}{2fL}\left(1-\frac{V_o}{V_i}\right)<br>$$</p><p>由以下关系确定电感量：</p><p>$$<br>I_L&#x3D;I_o<br>$$</p><p>$$<br>\Delta I_L<br>&#x3D;\frac{V_o+V_d}{fL}\cdot\frac{V_i-V_o}{V_i+V_d}<br>$$</p><p>取电流纹波为平均电感电流的 20%～40%：</p><p>$$<br>\Delta I_L&#x3D;(0.2\sim0.4)I_L<br>$$</p><p>因此：</p><p>$$<br>L&#x3D;\frac{V_o+V_d}{f(0.2\sim0.4)I_o}<br>\cdot\frac{V_i-V_o}{V_i+V_d}<br>$$</p><p>同步 Buck（$V_d&#x3D;0$）时：</p><p>$$<br>L&#x3D;\frac{V_o}{f(0.2\sim0.4)I_o}<br>\left(1-\frac{V_o}{V_i}\right)<br>$$</p><h3 id="2-3-输出电压纹波计算"><a href="#2-3-输出电压纹波计算" class="headerlink" title="2.3 输出电压纹波计算"></a>2.3 输出电压纹波计算</h3><p>输出电压纹波反映输出的稳定性。电感电流分为负载电流和电容电流，电容交替充电、放电；图中还标出了电容的等效串联电阻（ESR）。</p><p><img src="/img/blog/power-electronics/01-buck-circuit/04-output-current-paths-and-esr.png" alt="电感电流分配、电容充放电与 ESR 示意"></p><p>输出电压纹波由电容充放电引起的电压变化和 ESR 上的压降组成。下图给出了两部分的计算过程：</p><p><img src="/img/blog/power-electronics/01-buck-circuit/05-output-voltage-ripple.png" alt="输出电容与 ESR 引起的电压纹波计算"></p><h2 id="3-BUCK-芯片"><a href="#3-BUCK-芯片" class="headerlink" title="3. BUCK 芯片"></a>3. BUCK 芯片</h2><p>下图标出了输入储能与去耦电容、自举电容、使能引脚，以及接入反馈引脚的电阻分压网络。</p><p><img src="/img/blog/power-electronics/01-buck-circuit/06-buck-chip-peripherals.png" alt="BUCK 芯片外围电路及关键引脚"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 电力电子 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> BUCK </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>08 大模型文本生成解码策略</title>
       <link href="/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/"/>
       <url>/2026/09/14/blog/%E5%A4%A7%E6%A8%A1%E5%9E%8Bllm/08%20%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%96%87%E6%9C%AC%E7%94%9F%E6%88%90%E8%A7%A3%E7%A0%81%E7%AD%96%E7%95%A5/</url>

@@ -5,6 +5,7 @@ const path = require('node:path');
 const projectRoot = path.resolve(__dirname, '..');
 const publicDir = path.join(projectRoot, 'public');
 const deployDir = path.join(projectRoot, '.deploy_pages');
+const dryRun = process.argv.includes('--dry-run');
 const repository = process.env.BLOG_DEPLOY_REPO
   || 'https://github.com/mortalkit1101-ui/mortalkit1101-ui.github.io.git';
 
@@ -56,6 +57,12 @@ if (!fs.existsSync(path.join(deployDir, '.git'))) {
 }
 
 git(['config', 'core.autocrlf', 'false'], deployDir);
+// The deployment checkout has its own Git configuration.
+for (const key of ['user.name', 'user.email']) {
+  const value = git(['config', '--get', key], projectRoot, true).trim();
+  if (!value) throw new Error(`Missing Git ${key} in the source repository.`);
+  git(['config', key, value], deployDir);
+}
 clearDeployTree();
 
 for (const entry of fs.readdirSync(publicDir, { withFileTypes: true })) {
@@ -76,6 +83,8 @@ if (!status) {
 
 const timestamp = new Date().toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, ' UTC');
 git(['commit', '-m', `Deploy blog: ${timestamp}`], deployDir);
-git(['push', 'origin', 'main'], deployDir);
+git(['push', ...(dryRun ? ['--dry-run'] : []), 'origin', 'main'], deployDir);
 
-console.log('Published generated site to main with a normal Git push.');
+console.log(dryRun
+  ? 'Generated-site deployment dry run passed; no remote changes were made.'
+  : 'Published generated site to main with a normal Git push.');

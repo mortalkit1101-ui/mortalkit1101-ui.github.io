@@ -7,7 +7,10 @@
     "clean": "hexo clean",
     "covers": "node tools/generate-course-covers.js",
     "generate": "hexo generate",
-    "publish": "hexo clean && hexo generate && npm run deploy",
+    "publish": "node tools/publish-all.js",
+    "publish:check": "node tools/publish-all.js --dry-run",
+    "article": "node tools/new-article.js",
+    "verify:site": "node tools/verify-local-site.js",
     "server": "hexo server",
     "deploy": "node tools/publish-blog.js",
     "verify": "node tools/verify-course-site.js",
@@ -26,6 +29,7 @@
     "hexo-renderer-stylus": "^3.0.1",
     "hexo-server": "^3.0.0",
     "hexo-util": "^4.0.0",
+    "js-yaml": "4.3.0",
     "moment-timezone": "^0.6.2"
   },
   "hexo": {

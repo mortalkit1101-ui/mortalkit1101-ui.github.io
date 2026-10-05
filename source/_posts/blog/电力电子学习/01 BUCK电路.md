@@ -16,7 +16,7 @@ published: true
 
 下图是异步 Buck 电路的基本拓扑，包括开关管 Q、续流二极管 D、电感 L 和输出电容 C。
 
-![异步 Buck 电路的基本拓扑](/img/blog/power-electronics/01-buck-circuit/01-asynchronous-buck-topology.png)
+![异步 Buck 电路的基本拓扑](../img/blog/power-electronics/01-buck-circuit/01-asynchronous-buck-topology.png)
 
 - **Q 导通时：** $V_{SW}\approx V_i$，电感储能，电感电流线性上升。
 - **Q 关断时：** $V_{SW}\approx -V_d$，电感通过续流回路释放能量，电感电流线性下降。
@@ -27,7 +27,7 @@ published: true
 
 Q1 导通时，工作状态如下：
 
-![Q1 导通时的电感储能回路](../../../img/blog/power-electronics/01-buck-circuit/07-switch-on-state.png)
+![Q1 导通时的电感储能回路](../img/blog/power-electronics/01-buck-circuit/07-switch-on-state.png)
 
 输入电源经 Q1 向电感 L 供能。忽略开关管导通压降，电感两端的电压为 $V_i-V_o$：
 
@@ -41,7 +41,7 @@ $$
 
 Q1 关断后，D1 导通，电路如下：
 
-![Q1 关断时的二极管续流回路](../../../img/blog/power-electronics/01-buck-circuit/08-diode-freewheeling.png)
+![Q1 关断时的二极管续流回路](../img/blog/power-electronics/01-buck-circuit/08-diode-freewheeling.png)
 
 由于电感电流不能突变，其方向仍与 Q1 导通时相同，并通过 D1 形成续流回路。忽略二极管压降时，电感电压为 $-V_o$：
 
@@ -53,7 +53,7 @@ $$
 
 ### 1.3 异步 Buck 的工作波形
 
-![异步 Buck 开关状态与电流波形](../../../img/blog/power-electronics/01-buck-circuit/09-asynchronous-waveforms.png)
+![异步 Buck 开关状态与电流波形](../img/blog/power-electronics/01-buck-circuit/09-asynchronous-waveforms.png)
 
 由图可见：
 
@@ -64,11 +64,11 @@ $$
 
 在异步 Buck 中，Q1 关断后由二极管续流，二极管正向压降会产生导通损耗。同步整流使用 MOSFET 替代续流二极管，利用较低的导通电阻降低这一部分损耗。
 
-![同步整流 Buck 电路](../../../img/blog/power-electronics/01-buck-circuit/10-synchronous-topology.png)
+![同步整流 Buck 电路](../img/blog/power-electronics/01-buck-circuit/10-synchronous-topology.png)
 
 同步整流 Buck 的工作波形如下：
 
-![同步整流 Buck 的开关与电流波形](../../../img/blog/power-electronics/01-buck-circuit/11-synchronous-waveforms.png)
+![同步整流 Buck 的开关与电流波形](../img/blog/power-electronics/01-buck-circuit/11-synchronous-waveforms.png)
 
 ## 3. Simulink 仿真
 
@@ -76,13 +76,13 @@ $$
 
 仿真模型：
 
-![异步 Buck 的 Simulink 模型](../../../img/blog/power-electronics/01-buck-circuit/12-asynchronous-simulink-model.png)
+![异步 Buck 的 Simulink 模型](../img/blog/power-electronics/01-buck-circuit/12-asynchronous-simulink-model.png)
 
 仿真波形与输出电压：
 
-![异步 Buck 的仿真波形](../../../img/blog/power-electronics/01-buck-circuit/13-asynchronous-simulink-waveforms.png)
+![异步 Buck 的仿真波形](../img/blog/power-electronics/01-buck-circuit/13-asynchronous-simulink-waveforms.png)
 
-![异步 Buck 的输出电压结果](../../../img/blog/power-electronics/01-buck-circuit/14-asynchronous-output-voltage.png)
+![异步 Buck 的输出电压结果](../img/blog/power-electronics/01-buck-circuit/14-asynchronous-output-voltage.png)
 
 电流波形与前面的导通、关断分析一致。本次仿真输出未达到理想的 24 V；模型中 MOSFET 的导通电阻会产生额外压降。
 
@@ -90,13 +90,13 @@ $$
 
 仿真模型：
 
-![同步 Buck 的 Simulink 模型](../../../img/blog/power-electronics/01-buck-circuit/15-synchronous-simulink-model.png)
+![同步 Buck 的 Simulink 模型](../img/blog/power-electronics/01-buck-circuit/15-synchronous-simulink-model.png)
 
 仿真波形与输出电压：
 
-![同步 Buck 的仿真波形](../../../img/blog/power-electronics/01-buck-circuit/16-synchronous-simulink-waveforms.png)
+![同步 Buck 的仿真波形](../img/blog/power-electronics/01-buck-circuit/16-synchronous-simulink-waveforms.png)
 
-![同步 Buck 的输出电压结果](../../../img/blog/power-electronics/01-buck-circuit/17-synchronous-output-voltage.png)
+![同步 Buck 的输出电压结果](../img/blog/power-electronics/01-buck-circuit/17-synchronous-output-voltage.png)
 
 ## 4. 参数计算
 
@@ -106,7 +106,7 @@ $$
 
 电感电流在开关导通期间上升、关断期间下降，变化斜率由电感两端的电压决定。
 
-![电感电流在导通与关断期间的变化](/img/blog/power-electronics/01-buck-circuit/02-inductor-current-timing.png)
+![电感电流在导通与关断期间的变化](../img/blog/power-electronics/01-buck-circuit/02-inductor-current-timing.png)
 
 根据电感关系式：
 
@@ -150,7 +150,7 @@ $$
 
 电感电流纹波 $\Delta I_L$ 是一个开关周期内电感电流的**峰峰值**，如下图所示。
 
-![电感电流的平均值与峰峰值纹波](/img/blog/power-electronics/01-buck-circuit/03-inductor-current-ripple.png)
+![电感电流的平均值与峰峰值纹波](../img/blog/power-electronics/01-buck-circuit/03-inductor-current-ripple.png)
 
 开关导通时，电感电压为：
 
@@ -249,8 +249,8 @@ $$
 
 输出电压纹波反映输出的稳定性。电感电流分为负载电流和电容电流，电容交替充电、放电；图中还标出了电容的等效串联电阻（ESR）。
 
-![电感电流分配、电容充放电与 ESR 示意](/img/blog/power-electronics/01-buck-circuit/04-output-current-paths-and-esr.png)
+![电感电流分配、电容充放电与 ESR 示意](../img/blog/power-electronics/01-buck-circuit/04-output-current-paths-and-esr.png)
 
 输出电压纹波由电容充放电引起的电压变化和 ESR 上的压降组成。下图给出了两部分的计算过程：
 
-![输出电容与 ESR 引起的电压纹波计算](/img/blog/power-electronics/01-buck-circuit/05-output-voltage-ripple.png)
+![输出电容与 ESR 引起的电压纹波计算](../img/blog/power-electronics/01-buck-circuit/05-output-voltage-ripple.png)

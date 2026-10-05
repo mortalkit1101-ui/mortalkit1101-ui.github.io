@@ -7,7 +7,7 @@
 ## 日常使用
 
 1. 双击 **preview.cmd**，在浏览器打开 http://127.0.0.1:4000 。预览会在后台运行，保存 Markdown 后刷新页面查看修改；双击 **stop-preview.cmd** 可停止预览。
-2. 修改旧文章：用 Markdown 编辑器打开 **source/_posts/blog** 中的 `.md` 文件。按当前写作约定，将 **source** 整个文件夹作为 Obsidian 仓库打开；VS Code 等编辑器也可以直接打开整个 Blog 文件夹。
+2. 修改旧文章：用 Markdown 编辑器打开 **source/_posts/blog** 中的 `.md` 文件。你当前的 Obsidian 仓库是 **source/_posts/blog**，可以继续使用；VS Code 等编辑器也可以直接打开整个 Blog 文件夹。
 3. 新建文章：双击 **new-article.cmd**，输入标题和分类。工具创建带日期、分类、公式支持的文章，并自动加入 `_config.yml` 的 `published_posts` 名单。按输出路径打开文件写作。
 4. 首次使用双击 **login.cmd**，在 GitHub 页面完成登录并检查推送权限。
 5. 确认本地展示后双击 **publish.cmd**。它会重新生成网站、检查站内链接和图片、提交并推送源码到 `source`，然后将网页推送到 `main`。GitHub Pages 更新通常需要等待部署完成。
@@ -16,7 +16,7 @@
 
 ## 文章与图片
 
-Obsidian 仓库使用 `F:\AAAAAA\Blog\source`。文章放在 `_posts/blog/` 内，图片放在 `img/` 内；无需另外创建 Git 仓库。`.obsidian` 设置和 `.trash` 回收站已加入 Git 忽略规则。
+当前 Obsidian 仓库是 `F:\AAAAAA\Blog\source\_posts\blog`。文章放在分类文件夹内，图片放在仓库内的 `img/`；无需另外创建 Git 仓库。`.obsidian` 设置和 `.trash` 回收站已加入 Git 忽略规则。
 
 后续写好文章后，告诉助手需要整理和发布的文章。助手会优化标题、章节层级、段落衔接和排版，检查 Obsidian 图片嵌入、双链、公式等在博客中的兼容性，维护文章发布名单，完成本地展示检查后推送源码和网站。保留原文含义和未指定发布的笔记。
 
@@ -24,7 +24,7 @@ Obsidian 仓库使用 `F:\AAAAAA\Blog\source`。文章放在 `_posts/blog/` 内�
 - 原仓库有 14 篇文章，其中 10 篇在发布名单中。未发布的 4 篇笔记仍保持原状态。
 - 手动创建或导入 `blog` 内的文章，需要在 `_config.yml` 的 `published_posts` 添加相对 `source/_posts/` 的路径；只设置 `published: true` 不够。使用新建入口会自动处理。
 - 要隐藏名单中的文章，可从名单移除，或将文章头部设为 `published: false`。
-- 图片放在 `source/img/`，文章中引用 `/img/文件名.png`。避免本机盘符路径和 Obsidian 专用的 `![[图片]]` 写法。
+- 图片保存在 Obsidian 仓库内的 `source/_posts/blog/img/`，发布时在 `source/img/` 保留同路径、同内容的图片。分类文件夹内的文章可用 `![说明](../img/文件名.png)` 引用，并在文章头部设置 `obsidian_image_paths: true`；博客生成时会转成 `/img/文件名.png`。不要用越出当前仓库的 `../../../img/` 路径，也不要只把图片移动到 `source/img/`。
 - 编辑旧文章时，保留文件名和原 `date`，可以继续保留旧网址。文章标题可修改 `title`。
 
 ## 发布约定

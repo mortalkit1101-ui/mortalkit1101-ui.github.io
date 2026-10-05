@@ -2,8 +2,8 @@
 
 const path = require('node:path');
 
-// Keep vault-relative Markdown links editable in Obsidian, and resolve source/img
-// links to their public paths only in the rendered article.
+// Keep Markdown images inside the current source/_posts/blog Obsidian vault.
+// Its img mirror and source/img both use /img URLs on the published site.
 hexo.extend.filter.register('after_post_render', function resolveVaultImages(data) {
   if (!data.obsidian_image_paths || !data.source) return data;
 
@@ -19,8 +19,11 @@ hexo.extend.filter.register('after_post_render', function resolveVaultImages(dat
       const resolved = path.posix.normalize(path.posix.join(
         path.posix.dirname(data.source.replace(/\\/g, '/')), decoded,
       ));
-      if (!resolved.startsWith('img/')) return match;
-      return `${prefix}${encodeURI(`/${resolved}`)}${tail}${suffix}`;
+      const publicPath = resolved.startsWith('_posts/blog/img/')
+        ? resolved.slice('_posts/blog/'.length)
+        : resolved;
+      if (!publicPath.startsWith('img/')) return match;
+      return `${prefix}${encodeURI(`/${publicPath}`)}${tail}${suffix}`;
     },
   );
   return data;

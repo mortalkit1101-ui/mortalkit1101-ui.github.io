@@ -1,0 +1,48 @@
+/* Only the explicitly marked key formulas receive emphasis. */
+#article-container blockquote:has(.buck-formula-label) {
+  margin: 26px 0;
+  padding: 18px 24px;
+  border: 1px solid rgba(190, 128, 26, .3);
+  border-left: 5px solid #bf811d;
+  border-radius: 10px;
+  background: #fff8e9;
+  color: #302c23;
+}
+
+#article-container .buck-formula-label {
+  display: block;
+  color: #865600;
+  font-size: 1.02em;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+#article-container blockquote:has(.buck-formula-label) mjx-container[display="true"] {
+  max-width: 100%;
+  margin: 1.1em 0 .6em !important;
+  padding: 6px 0 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  font-size: 120% !important;
+}
+
+[data-theme="dark"] #article-container blockquote:has(.buck-formula-label) {
+  border-color: rgba(242, 187, 84, .3);
+  border-left-color: #efb74e;
+  background: #30291d;
+  color: #f4ead7;
+}
+
+[data-theme="dark"] #article-container .buck-formula-label {
+  color: #f4c56d;
+}
+
+@media (max-width: 600px) {
+  #article-container blockquote:has(.buck-formula-label) {
+    padding: 14px 12px;
+  }
+
+  #article-container blockquote:has(.buck-formula-label) mjx-container[display="true"] {
+    font-size: 105% !important;
+  }
+}

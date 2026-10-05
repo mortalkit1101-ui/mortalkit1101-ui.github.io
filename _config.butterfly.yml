@@ -60,7 +60,7 @@ social:
 # Image Settings
 # --------------------------------------
 
-favicon: /img/favicon.png
+favicon: /img/favicon.ico
 
 avatar:
   img: /img/avatar.JPG
@@ -1067,6 +1067,7 @@ inject:
   head:
     # - <link rel="stylesheet" href="/xxx.css">
     - <link rel="stylesheet" href="/css/empty-home.css">
+    - <link rel="stylesheet" href="/css/buck-formulas.css">
   bottom:
     # - <script src="xxxx"></script>
     - <script src="/js/empty-home.js"></script>

@@ -77,6 +77,7 @@ published_posts:
   - blog/项目/第一个项目：Tiny-GPT day1.md
   - blog/项目/第一个项目：Tiny-GPT day2.md
   - blog/电力电子学习/01 BUCK电路.md
+  - blog/电力电子学习/02 BOOST电路.md
 
 theme: butterfly
 
@@ -88,3 +89,7 @@ search:
 
 deploy:
   type:
+
+# Fixed article URLs are kept here so Obsidian only shows writing properties.
+blog_permalinks:
+  blog/电力电子学习/02 BOOST电路.md: 2026/09/29/blog/电力电子学习/02 BOOST电路/

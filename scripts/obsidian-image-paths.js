@@ -12,6 +12,8 @@ hexo.extend.filter.register('after_post_render', function resolveVaultImages(dat
   data.content = data.content.replace(
     /(<img\b[^>]*?\ssrc=")([^"<>]+)(")/gi,
     (match, prefix, reference, suffix) => {
+      // Marked prepends the site root to ../img vault references by default.
+      if (/^\/(?:\.\.\/)+img\//i.test(reference)) reference = reference.slice(1);
       if (/^(?:\/|[a-z][a-z\d+.-]*:)/i.test(reference)) return match;
       const tailIndex = reference.search(/[?#]/);
       const pathname = tailIndex < 0 ? reference : reference.slice(0, tailIndex);

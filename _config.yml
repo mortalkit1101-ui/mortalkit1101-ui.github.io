@@ -67,6 +67,7 @@ include:
   - .nojekyll
 
 published_posts:
+  - blog/电力电子学习/04 电力电子应用.md
   - blog/嵌入式/01 GPIO的输入输出.md
   - blog/大模型llm/08 大模型文本生成解码策略.md
   - blog/大模型llm/01 从数据生成到模型保存的完整二分类流程.md
@@ -95,3 +96,4 @@ deploy:
 blog_permalinks:
   blog/电力电子学习/02 BOOST电路.md: 2026/09/29/blog/电力电子学习/02 BOOST电路/
   blog/嵌入式/01 GPIO的输入输出.md: 2026/10/05/blog/嵌入式/01 GPIO的输入输出/
+  blog/电力电子学习/04 电力电子应用.md: 2026/10/12/blog/电力电子学习/04 电力电子应用/

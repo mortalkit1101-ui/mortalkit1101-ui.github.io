@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>04 电力电子应用</title>
+      <link href="//2026/10/12/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/04%20%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%BA%94%E7%94%A8/"/>
+      <url>//2026/10/12/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/04%20%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%BA%94%E7%94%A8/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-从电阻降压到开关降压"><a href="#1-从电阻降压到开关降压" class="headerlink" title="1. 从电阻降压到开关降压"></a>1. 从电阻降压到开关降压</h2><p>希望将 100 V 的直流电源通过 DC&#x2F;DC 变换，得到 50 V、10 A 的输出。</p><p><img src="/img/blog/power-electronics/04-power-electronics-applications/01-dc-dc-requirements.png" alt="DC&#x2F;DC 变换的输入与输出要求"></p><p>最简单的办法是在负载前串联一个电阻降压，但损耗很大，而且输出电压会随负载电流变化。因此，采用开关周期性通断，再添加 LC 滤波器，将开关节点的方波电压滤成纹波较小的直流输出。</p><p><img src="/img/blog/power-electronics/04-power-electronics-applications/02-switching-buck-lc-filter.png" alt="开关降压电路与 LC 输出滤波器"></p><h2 id="2-输出反馈与闭环控制"><a href="#2-输出反馈与闭环控制" class="headerlink" title="2. 输出反馈与闭环控制"></a>2. 输出反馈与闭环控制</h2><p>一个完整的控制系统还需要对输出量进行采样，将采样值与参考值比较，通过负反馈调节开关的占空比，使输出保持在目标值附近。</p><p><img src="/img/blog/power-electronics/04-power-electronics-applications/03-feedback-control-system.png" alt="带输出采样与负反馈的开关电源控制系统"></p><h2 id="3-从降压拓扑到升压拓扑"><a href="#3-从降压拓扑到升压拓扑" class="headerlink" title="3. 从降压拓扑到升压拓扑"></a>3. 从降压拓扑到升压拓扑</h2><p>将电感放到输入侧，并按下图调整开关连接，就形成了 Boost 升压拓扑。</p><p><img src="/img/blog/power-electronics/04-power-electronics-applications/04-boost-topology-and-gain.png" alt="Boost 升压拓扑与输出电压随占空比变化的关系"></p><p>电感电流不能突变。以开关接到图中位置 1 为导通状态：</p><ul><li><strong>开关导通（位置 1）时：</strong> 输入电源向电感储能，输出电容向负载供电。</li><li><strong>开关关断（切换到位置 2）时：</strong> 输入电源与电感共同向输出侧供能，为负载供电并补充电容的能量。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 电力电子 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> DC/DC </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>01 GPIO的输入输出</title>
       <link href="//2026/10/05/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/01%20GPIO%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/"/>
       <url>//2026/10/05/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/01%20GPIO%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>

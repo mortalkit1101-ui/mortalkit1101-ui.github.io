@@ -67,6 +67,7 @@ include:
   - .nojekyll
 
 published_posts:
+  - blog/电力电子学习/03 Cuk变换电路.md
   - blog/电力电子学习/04 电力电子应用.md
   - blog/嵌入式/01 GPIO的输入输出.md
   - blog/大模型llm/08 大模型文本生成解码策略.md
@@ -94,6 +95,7 @@ deploy:
 
 # Fixed article URLs are kept here so Obsidian only shows writing properties.
 blog_permalinks:
+  blog/电力电子学习/03 Cuk变换电路.md: 2026/10/09/blog/电力电子学习/03 Cuk变换电路/
   blog/电力电子学习/02 BOOST电路.md: 2026/09/29/blog/电力电子学习/02 BOOST电路/
   blog/嵌入式/01 GPIO的输入输出.md: 2026/10/05/blog/嵌入式/01 GPIO的输入输出/
   blog/电力电子学习/04 电力电子应用.md: 2026/10/12/blog/电力电子学习/04 电力电子应用/

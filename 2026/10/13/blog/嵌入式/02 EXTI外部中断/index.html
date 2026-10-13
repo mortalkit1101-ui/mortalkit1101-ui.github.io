@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>02 EXTI外部中断 | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. EXTI 简介EXTI（External interrupt&#x2F;event controller）是外部中断与事件控制器。本文使用正点原子探索者 STM32F407ZGT6 V3 开发板和 STM32F4 标准外设库，接着 GPIO 输入输出学习按键中断。 1.1 轮询与中断轮询：主循环反复读取 GPIO，执行到检测语句时才检查按键。如果主循环正在处理较长的操作，按键检测需要等待。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="02 EXTI外部中断">
+<meta property="og:url" content="https://041101.xyz/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="1. EXTI 简介EXTI（External interrupt&#x2F;event controller）是外部中断与事件控制器。本文使用正点原子探索者 STM32F407ZGT6 V3 开发板和 STM32F4 标准外设库，接着 GPIO 输入输出学习按键中断。 1.1 轮询与中断轮询：主循环反复读取 GPIO，执行到检测语句时才检查按键。如果主循环正在处理较长的操作，按键检测需要等待。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/avatar.JPG">
+<meta property="article:published_time" content="2026-10-13T14:25:26.000Z">
+<meta property="article:modified_time" content="2026-10-13T14:47:58.816Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="EXTI">
+<meta property="article:tag" content="NVIC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/avatar.JPG"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "02 EXTI外部中断",
+  "url": "https://041101.xyz/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/",
+  "image": "https://041101.xyz/img/avatar.JPG",
+  "datePublished": "2026-10-13T14:25:26.000Z",
+  "dateModified": "2026-10-13T14:47:58.816Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://041101.xyz/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '02 EXTI外部中断',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/empty-home.css"><link rel="stylesheet" href="/css/buck-formulas.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/home-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">02 EXTI外部中断</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">02 EXTI外部中断</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-13T14:25:26.000Z" title="发表于 2026-10-13 22:25:26">2026-10-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-13T14:47:58.816Z" title="更新于 2026-10-13 22:47:58">2026-10-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1-EXTI-简介"><a href="#1-EXTI-简介" class="headerlink" title="1. EXTI 简介"></a>1. EXTI 简介</h2><p>EXTI（External interrupt&#x2F;event controller）是外部中断与事件控制器。本文使用<strong>正点原子探索者 STM32F407ZGT6 V3 开发板</strong>和 STM32F4 标准外设库，接着 GPIO 输入输出学习按键中断。</p>
+<h3 id="1-1-轮询与中断"><a href="#1-1-轮询与中断" class="headerlink" title="1.1 轮询与中断"></a>1.1 轮询与中断</h3><p><strong>轮询</strong>：主循环反复读取 GPIO，执行到检测语句时才检查按键。如果主循环正在处理较长的操作，按键检测需要等待。</p>
+<p><strong>中断</strong>：硬件检测指定事件，产生请求；CPU 在允许响应时暂时转去执行中断服务函数，处理结束后恢复原来的程序。</p>
+<p>中断并不是 CPU 同时执行两段程序，也不保证请求发生后立刻执行。IRQ 未使能、CPU 屏蔽中断或更高优先级异常正在执行，都可能让请求先等待。</p>
+<h3 id="1-2-从-PE2-下降沿到主循环处理"><a href="#1-2-从-PE2-下降沿到主循环处理" class="headerlink" title="1.2 从 PE2 下降沿到主循环处理"></a>1.2 从 PE2 下降沿到主循环处理</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">按下 KEY2，PE2 从高电平变为低电平</span><br><span class="line">        ↓</span><br><span class="line">SYSCFG：选择 PE2 作为 EXTI2 的来源</span><br><span class="line">        ↓</span><br><span class="line">EXTI：检测下降沿，记录挂起标志</span><br><span class="line">        ↓</span><br><span class="line">允许的中断请求送往 NVIC</span><br><span class="line">        ↓</span><br><span class="line">NVIC：使能、优先级与待响应管理</span><br><span class="line">        ↓</span><br><span class="line">CPU 保存现场，读取中断向量</span><br><span class="line">        ↓</span><br><span class="line">执行 EXTI2_IRQHandler</span><br><span class="line">        ↓</span><br><span class="line">清除 EXTI 标志，记录软件通知</span><br><span class="line">        ↓</span><br><span class="line">异常返回，继续原程序</span><br><span class="line">        ↓</span><br><span class="line">主循环消抖并切换 LED</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>负责什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GPIO</td>
+<td>接收引脚电平</td>
+</tr>
+<tr>
+<td>SYSCFG</td>
+<td>选择哪个 GPIO 端口连接到对应 EXTI 线路</td>
+</tr>
+<tr>
+<td>EXTI</td>
+<td>检测指定边沿，记录并产生请求</td>
+</tr>
+<tr>
+<td>NVIC</td>
+<td>管理 CPU 对中断的响应</td>
+</tr>
+<tr>
+<td>CPU 与中断函数</td>
+<td>保存、恢复现场并执行处理程序</td>
+</tr>
+</tbody></table>
+<p>**下降沿由硬件检测。**进入中断函数后，<code>EXTI_GetITStatus</code> 检查的是对应线路有没有挂起请求，不是在函数里重新检测电平的高低变化。</p>
+<h3 id="1-3-探索者-V3-的按键与-LED"><a href="#1-3-探索者-V3-的按键与-LED" class="headerlink" title="1.3 探索者 V3 的按键与 LED"></a>1.3 探索者 V3 的按键与 LED</h3><table>
+<thead>
+<tr>
+<th>板上器件</th>
+<th>芯片引脚</th>
+<th>松开 &#x2F; 熄灭</th>
+<th>按下 &#x2F; 点亮</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>KEY0</td>
+<td>PE4</td>
+<td>配置内部上拉后为高电平</td>
+<td>低电平</td>
+</tr>
+<tr>
+<td>KEY1</td>
+<td>PE3</td>
+<td>配置内部上拉后为高电平</td>
+<td>低电平</td>
+</tr>
+<tr>
+<td>KEY2</td>
+<td>PE2</td>
+<td>配置内部上拉后为高电平</td>
+<td>低电平</td>
+</tr>
+<tr>
+<td>KEY_UP &#x2F; WK_UP</td>
+<td>PA0</td>
+<td>普通输入配置内部下拉后为低电平</td>
+<td>高电平</td>
+</tr>
+<tr>
+<td>LED0 &#x2F; DS0，红灯</td>
+<td>PF9</td>
+<td>高电平</td>
+<td>低电平</td>
+</tr>
+<tr>
+<td>LED1 &#x2F; DS1，绿灯</td>
+<td>PF10</td>
+<td>高电平</td>
+<td>低电平</td>
+</tr>
+</tbody></table>
+<p>KEY0、KEY1、KEY2 按下接地，板上没有外部上拉电阻，需要配置 STM32 内部上拉。按下是下降沿，松开是上升沿；持续按住低电平，不会凭空产生新的下降沿。</p>
+<p>官方《STM32F407 探索者开发指南 V1.3》第十六章 16.2 的硬件资源列表存在旧引脚笔误。这里以 <strong>V3 硬件参考手册第 31 页、原理图第 5 页及配套源码</strong>交叉核对后的连接为准，不采用 PE0 &#x2F; PE1 的 LED 连接。</p>
+<h2 id="2-寄存器介绍"><a href="#2-寄存器介绍" class="headerlink" title="2. 寄存器介绍"></a>2. 寄存器介绍</h2><h3 id="2-1-SYSCFG-EXTICR：选择-GPIO-来源"><a href="#2-1-SYSCFG-EXTICR：选择-GPIO-来源" class="headerlink" title="2.1 SYSCFG_EXTICR：选择 GPIO 来源"></a>2.1 SYSCFG_EXTICR：选择 GPIO 来源</h3><p>GPIO 引脚序号决定 EXTI 线路序号：<code>Px0 → EXTI0</code>、<code>Px2 → EXTI2</code>、<code>Px3 → EXTI3</code>，依次对应到 EXTI15。</p>
+<p>以 EXTI2 为例，多个端口的第 2 号引脚通过选择器接入同一条线路：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PA2 ─┐</span><br><span class="line">PB2 ─┤</span><br><span class="line">PC2 ─┼── 选择一个来源 ──→ EXTI2</span><br><span class="line">PD2 ─┤</span><br><span class="line">PE2 ─┘</span><br></pre></td></tr></table></figure>
+
+<p>**同一条 GPIO EXTI 线路，同一时刻只能选择一个端口来源。**PE2 和 PE3 可以分别使用 EXTI2、EXTI3；PA2 和 PE2 不能同时作为 EXTI2 的两个独立 GPIO 来源。</p>
+<p><code>SYSCFG_EXTICR1</code> 地址偏移为 <code>0x08</code>，其中 EXTI2 的端口选择字段位于 <code>[11:8]</code>。GPIOE 的编码为 4；标准库的 <code>SYSCFG_EXTILineConfig</code> 会修改这个字段。</p>
+<p>GPIOE、GPIOF 的时钟由 AHB1 控制，SYSCFG 的时钟由 APB2 控制。使用 F407 的 EXTI 不需要另找一个独立的 EXTI 时钟使能函数。</p>
+<p><strong>本课中断引脚仍配置为数字输入模式，不需要设置 GPIO 的 AF 复用模式。</strong></p>
+<h3 id="2-2-EXTI-IMR：中断屏蔽寄存器"><a href="#2-2-EXTI-IMR：中断屏蔽寄存器" class="headerlink" title="2.2 EXTI_IMR：中断屏蔽寄存器"></a>2.2 EXTI_IMR：中断屏蔽寄存器</h3><p>地址偏移：<code>0x00</code>。</p>
+<table>
+<thead>
+<tr>
+<th>对应位</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td>屏蔽这条线路的中断请求</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>允许这条线路的中断请求</td>
+</tr>
+</tbody></table>
+<p>允许 EXTI 线路与允许 NVIC 的 IRQ 是两个步骤。只配置其中一个，不能算完整的 CPU 中断响应配置。</p>
+<h3 id="2-3-EXTI-EMR：事件屏蔽寄存器"><a href="#2-3-EXTI-EMR：事件屏蔽寄存器" class="headerlink" title="2.3 EXTI_EMR：事件屏蔽寄存器"></a>2.3 EXTI_EMR：事件屏蔽寄存器</h3><p>地址偏移：<code>0x04</code>。控制 EXTI 的事件路径。</p>
+<p>**事件不等于执行中断服务函数。**本课使用 <code>EXTI_Mode_Interrupt</code>；事件模式与相关唤醒机制留到后续按需学习。</p>
+<h3 id="2-4-EXTI-RTSR-EXTI-FTSR：触发边沿选择"><a href="#2-4-EXTI-RTSR-EXTI-FTSR：触发边沿选择" class="headerlink" title="2.4 EXTI_RTSR &#x2F; EXTI_FTSR：触发边沿选择"></a>2.4 EXTI_RTSR &#x2F; EXTI_FTSR：触发边沿选择</h3><table>
+<thead>
+<tr>
+<th>寄存器</th>
+<th>地址偏移</th>
+<th>对应位置 1 的作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RTSR</td>
+<td><code>0x08</code></td>
+<td>选择上升沿触发</td>
+</tr>
+<tr>
+<td>FTSR</td>
+<td><code>0x0C</code></td>
+<td>选择下降沿触发</td>
+</tr>
+</tbody></table>
+<p>KEY1、KEY2 为低电平有效，按下时采用下降沿；KEY_UP 为高电平有效，按下时采用上升沿。两种边沿都开启时，按下和松开的变化都可能产生请求。</p>
+<h3 id="2-5-EXTI-PR：请求挂起寄存器"><a href="#2-5-EXTI-PR：请求挂起寄存器" class="headerlink" title="2.5 EXTI_PR：请求挂起寄存器"></a>2.5 EXTI_PR：请求挂起寄存器</h3><p>地址偏移：<code>0x14</code>。</p>
+<p>读取对应位为 1，表示这条线路有挂起请求。**清除方式是向对应位写 1；写 0 不会清除。**标准库 <code>EXTI_ClearITPendingBit</code> 将指定线路掩码直接写入 PR。</p>
+<p>PR 不能按普通变量“赋 0 清除”的习惯处理，也不应使用读—改—写方式清位，否则可能误清其他已挂起线路。</p>
+<p>清 PR 只清除当前来源记录，不会关闭 EXTI，不会改变 GPIO 电平，也不代表按键已经松开或完成消抖。</p>
+<p>每条线的 PR 是一个状态位，不是脉冲队列。多个边沿可能合并为一个待处理状态，因此不能据此保证精确记录所有高速脉冲。</p>
+<h3 id="2-6-EXTI-SWIER：软件中断事件寄存器"><a href="#2-6-EXTI-SWIER：软件中断事件寄存器" class="headerlink" title="2.6 EXTI_SWIER：软件中断事件寄存器"></a>2.6 EXTI_SWIER：软件中断事件寄存器</h3><p>地址偏移：<code>0x10</code>。可以按寄存器规则通过软件产生请求，用于检查后半段中断路径。GPIO 接线、来源选择和边沿是否正确，仍需要实际输入验证。</p>
+<h2 id="3-NVIC-与中断执行"><a href="#3-NVIC-与中断执行" class="headerlink" title="3. NVIC 与中断执行"></a>3. NVIC 与中断执行</h2><h3 id="3-1-EXTI-挂起与-NVIC-挂起"><a href="#3-1-EXTI-挂起与-NVIC-挂起" class="headerlink" title="3.1 EXTI 挂起与 NVIC 挂起"></a>3.1 EXTI 挂起与 NVIC 挂起</h3><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EXTI PR</td>
+<td>外设来源的挂起记录</td>
+</tr>
+<tr>
+<td>NVIC Enabled</td>
+<td>该 IRQ 被允许响应</td>
+</tr>
+<tr>
+<td>NVIC Pending</td>
+<td>内核侧有请求等待响应</td>
+</tr>
+<tr>
+<td>NVIC Active</td>
+<td>已进入这个异常的处理，可能正在执行或被更高优先级异常打断</td>
+</tr>
+</tbody></table>
+<p>**Pending 是待响应，不是“暂停正在执行的中断”。**进入 ISR 后 NVIC 管理 pending &#x2F; active 状态，但外设 PR 仍需软件按规则清除。只清 NVIC pending，不能代替清除仍然有效的外设请求来源。</p>
+<h3 id="3-2-抢占优先级与子优先级"><a href="#3-2-抢占优先级与子优先级" class="headerlink" title="3.2 抢占优先级与子优先级"></a>3.2 抢占优先级与子优先级</h3><p>F407 实现 4 位中断优先级，数字越小，优先级越高。本课采用 <code>NVIC_PriorityGroup_2</code>：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>位数</th>
+<th>可用数值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>抢占优先级</td>
+<td>2 位</td>
+<td>0～3</td>
+</tr>
+<tr>
+<td>子优先级</td>
+<td>2 位</td>
+<td>0～3</td>
+</tr>
+</tbody></table>
+<ul>
+<li>抢占优先级决定是否能够打断正在执行的较低抢占优先级 ISR。</li>
+<li>相同抢占优先级的 ISR 不因子优先级不同而相互打断。</li>
+<li>同抢占级的多个请求同时等待且可以响应时，子优先级用于排序；两者完全相同再按异常编号排序。</li>
+</ul>
+<p>本课 EXTI2 为 <code>(1, 0)</code>，EXTI3 为 <code>(1, 1)</code>：二者不能互相抢占；同时等待时 EXTI2 在前。优先级分组是位数的划分，不是给外设分配五个物理组，应在工程中统一设置。</p>
+<h3 id="3-3-CPU-保存现场与异常返回"><a href="#3-3-CPU-保存现场与异常返回" class="headerlink" title="3.3 CPU 保存现场与异常返回"></a>3.3 CPU 保存现场与异常返回</h3><p>普通、未涉及浮点扩展的异常进入，硬件保存 <code>R0～R3、R12、LR、PC、xPSR</code> 的基本栈帧；编译器按需要保存其他寄存器。同时，硬件从向量表读取中断入口地址。</p>
+<p>ISR 执行结束后，异常返回机制恢复原执行状态。如果还有符合条件的待处理异常，也可能通过尾链直接处理下一项，不一定立即返回主循环。当前先掌握整体过程，不要求背异常返回指令。</p>
+<h3 id="3-4-中断函数名称与共享入口"><a href="#3-4-中断函数名称与共享入口" class="headerlink" title="3.4 中断函数名称与共享入口"></a>3.4 中断函数名称与共享入口</h3><table>
+<thead>
+<tr>
+<th>GPIO EXTI 线路</th>
+<th>中断入口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EXTI0～EXTI4</td>
+<td>分别使用 EXTI0_IRQHandler～EXTI4_IRQHandler</td>
+</tr>
+<tr>
+<td>EXTI5～EXTI9</td>
+<td>共用 EXTI9_5_IRQHandler</td>
+</tr>
+<tr>
+<td>EXTI10～EXTI15</td>
+<td>共用 EXTI15_10_IRQHandler</td>
+</tr>
+</tbody></table>
+<p>共享入口中需要逐线检查挂起来源，能够处理多个同时到达的请求。</p>
+<p>启动文件的向量表关联的是准确的函数符号，例如 <code>EXTI2_IRQHandler</code>。名字拼错，代码仍可能编译，但真正中断会进入默认处理入口；同名 ISR 在多个文件重复定义，会导致链接错误。</p>
+<h3 id="3-5-初始化参数不要混用"><a href="#3-5-初始化参数不要混用" class="headerlink" title="3.5 初始化参数不要混用"></a>3.5 初始化参数不要混用</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GPIO_Pin_2</td>
+<td>GPIO 位掩码，值为 <code>0x0004</code></td>
+</tr>
+<tr>
+<td>EXTI_PinSource2</td>
+<td>引脚序号 2</td>
+</tr>
+<tr>
+<td>EXTI_Line2</td>
+<td>EXTI 线路掩码，值为 <code>0x0004</code></td>
+</tr>
+<tr>
+<td>EXTI2_IRQn</td>
+<td>NVIC IRQ 编号，在 F407 中为 8</td>
+</tr>
+<tr>
+<td>EXTI2_IRQHandler</td>
+<td>中断函数符号</td>
+</tr>
+</tbody></table>
+<p>数值相同不代表参数用途相同。EXTI 初始化的四项分别选择线路、模式、触发边沿和线路使能；NVIC 初始化则选择 IRQ、抢占优先级、子优先级和 IRQ 使能。</p>
+<h2 id="4-volatile-与软件标志"><a href="#4-volatile-与软件标志" class="headerlink" title="4. volatile 与软件标志"></a>4. volatile 与软件标志</h2><h3 id="4-1-为什么共享标志需要-volatile"><a href="#4-1-为什么共享标志需要-volatile" class="headerlink" title="4.1 为什么共享标志需要 volatile"></a>4.1 为什么共享标志需要 volatile</h3><p>主循环检查按键通知，中断可能在主循环执行期间把通知置为 1。编译器不能根据普通执行路径一直使用先前保存的旧值。</p>
+<p><code>volatile</code> 告诉编译器：这个对象可能被异步改变，必须保留程序规定的相关访问，不能基于“它没有变化”的假设省略读写。低优化下看起来能运行，不代表可以省略它。相关定义见 <a target="_blank" rel="noopener" href="https://documentation-service.arm.com/static/6049fe6cee937942ba302cac">Arm 编译器用户指南第 4.1 节</a>。</p>
+<table>
+<thead>
+<tr>
+<th>关键字 &#x2F; 类型</th>
+<th>本课中的作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件作用域的 static</td>
+<td>名字只在当前 <code>.c</code> 文件中可见</td>
+</tr>
+<tr>
+<td>volatile</td>
+<td>保留异步共享对象所需的访问</td>
+</tr>
+<tr>
+<td>uint8_t</td>
+<td>8 位无符号整数，可保存 0～255</td>
+</tr>
+</tbody></table>
+<p><code>static</code> 与 <code>volatile</code> 作用不同。同一文件中的 main 与 ISR 仍能共同访问文件级 static 变量。</p>
+<h3 id="4-2-硬件标志与软件标志"><a href="#4-2-硬件标志与软件标志" class="headerlink" title="4.2 硬件标志与软件标志"></a>4.2 硬件标志与软件标志</h3><table>
+<thead>
+<tr>
+<th>标志</th>
+<th>谁设置</th>
+<th>谁清除</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>EXTI PR</td>
+<td>硬件检测事件后设置</td>
+<td>ISR 按写 1 清的规则清除</td>
+</tr>
+<tr>
+<td>软件 press</td>
+<td>ISR 置为 1，通知主循环</td>
+<td>主循环处理时置为 0</td>
+</tr>
+</tbody></table>
+<p>不清硬件来源可能反复进入中断；不清软件通知，主循环可能反复处理同一通知。清除一个不会自动清除另一个。</p>
+<h3 id="4-3-volatile-的边界"><a href="#4-3-volatile-的边界" class="headerlink" title="4.3 volatile 的边界"></a>4.3 volatile 的边界</h3><ul>
+<li>不提供按键消抖。</li>
+<li>不关闭整个程序的全部优化。</li>
+<li>不保证“读取、修改、写回”或“检查后清零”作为一个整体不可被中断。</li>
+<li>不把布尔标志变成事件队列：多次置 1，结果仍然是 1。</li>
+</ul>
+<p>当前用布尔通知学习按键交互。需要精确事件计数或严格并发保护时，再增加相应机制。只由主循环访问的 ready 变量不需要 volatile。</p>
+<h2 id="5-代码部分"><a href="#5-代码部分" class="headerlink" title="5. 代码部分"></a>5. 代码部分</h2><h3 id="5-1-实验对应与验收"><a href="#5-1-实验对应与验收" class="headerlink" title="5.1 实验对应与验收"></a>5.1 实验对应与验收</h3><p>为便于与练习代码对照，以下保留原软件变量名称：</p>
+<table>
+<thead>
+<tr>
+<th>板上按键</th>
+<th>引脚 &#x2F; IRQ</th>
+<th>软件变量前缀</th>
+<th>控制的 LED</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>KEY2</td>
+<td>PE2 &#x2F; EXTI2</td>
+<td>key1</td>
+<td>PF9 红灯</td>
+</tr>
+<tr>
+<td>KEY1</td>
+<td>PE3 &#x2F; EXTI3</td>
+<td>key2</td>
+<td>PF10 绿灯</td>
+</tr>
+</tbody></table>
+<p><strong>软件 key1 &#x2F; key2 是本程序自定名称，与板上的 KEY1 &#x2F; KEY2 标签相反；硬件连接以上表为准。</strong></p>
+<p>初始化顺序为：延时初始化与优先级分组 → GPIO 时钟和模式 → SYSCFG 来源选择 → EXTI 边沿与使能 → 清遗留请求 → NVIC 优先级与使能。</p>
+<h3 id="5-2-完整代码"><a href="#5-2-完整代码" class="headerlink" title="5.2 完整代码"></a>5.2 完整代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f4xx.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;delay.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 中断和主循环共同访问，使用 volatile。 */</span></span><br><span class="line"><span class="type">static</span> <span class="keyword">volatile</span> <span class="type">uint8_t</span> key1_press = <span class="number">0</span>;</span><br><span class="line"><span class="type">static</span> <span class="keyword">volatile</span> <span class="type">uint8_t</span> key2_press = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 沿用用户变量对应：key1=PE2，key2=PE3。uint8_t 在255之后回绕。 */</span></span><br><span class="line"><span class="keyword">volatile</span> <span class="type">uint8_t</span> key1_irq_count = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">volatile</span> <span class="type">uint8_t</span> key2_irq_count = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">volatile</span> <span class="type">uint8_t</span> key1_press_count = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">volatile</span> <span class="type">uint8_t</span> key2_press_count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">Board_Init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    GPIO_InitTypeDef gpio;</span><br><span class="line">    EXTI_InitTypeDef exti;</span><br><span class="line">    NVIC_InitTypeDef nvic;</span><br><span class="line"></span><br><span class="line">    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE |</span><br><span class="line">                          RCC_AHB1Periph_GPIOF, ENABLE);</span><br><span class="line">    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* PF9 红灯，PF10 绿灯，初始都熄灭。 */</span></span><br><span class="line">    GPIO_SetBits(GPIOF, GPIO_Pin_9 | GPIO_Pin_10);</span><br><span class="line"></span><br><span class="line">    GPIO_StructInit(&amp;gpio);</span><br><span class="line">    gpio.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;</span><br><span class="line">    gpio.GPIO_Mode = GPIO_Mode_OUT;</span><br><span class="line">    gpio.GPIO_OType = GPIO_OType_PP;</span><br><span class="line">    gpio.GPIO_Speed = GPIO_Speed_2MHz;</span><br><span class="line">    gpio.GPIO_PuPd = GPIO_PuPd_NOPULL;</span><br><span class="line">    GPIO_Init(GPIOF, &amp;gpio);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* KEY2=PE2，KEY1=PE3，输入上拉。 */</span></span><br><span class="line">    gpio.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3;</span><br><span class="line">    gpio.GPIO_Mode = GPIO_Mode_IN;</span><br><span class="line">    gpio.GPIO_PuPd = GPIO_PuPd_UP;</span><br><span class="line">    GPIO_Init(GPIOE, &amp;gpio);</span><br><span class="line"></span><br><span class="line">    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource2);</span><br><span class="line">    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource3);</span><br><span class="line"></span><br><span class="line">    EXTI_StructInit(&amp;exti);</span><br><span class="line">    exti.EXTI_Line = EXTI_Line2 | EXTI_Line3;</span><br><span class="line">    exti.EXTI_Mode = EXTI_Mode_Interrupt;</span><br><span class="line">    exti.EXTI_Trigger = EXTI_Trigger_Falling;</span><br><span class="line">    exti.EXTI_LineCmd = ENABLE;</span><br><span class="line">    EXTI_Init(&amp;exti);</span><br><span class="line"></span><br><span class="line">    EXTI_ClearITPendingBit(EXTI_Line2 | EXTI_Line3);</span><br><span class="line">    NVIC_ClearPendingIRQ(EXTI2_IRQn);</span><br><span class="line">    NVIC_ClearPendingIRQ(EXTI3_IRQn);</span><br><span class="line"></span><br><span class="line">    nvic.NVIC_IRQChannel = EXTI2_IRQn;</span><br><span class="line">    nvic.NVIC_IRQChannelPreemptionPriority = <span class="number">1</span>;</span><br><span class="line">    nvic.NVIC_IRQChannelSubPriority = <span class="number">0</span>;</span><br><span class="line">    nvic.NVIC_IRQChannelCmd = ENABLE;</span><br><span class="line">    NVIC_Init(&amp;nvic);</span><br><span class="line"></span><br><span class="line">    nvic.NVIC_IRQChannel = EXTI3_IRQn;</span><br><span class="line">    nvic.NVIC_IRQChannelSubPriority = <span class="number">1</span>;</span><br><span class="line">    NVIC_Init(&amp;nvic);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI2_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (EXTI_GetITStatus(EXTI_Line2) != RESET)</span><br><span class="line">    &#123;</span><br><span class="line">        EXTI_ClearITPendingBit(EXTI_Line2);</span><br><span class="line">        key1_press = <span class="number">1</span>;       <span class="comment">/* 软件key1：PE2，板上KEY2。 */</span></span><br><span class="line">        key1_irq_count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">EXTI3_IRQHandler</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (EXTI_GetITStatus(EXTI_Line3) != RESET)</span><br><span class="line">    &#123;</span><br><span class="line">        EXTI_ClearITPendingBit(EXTI_Line3);</span><br><span class="line">        key2_press = <span class="number">1</span>;       <span class="comment">/* 软件key2：PE3，板上KEY1。 */</span></span><br><span class="line">        key2_irq_count++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* 沿用你的定义：0 可接受按下，1 已接受、等待松开。 */</span></span><br><span class="line">    <span class="type">uint8_t</span> key1_ready = <span class="number">0</span>;</span><br><span class="line">    <span class="type">uint8_t</span> key2_ready = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    delay_init();</span><br><span class="line">    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);</span><br><span class="line">    Board_Init();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* key1 是你的软件名称，对应 PE2，即板上的 KEY2。 */</span></span><br><span class="line">        <span class="keyword">if</span> (key1_press == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            key1_press = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (key1_ready == <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                delay_ms(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2) == <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    key1_ready = <span class="number">1</span>;</span><br><span class="line">                    key1_press_count++;</span><br><span class="line">                    GPIO_ToggleBits(GPIOF, GPIO_Pin_9);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* 释放检测独立放在主循环中，不依赖新的下降沿通知。 */</span></span><br><span class="line">        <span class="keyword">if</span> (key1_ready == <span class="number">1</span> &amp;&amp;</span><br><span class="line">            GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2) == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            delay_ms(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_2) == <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                key1_ready = <span class="number">0</span>;</span><br><span class="line">                key1_press = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* key2 对应 PE3，即板上的 KEY1。 */</span></span><br><span class="line">        <span class="keyword">if</span> (key2_press == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            key2_press = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (key2_ready == <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                delay_ms(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_3) == <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    key2_ready = <span class="number">1</span>;</span><br><span class="line">                    key2_press_count++;</span><br><span class="line">                    GPIO_ToggleBits(GPIOF, GPIO_Pin_10);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (key2_ready == <span class="number">1</span> &amp;&amp;</span><br><span class="line">            GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_3) == <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            delay_ms(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (GPIO_ReadInputDataBit(GPIOE, GPIO_Pin_3) == <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                key2_ready = <span class="number">0</span>;</span><br><span class="line">                key2_press = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/">https://041101.xyz/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/EXTI/">EXTI</a><a class="post-meta__tags" href="/tags/NVIC/">NVIC</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.JPG" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/12/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/04%20%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%BA%94%E7%94%A8/" title="04 电力电子应用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">04 电力电子应用</div></div><div class="info-2"><div class="info-item-1">1. 从电阻降压到开关降压希望将 100 V 的直流电源通过 DC&#x2F;DC 变换，得到 50 V、10 A 的输出。  最简单的办法是在负载前串联一个电阻降压，但损耗很大，而且输出电压会随负载电流变化。因此，采用开关周期性通断，再添加 LC 滤波器，将开关节点的方波电压滤成纹波较小的直流输出。  2. 输出反馈与闭环控制一个完整的控制系统还需要对输出量进行采样，将采样值与参考值比较，通过负反馈调节开关的占空比，使输出保持在目标值附近。  3. 从降压拓扑到升压拓扑将电感放到输入侧，并按下图调整开关连接，就形成了 Boost 升压拓扑。  电感电流不能突变。以开关接到图中位置 1 为导通状态：  开关导通（位置 1）时： 输入电源向电感储能，输出电容向负载供电。 开关关断（切换到位置 2）时： 输入电源与电感共同向输出侧供能，为负载供电并补充电容的能量。  </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">组内无法实习，现更改为电力电子硬件学习！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-EXTI-%E7%AE%80%E4%BB%8B"><span class="toc-text">1. EXTI 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%BD%AE%E8%AF%A2%E4%B8%8E%E4%B8%AD%E6%96%AD"><span class="toc-text">1.1 轮询与中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%BB%8E-PE2-%E4%B8%8B%E9%99%8D%E6%B2%BF%E5%88%B0%E4%B8%BB%E5%BE%AA%E7%8E%AF%E5%A4%84%E7%90%86"><span class="toc-text">1.2 从 PE2 下降沿到主循环处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E6%8E%A2%E7%B4%A2%E8%80%85-V3-%E7%9A%84%E6%8C%89%E9%94%AE%E4%B8%8E-LED"><span class="toc-text">1.3 探索者 V3 的按键与 LED</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AF%84%E5%AD%98%E5%99%A8%E4%BB%8B%E7%BB%8D"><span class="toc-text">2. 寄存器介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-SYSCFG-EXTICR%EF%BC%9A%E9%80%89%E6%8B%A9-GPIO-%E6%9D%A5%E6%BA%90"><span class="toc-text">2.1 SYSCFG_EXTICR：选择 GPIO 来源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-EXTI-IMR%EF%BC%9A%E4%B8%AD%E6%96%AD%E5%B1%8F%E8%94%BD%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">2.2 EXTI_IMR：中断屏蔽寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-EXTI-EMR%EF%BC%9A%E4%BA%8B%E4%BB%B6%E5%B1%8F%E8%94%BD%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">2.3 EXTI_EMR：事件屏蔽寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-EXTI-RTSR-EXTI-FTSR%EF%BC%9A%E8%A7%A6%E5%8F%91%E8%BE%B9%E6%B2%BF%E9%80%89%E6%8B%A9"><span class="toc-text">2.4 EXTI_RTSR &#x2F; EXTI_FTSR：触发边沿选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-EXTI-PR%EF%BC%9A%E8%AF%B7%E6%B1%82%E6%8C%82%E8%B5%B7%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">2.5 EXTI_PR：请求挂起寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-EXTI-SWIER%EF%BC%9A%E8%BD%AF%E4%BB%B6%E4%B8%AD%E6%96%AD%E4%BA%8B%E4%BB%B6%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">2.6 EXTI_SWIER：软件中断事件寄存器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-NVIC-%E4%B8%8E%E4%B8%AD%E6%96%AD%E6%89%A7%E8%A1%8C"><span class="toc-text">3. NVIC 与中断执行</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-EXTI-%E6%8C%82%E8%B5%B7%E4%B8%8E-NVIC-%E6%8C%82%E8%B5%B7"><span class="toc-text">3.1 EXTI 挂起与 NVIC 挂起</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E6%8A%A2%E5%8D%A0%E4%BC%98%E5%85%88%E7%BA%A7%E4%B8%8E%E5%AD%90%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-text">3.2 抢占优先级与子优先级</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-CPU-%E4%BF%9D%E5%AD%98%E7%8E%B0%E5%9C%BA%E4%B8%8E%E5%BC%82%E5%B8%B8%E8%BF%94%E5%9B%9E"><span class="toc-text">3.3 CPU 保存现场与异常返回</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E4%B8%AD%E6%96%AD%E5%87%BD%E6%95%B0%E5%90%8D%E7%A7%B0%E4%B8%8E%E5%85%B1%E4%BA%AB%E5%85%A5%E5%8F%A3"><span class="toc-text">3.4 中断函数名称与共享入口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%82%E6%95%B0%E4%B8%8D%E8%A6%81%E6%B7%B7%E7%94%A8"><span class="toc-text">3.5 初始化参数不要混用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-volatile-%E4%B8%8E%E8%BD%AF%E4%BB%B6%E6%A0%87%E5%BF%97"><span class="toc-text">4. volatile 与软件标志</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%B1%E4%BA%AB%E6%A0%87%E5%BF%97%E9%9C%80%E8%A6%81-volatile"><span class="toc-text">4.1 为什么共享标志需要 volatile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E7%A1%AC%E4%BB%B6%E6%A0%87%E5%BF%97%E4%B8%8E%E8%BD%AF%E4%BB%B6%E6%A0%87%E5%BF%97"><span class="toc-text">4.2 硬件标志与软件标志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-volatile-%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="toc-text">4.3 volatile 的边界</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%BB%A3%E7%A0%81%E9%83%A8%E5%88%86"><span class="toc-text">5. 代码部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%AE%9E%E9%AA%8C%E5%AF%B9%E5%BA%94%E4%B8%8E%E9%AA%8C%E6%94%B6"><span class="toc-text">5.1 实验对应与验收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="toc-text">5.2 完整代码</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/" title="02 EXTI外部中断">02 EXTI外部中断</a><time datetime="2026-10-13T14:25:26.000Z" title="发表于 2026-10-13 22:25:26">2026-10-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/12/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/04%20%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%BA%94%E7%94%A8/" title="04 电力电子应用">04 电力电子应用</a><time datetime="2026-10-12T11:20:58.000Z" title="发表于 2026-10-12 19:20:58">2026-10-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/05/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/01%20GPIO%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" title="01 GPIO的输入输出">01 GPIO的输入输出</a><time datetime="2026-10-09T07:19:08.000Z" title="发表于 2026-10-09 15:19:08">2026-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/09/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/03%20Cuk%E5%8F%98%E6%8D%A2%E7%94%B5%E8%B7%AF/" title="03 Cuk变换电路">03 Cuk变换电路</a><time datetime="2026-10-09T02:00:00.000Z" title="发表于 2026-10-09 10:00:00">2026-10-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/29/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/02%20BOOST%E7%94%B5%E8%B7%AF/" title="02 BOOST电路">02 BOOST电路</a><time datetime="2026-10-08T09:39:07.000Z" title="发表于 2026-10-08 17:39:07">2026-10-08</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/home-bg.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/empty-home.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

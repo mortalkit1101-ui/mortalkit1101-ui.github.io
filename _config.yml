@@ -67,6 +67,7 @@ include:
   - .nojekyll
 
 published_posts:
+  - blog/嵌入式/02 EXTI外部中断.md
   - blog/电力电子学习/03 Cuk变换电路.md
   - blog/电力电子学习/04 电力电子应用.md
   - blog/嵌入式/01 GPIO的输入输出.md
@@ -95,6 +96,7 @@ deploy:
 
 # Fixed article URLs are kept here so Obsidian only shows writing properties.
 blog_permalinks:
+  blog/嵌入式/02 EXTI外部中断.md: 2026/10/13/blog/嵌入式/02 EXTI外部中断/
   blog/电力电子学习/03 Cuk变换电路.md: 2026/10/09/blog/电力电子学习/03 Cuk变换电路/
   blog/电力电子学习/02 BOOST电路.md: 2026/09/29/blog/电力电子学习/02 BOOST电路/
   blog/嵌入式/01 GPIO的输入输出.md: 2026/10/05/blog/嵌入式/01 GPIO的输入输出/

@@ -1,0 +1,541 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>04 I2C | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="IIC、I2C 和 I²C 指同一种通信总线。I²C 使用时钟线 SCL 和双向数据线 SDA，在同一总线上通过设备地址选择通信对象，常用于连接 EEPROM、传感器等芯片。 I²C 支持多主多从，也常用于单主多从系统。本次实验只有 STM32 一个主机，目标从机是开发板上的 24C02 EEPROM。 本文记录 2026 年 11 月 20 日的软件 I²C、硬件 I²C 学习内容。开发板为正点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="04 I2C">
+<meta property="og:url" content="https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="IIC、I2C 和 I²C 指同一种通信总线。I²C 使用时钟线 SCL 和双向数据线 SDA，在同一总线上通过设备地址选择通信对象，常用于连接 EEPROM、传感器等芯片。 I²C 支持多主多从，也常用于单主多从系统。本次实验只有 STM32 一个主机，目标从机是开发板上的 24C02 EEPROM。 本文记录 2026 年 11 月 20 日的软件 I²C、硬件 I²C 学习内容。开发板为正点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/avatar.JPG">
+<meta property="article:published_time" content="2026-11-20T11:51:04.000Z">
+<meta property="article:modified_time" content="2026-11-20T11:56:28.508Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="IIC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/avatar.JPG"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "04 I2C",
+  "url": "https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/",
+  "image": "https://041101.xyz/img/avatar.JPG",
+  "datePublished": "2026-11-20T11:51:04.000Z",
+  "dateModified": "2026-11-20T11:56:28.508Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '04 I2C',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/empty-home.css"><link rel="stylesheet" href="/css/buck-formulas.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/home-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">04 I2C</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">04 I2C</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-20T11:51:04.000Z" title="发表于 2026-11-20 19:51:04">2026-11-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-20T11:56:28.508Z" title="更新于 2026-11-20 19:56:28">2026-11-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>IIC、I2C 和 I²C 指同一种通信总线。I²C 使用时钟线 SCL 和双向数据线 SDA，在同一总线上通过设备地址选择通信对象，常用于连接 EEPROM、传感器等芯片。</p>
+<p>I²C 支持多主多从，也常用于单主多从系统。本次实验只有 STM32 一个主机，目标从机是开发板上的 24C02 EEPROM。</p>
+<p>本文记录 2026 年 11 月 20 日的软件 I²C、硬件 I²C 学习内容。开发板为正点原子探索者 STM32F407 V3，芯片为 STM32F407ZGT6，工程使用 STM32CubeMX、VS Code 和 HAL 库。</p>
+<h2 id="两根线与开漏输出"><a href="#两根线与开漏输出" class="headerlink" title="两根线与开漏输出"></a>两根线与开漏输出</h2><table>
+<thead>
+<tr>
+<th>信号</th>
+<th>本次引脚</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SCL</td>
+<td>PB8</td>
+<td>主机产生通信时钟</td>
+</tr>
+<tr>
+<td>SDA</td>
+<td>PB9</td>
+<td>双向传输地址、数据和应答</td>
+</tr>
+</tbody></table>
+<p>按本次开发板的连接，板载 EEPROM 已经连接这两根线，无需额外跳线。两根线各有 4.7 kΩ 电阻上拉到 3.3 V，本次不使用 GPIO 内部上拉。</p>
+<p>开漏输出的两个动作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET); <span class="comment">// 主动拉低线路</span></span><br><span class="line">HAL_GPIO_WritePin(port, pin, GPIO_PIN_SET);   <span class="comment">// 释放线路，由电阻上拉</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>开漏写 1 表示释放，不是主动输出高电平。</strong> 释放 SDA 后，从机仍然可以将线路拉低，主机通过 <code>HAL_GPIO_ReadPin()</code> 读取实际电平。这使数据发送方和接收方能够轮流控制 SDA。</p>
+<p>SCL 采用开漏还允许从机通过保持 SCL 为低来延长等待时间，即时钟拉伸。本次软件示例按 EEPROM 正常响应、不发生时钟拉伸的条件编写，没有实现拉伸等待和多主仲裁。</p>
+<p>之前完成的 GPIO 实验结果：主动拉低 SDA 读到 0，释放 SDA 读到 1，释放 SCL 读到 1。</p>
+<h2 id="起始、停止和数据位"><a href="#起始、停止和数据位" class="headerlink" title="起始、停止和数据位"></a>起始、停止和数据位</h2><table>
+<thead>
+<tr>
+<th>动作</th>
+<th>SCL 状态</th>
+<th>SDA 动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>起始 START</td>
+<td>高电平</td>
+<td>从高变低</td>
+</tr>
+<tr>
+<td>停止 STOP</td>
+<td>高电平</td>
+<td>从低变高</td>
+</tr>
+<tr>
+<td>准备普通数据位</td>
+<td>低电平</td>
+<td>设置为这一位对应的电平</td>
+</tr>
+<tr>
+<td>读取普通数据位</td>
+<td>高电平</td>
+<td>保持稳定，让接收方读取</td>
+</tr>
+</tbody></table>
+<p><strong>低电平期间准备数据，高电平期间保持数据稳定。</strong> START 和 STOP 是 SDA 在 SCL 高电平期间变化的特殊情况。</p>
+<p>一次传输中的数据字节按最高位先发送：bit7、bit6，直到 bit0。</p>
+<h2 id="ACK-与-NACK"><a href="#ACK-与-NACK" class="headerlink" title="ACK 与 NACK"></a>ACK 与 NACK</h2><p>每传输 8 位后，主机还要产生第 9 个时钟，用于传输应答位。</p>
+<ul>
+<li>ACK：接收方在第 9 个时钟将 SDA 拉低，表示应答。</li>
+<li>NACK：第 9 个时钟 SDA 保持高电平，表示未应答或不再继续接收。</li>
+</ul>
+<p><strong>前 8 位由发送方控制 SDA；第 9 位由接收方决定应答。第 9 个时钟仍由主机产生。</strong> 发送方必须先释放 SDA，接收方才能正确应答。</p>
+<p>单字节读取结束时，STM32 发送 NACK，告诉 EEPROM 不再继续读，再发送 STOP。这是正常的结束操作。</p>
+<p>注意：普通数据位的低电平表示 0，而 ACK 的低电平表示应答成功，不能把两个判断混在一起。自定义函数可以用 1 表示“收到 ACK”，但 HAL 的 <code>HAL_OK</code> 数值为 0。</p>
+<h2 id="设备地址、内部地址和数据"><a href="#设备地址、内部地址和数据" class="headerlink" title="设备地址、内部地址和数据"></a>设备地址、内部地址和数据</h2><p>本次板载 24C02 的 A2、A1、A0 接地，7 位设备地址为 <code>0x50</code>。它共有 256 字节，内部存储地址为 <code>0x00～0xFF</code>。</p>
+<p>设备地址后面加一位方向，形成线路上的第一个字节：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">7 位设备地址：1010000 = 0x50</span><br><span class="line"></span><br><span class="line">写方向：1010000 0 = 0xA0</span><br><span class="line">读方向：1010000 1 = 0xA1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">0x50U</span> &lt;&lt; <span class="number">1</span>) | <span class="number">0U</span>  <span class="comment">// 写方向</span></span><br><span class="line">(<span class="number">0x50U</span> &lt;&lt; <span class="number">1</span>) | <span class="number">1U</span>  <span class="comment">// 读方向</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设备地址 <code>0x50</code></td>
+<td>选择总线上的哪颗芯片</td>
+</tr>
+<tr>
+<td>内部地址 <code>0x00</code></td>
+<td>选择这颗芯片内部的哪个存储单元</td>
+</tr>
+<tr>
+<td>数据 <code>0x5A</code></td>
+<td>要保存的一个字节内容</td>
+</tr>
+</tbody></table>
+<h2 id="EEPROM-单字节写入与读取"><a href="#EEPROM-单字节写入与读取" class="headerlink" title="EEPROM 单字节写入与读取"></a>EEPROM 单字节写入与读取</h2><h3 id="写入一个字节"><a href="#写入一个字节" class="headerlink" title="写入一个字节"></a>写入一个字节</h3><p>调用 <code>EEPROM_WriteByte(0x00, 0x5A)</code> 时，目标是把数据 <code>0x5A</code> 保存到 EEPROM 内部地址 <code>0x00</code>。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">START</span><br><span class="line">  → STM32 发送 0xA0 → EEPROM 回复 ACK</span><br><span class="line">  → STM32 发送0x00 → EEPROM 回复ACK</span><br><span class="line">  → STM32 发送0x5A → EEPROM 回复ACK</span><br><span class="line">  → STOP</span><br><span class="line">  → 等待内部写入完成</span><br></pre></td></tr></table></figure>
+
+<p>STOP 后 EEPROM 还需要内部写入时间。本次代码等待 10 ms，再执行后续操作；实际等待时间应覆盖所用器件数据手册规定的最大写周期，也可通过 ACK 轮询确认写入完成。总线上的数据发送完成，不等于 EEPROM 已经完成内部保存。</p>
+<h3 id="指定地址读取一个字节"><a href="#指定地址读取一个字节" class="headerlink" title="指定地址读取一个字节"></a>指定地址读取一个字节</h3><p>调用 <code>EEPROM_ReadByte(0x00, &amp;eeprom_data)</code>，将指定位置的内容保存到变量 <code>eeprom_data</code>。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">START</span><br><span class="line">  → STM32 发送0xA0 → EEPROM 回复ACK</span><br><span class="line">  → STM32 发送0x00 → EEPROM 回复ACK</span><br><span class="line">  → 重复 START</span><br><span class="line">  → STM32 发送0xA1 → EEPROM 回复ACK</span><br><span class="line">  → EEPROM 输出8 位数据，STM32 接收</span><br><span class="line">  → STM32 发送 NACK</span><br><span class="line">  → STOP</span><br></pre></td></tr></table></figure>
+
+<p>读取前先用写方向发送内部地址，是为了告诉 EEPROM 接下来从哪里读取。这一阶段只发送地址，没有发送待保存的数据。重复 START 在不释放总线的情况下，重新发送设备地址并切换为读方向。</p>
+<h2 id="I²C-通信流程的整体理解"><a href="#I²C-通信流程的整体理解" class="headerlink" title="I²C 通信流程的整体理解"></a>I²C 通信流程的整体理解</h2><h3 id="主机怎样发起通信"><a href="#主机怎样发起通信" class="headerlink" title="主机怎样发起通信"></a>主机怎样发起通信</h3><p>I²C 支持多主多从，但不能靠“谁先拉低 SCL”来确定主机。主机先确认总线空闲，再发送 START，开始一次通信。</p>
+<p>通信过程中，两根线暂时同时为高，也不代表传输已经结束，需要结合 START、STOP 判断总线状态。</p>
+<p>如果两个主机几乎同时开始，需要通过时钟同步和仲裁决定谁继续。主机发送时也观察 SDA，<strong>如果自己想发送 1，却读到 0，就知道自己失去仲裁，需要退出竞争。</strong> 本次 STM32 是唯一主机，EEPROM 是从机，软件驱动未实现多主仲裁。</p>
+<h3 id="先发送从机地址，再由从机回复-ACK"><a href="#先发送从机地址，再由从机回复-ACK" class="headerlink" title="先发送从机地址，再由从机回复 ACK"></a>先发送从机地址，再由从机回复 ACK</h3><p>原来的理解是“主机先给目标从机发送 ACK，再发送数据”，应修正为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">主机发送 START</span><br><span class="line">    ↓</span><br><span class="line">主机发送“从机地址＋读写方向”</span><br><span class="line">    ↓</span><br><span class="line">被选中的从机回复 ACK</span><br><span class="line">    ↓</span><br><span class="line">开始传输后续内容</span><br></pre></td></tr></table></figure>
+
+<p><strong>从机通过地址知道“这次是在找我”，ACK 是它收到后的应答。</strong> ACK 本身不包含目标地址，也不是主机用来选择从机的命令。</p>
+<p>结合前面的 EEPROM 写入流程：STM32 先发送 0xA0 选择设备，再发送 0x00 指定内部位置，最后发送 0x5A作为数据；EEPROM 在每个字节之后分别回复 ACK，最后由 STM32 发送 STOP。</p>
+<h3 id="发送时，在-SCL-低电平期间准备-SDA"><a href="#发送时，在-SCL-低电平期间准备-SDA" class="headerlink" title="发送时，在 SCL 低电平期间准备 SDA"></a>发送时，在 SCL 低电平期间准备 SDA</h3><p>原来的理解是“在 SCL 高电平时把数据放到 SDA 上”，应修正为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">STM32 拉低 SCL</span><br><span class="line">    ↓</span><br><span class="line">STM32 设置 SDA，准备这一位数据</span><br><span class="line">    ↓</span><br><span class="line">STM32 释放 SCL，使其升高；SDA 保持不变，EEPROM 读取</span><br><span class="line">    ↓</span><br><span class="line">STM32 拉低 SCL，准备下一位</span><br></pre></td></tr></table></figure>
+
+<p>对应发送一位的代码如下，放在软件发送函数的循环内：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">I2C_SCL(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">I2C_SDA((data &amp; <span class="number">0x80U</span>) != <span class="number">0U</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line"></span><br><span class="line">I2C_SCL(<span class="number">1</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line"></span><br><span class="line">I2C_SCL(<span class="number">0</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line"></span><br><span class="line">data &lt;&lt;= <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>普通数据传输期间：低电平时准备或改变 SDA，高电平时保持 SDA 稳定。</strong> 如果在 SCL 高电平期间改变 SDA，就可能被对方识别为 START 或 STOP。</p>
+<h3 id="接收时，SDA-的控制方改变，时钟仍由主机产生"><a href="#接收时，SDA-的控制方改变，时钟仍由主机产生" class="headerlink" title="接收时，SDA 的控制方改变，时钟仍由主机产生"></a>接收时，SDA 的控制方改变，时钟仍由主机产生</h3><p>“接收时反过来”指 EEPROM 输出数据、STM32 读取数据。它不表示时钟改由 EEPROM 产生，也不表示数据电平与位值反过来。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">STM32 释放 SDA，让 EEPROM 控制数据线</span><br><span class="line">    ↓</span><br><span class="line">SCL 低电平期间，EEPROM 准备数据</span><br><span class="line">    ↓</span><br><span class="line">STM32 释放 SCL，使其升高，并读取 SDA</span><br><span class="line">    ↓</span><br><span class="line">STM32 拉低 SCL，进入下一位</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>谁控制 SDA</th>
+<th>STM32 在做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>STM32 发送 8 位地址或数据</td>
+<td>STM32</td>
+<td>设置数据、产生时钟</td>
+</tr>
+<tr>
+<td>EEPROM 回复 ACK</td>
+<td>EEPROM</td>
+<td>释放 SDA、产生第 9 个时钟并读取应答</td>
+</tr>
+<tr>
+<td>EEPROM 发送 8 位数据</td>
+<td>EEPROM</td>
+<td>释放 SDA、产生时钟并读取数据</td>
+</tr>
+<tr>
+<td>STM32 结束单字节读取</td>
+<td>STM32</td>
+<td>第 9 个时钟保持 SDA 释放为高，发送 NACK</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>主机在总线空闲后发送 START，再发送地址和读写方向，由从机回复 ACK。传输每一位时，发送方在 SCL 低电平期间准备数据，接收方在高电平期间读取。读写过程中，时钟都由主机产生。</p>
+</blockquote>
+<h2 id="软件-I²C-实现要点"><a href="#软件-I²C-实现要点" class="headerlink" title="软件 I²C 实现要点"></a>软件 I²C 实现要点</h2><p>软件 I²C 使用普通 GPIO，由程序逐次控制两根线。</p>
+<p>CubeMX 中关闭 I2C1，将 PB8、PB9 配置为普通开漏输出、无内部上下拉。可以将初始输出设为 High、输出速度设为 Low；初始化完成后释放两根线。GPIO 的输出速度设置控制引脚边沿特性，不直接决定通信时钟频率。</p>
+<p>软件控制要求普通 GPIO 输出模式。之前误用 <code>GPIO_MODE_AF_OD</code> 时，引脚由外设复用功能控制，普通 GPIO 写操作无法按预期拉低 SDA；切换为 <code>GPIO_MODE_OUTPUT_OD</code> 后电平实验通过。</p>
+<h3 id="文件组织"><a href="#文件组织" class="headerlink" title="文件组织"></a>文件组织</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Core/Inc/eeprom.h：引脚定义和对外接口声明</span><br><span class="line">Core/Src/eeprom.c：起始、停止、逐位收发和 EEPROM 操作实现</span><br><span class="line">Core/Src/main.c：初始化、调用接口、打印结果</span><br></pre></td></tr></table></figure>
+
+<p>头文件中集中定义引脚，修改时同时调整 CubeMX GPIO 配置和实际接线。板载 EEPROM 已固定连接 PB8、PB9，不能仅改宏就改变板上走线。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> EEPROM_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stm32f4xx_hal.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_SCL_GPIO_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_SCL_GPIO_PIN  GPIO_PIN_8</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_SDA_GPIO_PORT GPIOB</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_SDA_GPIO_PIN  GPIO_PIN_9</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 软件接口统一保存7 位地址，由发送代码补读写位 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_DEVICE_ADDRESS 0x50U</span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">EEPROM_Init</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line">HAL_StatusTypeDef <span class="title function_">EEPROM_Check</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line">HAL_StatusTypeDef <span class="title function_">EEPROM_WriteByte</span><span class="params">(<span class="type">uint8_t</span> address, <span class="type">uint8_t</span> data)</span>;</span><br><span class="line">HAL_StatusTypeDef <span class="title function_">EEPROM_ReadByte</span><span class="params">(<span class="type">uint8_t</span> address, <span class="type">uint8_t</span> *data)</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>eeprom.c</code> 中包含 <code>eeprom.h</code>，<code>main.c</code> 也通过包含头文件使用接口，不直接包含 <code>.c</code> 文件。带 <code>static</code> 的辅助函数仅在 <code>eeprom.c</code> 内部使用。</p>
+<p>工程根目录 <code>CMakeLists.txt</code> 中把源文件加入现有列表：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_sources</span>(<span class="variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE</span><br><span class="line">    Core/Src/eeprom.c</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="发送-8-位与检查-ACK"><a href="#发送-8-位与检查-ACK" class="headerlink" title="发送 8 位与检查 ACK"></a>发送 8 位与检查 ACK</h3><p>以下是函数内部的时序片段，并非完整驱动；<code>status</code> 为发送函数中声明的 <code>HAL_StatusTypeDef</code> 变量。片段放在 <code>eeprom.c</code> 中对应的函数内部。<code>I2C_SCL(0)</code>、<code>I2C_SDA(0)</code> 表示拉低；参数为 1 表示释放；<code>I2C_Delay()</code> 为通信延时辅助函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 发送函数内部：先发送当前最高位 */</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">uint8_t</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    I2C_SCL(<span class="number">0</span>);</span><br><span class="line">    I2C_SDA((data &amp; <span class="number">0x80U</span>) != <span class="number">0U</span>);</span><br><span class="line">    I2C_Delay();</span><br><span class="line"></span><br><span class="line">    I2C_SCL(<span class="number">1</span>);</span><br><span class="line">    I2C_Delay();</span><br><span class="line"></span><br><span class="line">    I2C_SCL(<span class="number">0</span>);</span><br><span class="line">    I2C_Delay();</span><br><span class="line"></span><br><span class="line">    data &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 发完8 位，必须释放 SDA */</span></span><br><span class="line">I2C_SDA(<span class="number">1</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line"></span><br><span class="line">I2C_SCL(<span class="number">1</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (HAL_GPIO_ReadPin(EEPROM_SDA_GPIO_PORT,</span><br><span class="line">                     EEPROM_SDA_GPIO_PIN) == GPIO_PIN_RESET)</span><br><span class="line">&#123;</span><br><span class="line">    status = HAL_OK;  <span class="comment">// 第9 个时钟读到低电平：收到 ACK</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    status = HAL_ERROR;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">I2C_SCL(<span class="number">0</span>);</span><br><span class="line">I2C_Delay();</span><br></pre></td></tr></table></figure>
+
+<p><code>data &amp; 0x80U</code> 检查最高位，<code>data &lt;&lt;= 1</code> 把下一位移到最高位，等待下一轮发送。</p>
+<h3 id="接收-8-位与组装数据"><a href="#接收-8-位与组装数据" class="headerlink" title="接收 8 位与组装数据"></a>接收 8 位与组装数据</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 接收函数内部：先确保 SCL 为低，再释放 SDA */</span></span><br><span class="line"><span class="type">uint8_t</span> data = <span class="number">0</span>;</span><br><span class="line">I2C_SCL(<span class="number">0</span>);</span><br><span class="line">I2C_SDA(<span class="number">1</span>);  <span class="comment">// 释放 SDA，让 EEPROM 输出数据</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="type">uint8_t</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)</span><br><span class="line">&#123;</span><br><span class="line">    I2C_Delay();</span><br><span class="line">    I2C_SCL(<span class="number">1</span>);</span><br><span class="line">    I2C_Delay();</span><br><span class="line"></span><br><span class="line">    data &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (HAL_GPIO_ReadPin(EEPROM_SDA_GPIO_PORT,</span><br><span class="line">                         EEPROM_SDA_GPIO_PIN) == GPIO_PIN_SET)</span><br><span class="line">    &#123;</span><br><span class="line">        data |= <span class="number">1U</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    I2C_SCL(<span class="number">0</span>);</span><br><span class="line">    I2C_Delay();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 只读一个字节：第9 个时钟发送 NACK */</span></span><br><span class="line">I2C_SDA(<span class="number">1</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line">I2C_SCL(<span class="number">1</span>);</span><br><span class="line">I2C_Delay();</span><br><span class="line">I2C_SCL(<span class="number">0</span>);</span><br><span class="line">I2C_Delay();</span><br></pre></td></tr></table></figure>
+
+<p><code>data &lt;&lt;= 1</code> 将已收到的数据左移，最低位空出 0；本次读到高电平，就用 <code>data |= 1U</code> 将最低位置 1。低电平则不置位。</p>
+<p>本次软件程序使用毫秒延时，适合观察和理解顺序，通信速度较慢；不能将其看作精确的 100 kHz实现。接口在主循环中调用，不放进中断回调。</p>
+<h2 id="硬件-I²C：I2C1-与-HAL"><a href="#硬件-I²C：I2C1-与-HAL" class="headerlink" title="硬件 I²C：I2C1 与 HAL"></a>硬件 I²C：I2C1 与 HAL</h2><p>软件 I²C 逐次调用 GPIO 函数产生时序，硬件 I²C 则由 I2C1 外设产生时序。本次使用 HAL 阻塞接口，CPU 仍在函数中等待完成；使用硬件外设不等于调用过程自动变成异步。</p>
+<h3 id="CubeMX-配置"><a href="#CubeMX-配置" class="headerlink" title="CubeMX 配置"></a>CubeMX 配置</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>本次设置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>外设</td>
+<td>I2C1，I2C 模式</td>
+</tr>
+<tr>
+<td>SCL &#x2F; SDA</td>
+<td>PB8 &#x2F; PB9</td>
+</tr>
+<tr>
+<td>GPIO 模式</td>
+<td>AF4 复用开漏，无内部上下拉</td>
+</tr>
+<tr>
+<td>时钟速度</td>
+<td>100000 Hz，即 100 kHz</td>
+</tr>
+<tr>
+<td>Addressing Mode</td>
+<td>7-bit</td>
+</tr>
+<tr>
+<td>Duty Cycle</td>
+<td>2，当前标准模式沿用默认值</td>
+</tr>
+<tr>
+<td>Own Address1</td>
+<td>0，本次不作为从机使用</td>
+</tr>
+<tr>
+<td>Dual Address &#x2F; General Call</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>No Stretch Mode</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>I2C 中断 &#x2F; DMA</td>
+<td>本次阻塞实验不启用</td>
+</tr>
+</tbody></table>
+<p><code>Own Address</code> 是 STM32 作为从机时的地址，不是 EEPROM 的设备地址。当前 PCLK1&#x3D;42 MHz，I2C1 的时序配置基于这个外设时钟，不套用此前 APB1 定时器的 84 MHz时钟。</p>
+<p>生成代码后，在 <code>main.c</code> 中包含 <code>i2c.h</code>，并在初始化阶段调用 <code>MX_I2C1_Init()</code>。切换到硬件模式后，不再调用原来通过 GPIO 操作线路的软件 EEPROM 接口。</p>
+<h3 id="地址宏的统一约定"><a href="#地址宏的统一约定" class="headerlink" title="地址宏的统一约定"></a>地址宏的统一约定</h3><p>下面的 HAL 示例使用两个名字明确区分 7 位地址和接口参数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_ADDRESS_7BIT  0x50U</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> EEPROM_HAL_ADDRESS  (EEPROM_ADDRESS_7BIT &lt;&lt; 1)</span></span><br></pre></td></tr></table></figure>
+
+<p>STM32F4 的这些 HAL 接口要求设备地址左移 1 位后传入，写入和读取都传 <code>EEPROM_HAL_ADDRESS</code>，由 HAL 处理方向位。不要在调用前又手动加上读方向位，也不要重复左移。</p>
+<p>本次硬件实验工程仍保留旧的 <code>EEPROM_DEVICE_ADDRESS</code> 表达式 <code>(0x50 &lt;&lt; 1) | 0</code>，用于 HAL 时值为 0xA0。后续复用软件驱动前应按上面的命名统一：软件使用 7 位地址再移位，HAL 使用移位后的地址。不要让同一个宏同时承担两种含义；表达式宏应加整体括号。</p>
+<h3 id="初始化后检测并写入一次"><a href="#初始化后检测并写入一次" class="headerlink" title="初始化后检测并写入一次"></a>初始化后检测并写入一次</h3><p><code>main.c</code> 的 <code>USER CODE BEGIN Includes</code> 区域包含 <code>stdio.h</code>；确保已包含生成的 <code>i2c.h</code>。地址宏放在 <code>USER CODE BEGIN PD</code>。全局变量放在 <code>USER CODE BEGIN PV</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HAL_StatusTypeDef eeprom_status;</span><br><span class="line"><span class="type">uint8_t</span> eeprom_write_data = <span class="number">0x3C</span>;</span><br><span class="line"><span class="type">uint8_t</span> eeprom_data = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>以下代码放在 <code>main()</code> 的 <code>USER CODE BEGIN 2</code> 区域，即 CubeMX 初始化完成后、进入主循环之前。每次启动只写入一次。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">eeprom_status = HAL_I2C_IsDeviceReady(</span><br><span class="line">    &amp;hi2c1, EEPROM_HAL_ADDRESS, <span class="number">3</span>, <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;EEPROM check status=%u\r\n&quot;</span>,</span><br><span class="line">       (<span class="type">unsigned</span> <span class="type">int</span>)eeprom_status);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (eeprom_status == HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line">    eeprom_status = HAL_I2C_Mem_Write(</span><br><span class="line">        &amp;hi2c1,</span><br><span class="line">        EEPROM_HAL_ADDRESS,</span><br><span class="line">        <span class="number">0x00</span>,</span><br><span class="line">        I2C_MEMADD_SIZE_8BIT,</span><br><span class="line">        &amp;eeprom_write_data,</span><br><span class="line">        <span class="number">1</span>,</span><br><span class="line">        <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (eeprom_status == HAL_OK)</span><br><span class="line">    &#123;</span><br><span class="line">        HAL_Delay(<span class="number">10</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;EEPROM write status=%u\r\n&quot;</span>,</span><br><span class="line">           (<span class="type">unsigned</span> <span class="type">int</span>)eeprom_status);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>HAL_I2C_IsDeviceReady()</code> 用于检测设备是否应答；这里最多尝试 3 次，超时参数为 100 ms。</p>
+<h3 id="主循环读回"><a href="#主循环读回" class="headerlink" title="主循环读回"></a>主循环读回</h3><p>下面代码放在 <code>while (1)</code> 内原有的 <code>USER CODE BEGIN 3</code> 区域。保留已有的 <code>printf()</code> 串口重定向，不需要新增回调函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">eeprom_status = HAL_I2C_Mem_Read(</span><br><span class="line">    &amp;hi2c1,</span><br><span class="line">    EEPROM_HAL_ADDRESS,</span><br><span class="line">    <span class="number">0x00</span>,</span><br><span class="line">    I2C_MEMADD_SIZE_8BIT,</span><br><span class="line">    &amp;eeprom_data,</span><br><span class="line">    <span class="number">1</span>,</span><br><span class="line">    <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (eeprom_status == HAL_OK)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;EEPROM [0x00] = 0x%02X\r\n&quot;</span>,</span><br><span class="line">           (<span class="type">unsigned</span> <span class="type">int</span>)eeprom_data);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Read failed: status=%u, error=0x%lX\r\n&quot;</span>,</span><br><span class="line">           (<span class="type">unsigned</span> <span class="type">int</span>)eeprom_status,</span><br><span class="line">           (<span class="type">unsigned</span> <span class="type">long</span>)HAL_I2C_GetError(&amp;hi2c1));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">HAL_Delay(<span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Mem_Write &#x2F; Mem_Read 参数</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>&amp;hi2c1</code></td>
+<td>使用哪个 I²C 外设</td>
+</tr>
+<tr>
+<td><code>EEPROM_HAL_ADDRESS</code></td>
+<td>选择哪个设备</td>
+</tr>
+<tr>
+<td><code>0x00</code></td>
+<td>设备内部的哪个位置</td>
+</tr>
+<tr>
+<td><code>I2C_MEMADD_SIZE_8BIT</code></td>
+<td>内部地址发送 1 字节</td>
+</tr>
+<tr>
+<td><code>&amp;eeprom_write_data</code> &#x2F; <code>&amp;eeprom_data</code></td>
+<td>待发送数据或接收结果的变量地址</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>传输 1 字节数据</td>
+</tr>
+<tr>
+<td><code>100</code></td>
+<td>HAL 通信等待的超时参数，单位 ms</td>
+</tr>
+</tbody></table>
+<p><code>HAL_OK</code>、<code>HAL_ERROR</code>、<code>HAL_BUSY</code>、<code>HAL_TIMEOUT</code> 分别表示成功、错误、忙和超时。发生错误时，可以结合 <code>HAL_I2C_GetError()</code> 查看原因。总线通信返回成功后，仍应读回比较，确认写入结果。</p>
+<h2 id="内部地址选择-8BIT还是-16BIT"><a href="#内部地址选择-8BIT还是-16BIT" class="headerlink" title="内部地址选择 8BIT还是 16BIT"></a>内部地址选择 8BIT还是 16BIT</h2><p><code>I2C_MEMADD_SIZE_8BIT</code> 或 <code>I2C_MEMADD_SIZE_16BIT</code> 决定内部地址字段发送几个字节，必须符合从机协议。</p>
+<table>
+<thead>
+<tr>
+<th>内部地址参数</th>
+<th>8BIT 发送内容</th>
+<th>16BIT 发送内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0x0012</code></td>
+<td><code>12</code></td>
+<td><code>00 12</code></td>
+</tr>
+<tr>
+<td><code>0x1234</code></td>
+<td>只发送低字节 <code>34</code></td>
+<td><code>12 34</code></td>
+</tr>
+</tbody></table>
+<p>16BIT 先发高字节，再发低字节。它不改变数据字节宽度，也不改变设备地址的 7 位寻址方式。</p>
+<p>24C02 的地址范围为 0x00～0xFF，使用 8BIT。假设向 0x00 写入 0x3C，却误选 16BIT，省略 ACK 后的发送内容是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">正确 8BIT：设备写地址 → 00 → 3C</span><br><span class="line">                         地址  数据</span><br><span class="line"></span><br><span class="line">误选16BIT：设备写地址 → 00 → 00 → 3C</span><br><span class="line">HAL 理解：                 高地址 低地址 数据</span><br><span class="line">24C02 理解：               地址  数据1 数据2</span><br></pre></td></tr></table></figure>
+
+<p>在器件就绪、写保护未使能且符合时序要求时，24C02 会把后面的两个字节按页写数据解释，向 0x00 写入 0x00，向 0x01 写入 0x3C。即使收到 ACK、HAL 返回成功，也不代表地址格式正确。这个错误配置只作原理讲解，本次没有进行对应上板实验。</p>
+<h2 id="核对资料"><a href="#核对资料" class="headerlink" title="核对资料"></a>核对资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.nxp.com/docs/en/user-guide/UM10204.pdf">NXP：I²C 总线规范 UM10204</a>：起始与停止、数据有效性、ACK&#x2F;NACK 和仲裁。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/STMicroelectronics/stm32f4xx-hal-driver/blob/master/Src/stm32f4xx_hal_i2c.c">ST：STM32F4 HAL I²C 驱动源码</a>：设备地址移位、内部地址宽度和阻塞接口。</li>
+<li><a target="_blank" rel="noopener" href="https://www.st.com/resource/en/datasheet/m24c02-w.pdf">ST：M24C02 数据手册</a>：同类 24C02 器件的字节写、页写与随机读取；板载芯片的写周期和电气参数仍以实际型号数据手册为准。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/">https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/IIC/">IIC</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.JPG" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/10/14/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/03%20TIM%E5%AE%9A%E6%97%B6%E4%B8%AD%E6%96%AD/" title="03 TIM定时中断"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">03 TIM定时中断</div></div><div class="info-2"><div class="info-item-1">1. TIM 定时中断简介TIM（Timer）是片内定时器。本文沿用正点原子探索者 STM32F407ZGT6 V3 开发板、STM32F4 标准外设库（SPL V1.4.0）和现有 168 MHz 时钟模板，用 TIM6 每隔 500 ms 产生一次更新中断，翻转 PF9 红灯。红灯亮 500 ms、灭 500 ms，完整亮灭周期为 1 s。PF10 绿灯保持熄灭。 EXTI 由外部引脚边沿提出中断请求；TIM6 由片内计数器溢出提出请求。两者随后都经过 NVIC、向量表和中断服务函数。TIM6 自动计数，主循环无须用 delay_ms 等待 500 ms。 1.1 从时钟到 LED 翻转1234567891011121314HSE 8 MHz  ↓ PLLHCLK 168 MHz  ↓ APB1 /4PCLK1 42 MHz  ↓ F407 定时器时钟规则：×2TIM6CLK 84 MHz  ↓ PSC 分频CNT 向上计数  ↓ 超过 ARR，回到 0更新事件，UIF=1  ↓ UIE 与 NVIC 均已开启TIM6_DAC_IRQHandler  ↓ 清 UIF，翻转 P...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">组内无法实习，现更改为电力电子硬件学习！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A4%E6%A0%B9%E7%BA%BF%E4%B8%8E%E5%BC%80%E6%BC%8F%E8%BE%93%E5%87%BA"><span class="toc-text">两根线与开漏输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%A7%8B%E3%80%81%E5%81%9C%E6%AD%A2%E5%92%8C%E6%95%B0%E6%8D%AE%E4%BD%8D"><span class="toc-text">起始、停止和数据位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACK-%E4%B8%8E-NACK"><span class="toc-text">ACK 与 NACK</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E5%A4%87%E5%9C%B0%E5%9D%80%E3%80%81%E5%86%85%E9%83%A8%E5%9C%B0%E5%9D%80%E5%92%8C%E6%95%B0%E6%8D%AE"><span class="toc-text">设备地址、内部地址和数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EEPROM-%E5%8D%95%E5%AD%97%E8%8A%82%E5%86%99%E5%85%A5%E4%B8%8E%E8%AF%BB%E5%8F%96"><span class="toc-text">EEPROM 单字节写入与读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E4%B8%80%E4%B8%AA%E5%AD%97%E8%8A%82"><span class="toc-text">写入一个字节</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E5%9C%B0%E5%9D%80%E8%AF%BB%E5%8F%96%E4%B8%80%E4%B8%AA%E5%AD%97%E8%8A%82"><span class="toc-text">指定地址读取一个字节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I%C2%B2C-%E9%80%9A%E4%BF%A1%E6%B5%81%E7%A8%8B%E7%9A%84%E6%95%B4%E4%BD%93%E7%90%86%E8%A7%A3"><span class="toc-text">I²C 通信流程的整体理解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%9C%BA%E6%80%8E%E6%A0%B7%E5%8F%91%E8%B5%B7%E9%80%9A%E4%BF%A1"><span class="toc-text">主机怎样发起通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%88%E5%8F%91%E9%80%81%E4%BB%8E%E6%9C%BA%E5%9C%B0%E5%9D%80%EF%BC%8C%E5%86%8D%E7%94%B1%E4%BB%8E%E6%9C%BA%E5%9B%9E%E5%A4%8D-ACK"><span class="toc-text">先发送从机地址，再由从机回复 ACK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E6%97%B6%EF%BC%8C%E5%9C%A8-SCL-%E4%BD%8E%E7%94%B5%E5%B9%B3%E6%9C%9F%E9%97%B4%E5%87%86%E5%A4%87-SDA"><span class="toc-text">发送时，在 SCL 低电平期间准备 SDA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E6%97%B6%EF%BC%8CSDA-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%96%B9%E6%94%B9%E5%8F%98%EF%BC%8C%E6%97%B6%E9%92%9F%E4%BB%8D%E7%94%B1%E4%B8%BB%E6%9C%BA%E4%BA%A7%E7%94%9F"><span class="toc-text">接收时，SDA 的控制方改变，时钟仍由主机产生</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6-I%C2%B2C-%E5%AE%9E%E7%8E%B0%E8%A6%81%E7%82%B9"><span class="toc-text">软件 I²C 实现要点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%84%E7%BB%87"><span class="toc-text">文件组织</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E9%80%81-8-%E4%BD%8D%E4%B8%8E%E6%A3%80%E6%9F%A5-ACK"><span class="toc-text">发送 8 位与检查 ACK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6-8-%E4%BD%8D%E4%B8%8E%E7%BB%84%E8%A3%85%E6%95%B0%E6%8D%AE"><span class="toc-text">接收 8 位与组装数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6-I%C2%B2C%EF%BC%9AI2C1-%E4%B8%8E-HAL"><span class="toc-text">硬件 I²C：I2C1 与 HAL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CubeMX-%E9%85%8D%E7%BD%AE"><span class="toc-text">CubeMX 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%B0%E5%9D%80%E5%AE%8F%E7%9A%84%E7%BB%9F%E4%B8%80%E7%BA%A6%E5%AE%9A"><span class="toc-text">地址宏的统一约定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%90%8E%E6%A3%80%E6%B5%8B%E5%B9%B6%E5%86%99%E5%85%A5%E4%B8%80%E6%AC%A1"><span class="toc-text">初始化后检测并写入一次</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%BE%AA%E7%8E%AF%E8%AF%BB%E5%9B%9E"><span class="toc-text">主循环读回</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E5%9C%B0%E5%9D%80%E9%80%89%E6%8B%A9-8BIT%E8%BF%98%E6%98%AF-16BIT"><span class="toc-text">内部地址选择 8BIT还是 16BIT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%AF%B9%E8%B5%84%E6%96%99"><span class="toc-text">核对资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/" title="04 I2C">04 I2C</a><time datetime="2026-11-20T11:51:04.000Z" title="发表于 2026-11-20 19:51:04">2026-11-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/14/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/03%20TIM%E5%AE%9A%E6%97%B6%E4%B8%AD%E6%96%AD/" title="03 TIM定时中断">03 TIM定时中断</a><time datetime="2026-10-14T14:05:21.000Z" title="发表于 2026-10-14 22:05:21">2026-10-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/" title="02 EXTI外部中断">02 EXTI外部中断</a><time datetime="2026-10-13T14:25:26.000Z" title="发表于 2026-10-13 22:25:26">2026-10-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/12/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/04%20%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%BA%94%E7%94%A8/" title="04 电力电子应用">04 电力电子应用</a><time datetime="2026-10-12T11:20:58.000Z" title="发表于 2026-10-12 19:20:58">2026-10-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/05/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/01%20GPIO%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/" title="01 GPIO的输入输出">01 GPIO的输入输出</a><time datetime="2026-10-09T07:19:08.000Z" title="发表于 2026-10-09 15:19:08">2026-10-09</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/home-bg.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/empty-home.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>

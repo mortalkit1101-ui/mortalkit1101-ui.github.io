@@ -1,0 +1,352 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>05 SPI | Mortal</title><meta name="author" content="Mortal,mortalkit1101@gmail.com"><meta name="copyright" content="Mortal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SPI 基础知识SPI 是一种同步、全双工的串行通信接口，常见连接方式是一主多从。主机产生时钟，通过各自独立的片选线选择从机。    信号线 含义 作用    SCK Serial Clock 时钟，由主机产生   MOSI Master Out Slave In 主机发送，从机接收   MISO Master In Slave Out 从机发送，主机接收   SS &#x2F; CS Slave">
+<meta property="og:type" content="article">
+<meta property="og:title" content="05 SPI">
+<meta property="og:url" content="https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/05%20SPI/index.html">
+<meta property="og:site_name" content="Mortal">
+<meta property="og:description" content="SPI 基础知识SPI 是一种同步、全双工的串行通信接口，常见连接方式是一主多从。主机产生时钟，通过各自独立的片选线选择从机。    信号线 含义 作用    SCK Serial Clock 时钟，由主机产生   MOSI Master Out Slave In 主机发送，从机接收   MISO Master In Slave Out 从机发送，主机接收   SS &#x2F; CS Slave">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://041101.xyz/img/avatar.JPG">
+<meta property="article:published_time" content="2026-11-21T08:12:20.000Z">
+<meta property="article:modified_time" content="2026-11-21T08:25:14.501Z">
+<meta property="article:author" content="Mortal">
+<meta property="article:tag" content="Flash">
+<meta property="article:tag" content="SPI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://041101.xyz/img/avatar.JPG"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "05 SPI",
+  "url": "https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/05%20SPI/",
+  "image": "https://041101.xyz/img/avatar.JPG",
+  "datePublished": "2026-11-21T08:12:20.000Z",
+  "dateModified": "2026-11-21T08:25:14.501Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mortal",
+      "url": "https://041101.xyz"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/05%20SPI/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.5"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":true,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '05 SPI',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/empty-home.css"><link rel="stylesheet" href="/css/buck-formulas.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/home-bg.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Mortal</span></a><a class="nav-page-title" href="/"><span class="site-name">05 SPI</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">05 SPI</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-21T08:12:20.000Z" title="发表于 2026-11-21 16:12:20">2026-11-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-21T08:25:14.501Z" title="更新于 2026-11-21 16:25:14">2026-11-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="SPI-基础知识"><a href="#SPI-基础知识" class="headerlink" title="SPI 基础知识"></a>SPI 基础知识</h2><p>SPI 是一种<strong>同步、全双工</strong>的串行通信接口，常见连接方式是一主多从。主机产生时钟，通过各自独立的片选线选择从机。</p>
+<table>
+<thead>
+<tr>
+<th>信号线</th>
+<th>含义</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SCK</td>
+<td>Serial Clock</td>
+<td>时钟，由主机产生</td>
+</tr>
+<tr>
+<td>MOSI</td>
+<td>Master Out Slave In</td>
+<td>主机发送，从机接收</td>
+</tr>
+<tr>
+<td>MISO</td>
+<td>Master In Slave Out</td>
+<td>从机发送，主机接收</td>
+</tr>
+<tr>
+<td>SS &#x2F; CS</td>
+<td>Slave Select &#x2F; Chip Select</td>
+<td>从机片选，本文以低电平有效为例</td>
+</tr>
+</tbody></table>
+<p><img src="/img/blog/embedded/05-spi/01-spi-bus.png" alt="SPI 一主多从连接示意图"></p>
+<h3 id="移位与全双工传输"><a href="#移位与全双工传输" class="headerlink" title="移位与全双工传输"></a>移位与全双工传输</h3><p>以图中的<strong>高位先行</strong>（MSB first）为例：主机移位寄存器的最高位经 MOSI 送入从机的最低位，从机的最高位经 MISO 送入主机的最低位，两个移位寄存器形成一个数据交换的“圈”。</p>
+<p>在时钟控制下，主从机同时发送、接收，完成一个字节的交换。位序需要双方一致，并非所有 SPI 设备都固定为高位先行。</p>
+<p><img src="/img/blog/embedded/05-spi/02-shift-register.png" alt="SPI 主从机移位寄存器交换数据示意图"></p>
+<h2 id="SPI-时钟模式"><a href="#SPI-时钟模式" class="headerlink" title="SPI 时钟模式"></a>SPI 时钟模式</h2><p>CPOL（时钟极性）和 CPHA（时钟相位）分别取 0 或 1，共形成<strong>四种模式</strong>。CPOL 决定 SCK 的空闲电平（0 为低、1 为高），CPHA 决定在哪个时钟边沿采样：</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>CPOL &#x2F; CPHA</th>
+<th>采样</th>
+<th>移出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0 &#x2F; 0</td>
+<td>上升沿</td>
+<td>下降沿</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0 &#x2F; 1</td>
+<td>下降沿</td>
+<td>上升沿</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1 &#x2F; 0</td>
+<td>下降沿</td>
+<td>上升沿</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1 &#x2F; 1</td>
+<td>上升沿</td>
+<td>下降沿</td>
+</tr>
+</tbody></table>
+<p>主从机必须使用相同的时钟模式。下面结合原图记录模式 0 和模式 1 的时序。</p>
+<h3 id="模式-0：上升沿采样"><a href="#模式-0：上升沿采样" class="headerlink" title="模式 0：上升沿采样"></a>模式 0：上升沿采样</h3><p>SS 拉低后选中从机，首位数据需要在第一个 SCK 上升沿之前准备好。随后主从机在<strong>上升沿采样移入数据，在下降沿移出下一位数据</strong>。</p>
+<p><img src="/img/blog/embedded/05-spi/03-mode-0.png" alt="SPI 模式 0 时序：CPOL 为 0、CPHA 为 0"></p>
+<h3 id="模式-1：下降沿采样"><a href="#模式-1：下降沿采样" class="headerlink" title="模式 1：下降沿采样"></a>模式 1：下降沿采样</h3><p>SS 拉低表示选中从机，在整个传输过程中保持低电平。主从机在<strong>第一个上升沿移出首位数据，在下降沿采样移入数据</strong>，随后重复，直到传输完毕。</p>
+<p>为了避免多个从机同时驱动 MISO，未选中的从机应释放 MISO，使其处于高阻态；选中后按器件规定的时序输出数据。数据在采样边沿附近应保持稳定，不能简单理解为“高电平传输”。</p>
+<p><img src="/img/blog/embedded/05-spi/04-mode-1.png" alt="SPI 模式 1 时序：CPOL 为 0、CPHA 为 1"></p>
+<h2 id="W25Q128-Flash"><a href="#W25Q128-Flash" class="headerlink" title="W25Q128 Flash"></a>W25Q128 Flash</h2><p>采用 W25Q128 学习 SPI Flash 的读写。它是一种低成本、小型化的非易失性存储器，断电后仍能保留数据。下图为 <strong>W25Q128JV</strong>，本文按该型号的普通 SPI 操作说明，使用 24 位地址；具体操作应核对实际芯片型号。</p>
+<h3 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h3><p>W25Q128JV 的容量为 128 Mbit，即 16 MiB。按图中的 64 KiB 块划分，存储层级由大到小为：</p>
+<p><strong>块（Block）→ 扇区（Sector）→ 页（Page）</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>单元</th>
+<th>大小</th>
+<th>关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>块（图中的 64 KiB Block）</td>
+<td>64 KiB</td>
+<td>包含 16 个扇区</td>
+</tr>
+<tr>
+<td>扇区（Sector）</td>
+<td>4 KiB</td>
+<td>包含 16 页，是最小擦除单元</td>
+</tr>
+<tr>
+<td>页（Page）</td>
+<td>256 字节</td>
+<td>页编程的数据边界</td>
+</tr>
+</tbody></table>
+<p>芯片还支持 32 KiB 块擦除和整片擦除。</p>
+<p><img src="/img/blog/embedded/05-spi/05-flash-memory-map.png" alt="W25Q128JV Flash 存储结构与块划分"></p>
+<h3 id="Flash-操作注意事项"><a href="#Flash-操作注意事项" class="headerlink" title="Flash 操作注意事项"></a>Flash 操作注意事项</h3><p><strong>写入与擦除：</strong></p>
+<ol>
+<li>每次页编程或擦除前，必须先发送<strong>写使能</strong>（Write Enable）指令。</li>
+<li>编程只能将数据位由 <strong>1 写为 0</strong>；要从 0 恢复为 1，必须擦除。</li>
+<li>按手册要求，向已擦除的位置写入数据；擦除后每一位均为 1，即每字节为 <code>0xFF</code>。不必在每次写入前重复擦除整个扇区，但覆盖旧数据前应先处理擦除需求。</li>
+<li>擦除必须按照器件支持的单元进行，最小为 4 KiB 扇区，不能按单字节擦除。</li>
+<li>单次页编程最多发送 256 字节，且<strong>不能跨越当前页边界</strong>。从页内偏移处开始时，只能写到本页末尾；继续发送会回绕到页首，覆盖本次传入页缓冲区的数据，因此跨页写入必须拆分。</li>
+<li>页编程或擦除启动后，芯片进入忙状态，应读取状态寄存器中的 <code>BUSY</code> 位，等待其清零后再进行普通读写；忙状态并非完全不响应指令，仍可读取状态寄存器。</li>
+</ol>
+<p><strong>读取：</strong></p>
+<p>直接读取数据，无需写使能，读取后也不会进入忙状态。普通读取应等待 <code>BUSY = 0</code>；若使用擦除&#x2F;编程暂停功能，需遵守手册中的暂停与读取限制。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://041101.xyz">Mortal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/05%20SPI/">https://041101.xyz/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/05%20SPI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://041101.xyz" target="_blank">Mortal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SPI/">SPI</a><a class="post-meta__tags" href="/tags/Flash/">Flash</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.JPG" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/" title="04 I2C"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">04 I2C</div></div><div class="info-2"><div class="info-item-1">IIC、I2C 和 I²C 指同一种通信总线。I²C 使用时钟线 SCL 和双向数据线 SDA，在同一总线上通过设备地址选择通信对象，常用于连接 EEPROM、传感器等芯片。 I²C 支持多主多从，也常用于单主多从系统。本次实验只有 STM32 一个主机，目标从机是开发板上的 24C02 EEPROM。 本文记录 2026 年 11 月 20 日的软件 I²C、硬件 I²C 学习内容。开发板为正点原子探索者 STM32F407 V3，芯片为 STM32F407ZGT6，工程使用 STM32CubeMX、VS Code 和 HAL 库。 两根线与开漏输出   信号 本次引脚 作用    SCL PB8 主机产生通信时钟   SDA PB9 双向传输地址、数据和应答   按本次开发板的连接，板载 EEPROM 已经连接这两根线，无需额外跳线。两根线各有 4.7 kΩ 电阻上拉到 3.3 V，本次不使用 GPIO 内部上拉。 开漏输出的两个动作： 12HAL_GPIO_WritePin(port, pin, GPIO_PIN_RESET); // 主动拉低线路HAL_GPIO_Writ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.JPG" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mortal</div><div class="author-info-description">一名西安交通大学的通信研究生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/mortalkit1101-ui"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/mortalkit1101-ui" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://041101.xyz" target="_blank" title="Website"><i class="fas fa-link" style="color: #2f81f7;"></i></a><a class="social-icon" href="mailto:mortalkit1101@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">组内无法实习，现更改为电力电子硬件学习！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-text">SPI 基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E4%BD%8D%E4%B8%8E%E5%85%A8%E5%8F%8C%E5%B7%A5%E4%BC%A0%E8%BE%93"><span class="toc-text">移位与全双工传输</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI-%E6%97%B6%E9%92%9F%E6%A8%A1%E5%BC%8F"><span class="toc-text">SPI 时钟模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F-0%EF%BC%9A%E4%B8%8A%E5%8D%87%E6%B2%BF%E9%87%87%E6%A0%B7"><span class="toc-text">模式 0：上升沿采样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F-1%EF%BC%9A%E4%B8%8B%E9%99%8D%E6%B2%BF%E9%87%87%E6%A0%B7"><span class="toc-text">模式 1：下降沿采样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#W25Q128-Flash"><span class="toc-text">W25Q128 Flash</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-text">存储结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flash-%E6%93%8D%E4%BD%9C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">Flash 操作注意事项</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/05%20SPI/" title="05 SPI">05 SPI</a><time datetime="2026-11-21T08:12:20.000Z" title="发表于 2026-11-21 16:12:20">2026-11-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/11/20/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/04%20I2C/" title="04 I2C">04 I2C</a><time datetime="2026-11-20T11:51:04.000Z" title="发表于 2026-11-20 19:51:04">2026-11-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/14/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/03%20TIM%E5%AE%9A%E6%97%B6%E4%B8%AD%E6%96%AD/" title="03 TIM定时中断">03 TIM定时中断</a><time datetime="2026-10-14T14:05:21.000Z" title="发表于 2026-10-14 22:05:21">2026-10-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/13/blog/%E5%B5%8C%E5%85%A5%E5%BC%8F/02%20EXTI%E5%A4%96%E9%83%A8%E4%B8%AD%E6%96%AD/" title="02 EXTI外部中断">02 EXTI外部中断</a><time datetime="2026-10-13T14:25:26.000Z" title="发表于 2026-10-13 22:25:26">2026-10-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/10/12/blog/%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%AD%A6%E4%B9%A0/04%20%E7%94%B5%E5%8A%9B%E7%94%B5%E5%AD%90%E5%BA%94%E7%94%A8/" title="04 电力电子应用">04 电力电子应用</a><time datetime="2026-10-12T11:20:58.000Z" title="发表于 2026-10-12 19:20:58">2026-10-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/home-bg.png);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mortal</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.5</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.5"></script><script src="/js/main.js?v=5.5.5"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/js/empty-home.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="Search Mortal" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.5"></script></div></div></body></html>
